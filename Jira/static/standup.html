@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Daily standup: active sprint tickets, per-person updates, blockers, and export.">
+  <title>Daily Standup</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <script src="/static/standup.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Jira Weekly Report home">
+        <span class="brand-mark" aria-hidden="true">JF</span>
+        <span><strong>Jira Weekly Report</strong><small>Daily standup</small></span>
+      </a>
+      <nav class="view-nav" aria-label="Report sections">
+        <a href="/">Weekly report</a>
+        <a class="active" href="/standup">Daily standup</a>
+        <a href="/assignments">Assignment &amp; backlog</a>
+        <a href="/sd-analysis">SD analysis</a>
+        <a href="/bulk-create">Bulk create</a>
+      </nav>
+      <div class="topbar-status"><span class="status-dot" aria-hidden="true"></span><span>Saved locally, nothing written to Jira</span></div>
+    </header>
+
+    <main>
+      <section class="workspace">
+        <aside class="setup-card" aria-labelledby="standup-setup-title">
+          <div class="section-heading">
+            <div><p class="eyebrow">CONNECTION</p><h2 id="standup-setup-title">Load sprint &amp; roster</h2></div>
+            <span class="secure-note">Token not saved twice</span>
+          </div>
+
+          <label for="base-url">Jira URL</label>
+          <input id="base-url" type="url" placeholder="https://jira.your-company.com" required>
+
+          <div class="field-grid">
+            <div>
+              <label for="api-mode">Jira type</label>
+              <select id="api-mode">
+                <option value="auto">Detect automatically</option>
+                <option value="server">Data Center / Server</option>
+                <option value="cloud">Jira Cloud</option>
+              </select>
+            </div>
+            <div>
+              <label for="auth-type">Authentication</label>
+              <select id="auth-type">
+                <option value="auto">Choose automatically</option>
+                <option value="bearer">Personal access token</option>
+                <option value="basic">Email + API token</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="username-field">
+            <label for="username">Username / Cloud email</label>
+            <input id="username" type="text" placeholder="your.name@company.com">
+          </div>
+
+          <label for="token">API token or PAT</label>
+          <div class="secret-input">
+            <input id="token" type="password" placeholder="Saved token will be used when available">
+            <button id="toggle-token" type="button" class="text-button">Show</button>
+          </div>
+          <label class="check-label">
+            <input id="save-token" type="checkbox" checked>
+            <span>Remember securely on this Windows account</span>
+          </label>
+          <p id="saved-token-status" class="saved-token-status" hidden></p>
+
+          <div class="sprint-picker-heading">
+            <label for="sprint">Active sprint</label>
+            <button id="refresh-sprints" type="button" class="inline-link-button" title="Re-fetch the sprint list from Jira">Refresh</button>
+          </div>
+          <div class="sprint-picker" id="sprint-picker">
+            <input id="sprint" type="text" class="sprint-search"
+              placeholder="Type a sprint number or name to search…" autocomplete="off">
+            <div id="sprint-options" class="sprint-options" role="listbox" aria-label="Active and upcoming sprints" hidden></div>
+          </div>
+          <p id="sprint-picker-status" class="muted sprint-picker-status" hidden></p>
+
+          <label for="roster-input">Team members</label>
+          <div class="roster-input-row">
+            <input id="roster-input" type="text" placeholder="Jira username / account ID, then Add">
+            <button id="roster-add-button" type="button" class="secondary-button roster-add-button">Add</button>
+          </div>
+          <div id="roster-chips" class="roster-chips"></div>
+          <p class="muted">Seeded from the weekly report's team_members. Add, remove, or edit anyone
+            just for this standup — nothing here changes the saved configuration.</p>
+
+          <button id="load-roster-button" type="button" class="primary-button">
+            <span class="button-label">Load sprint tickets</span>
+            <span class="button-loader" aria-hidden="true"></span>
+          </button>
+          <div id="standup-error" class="error-message" role="alert" hidden></div>
+        </aside>
+
+        <section class="results standup-results" aria-live="polite">
+          <div id="standup-empty" class="empty-state">
+            <div class="empty-visual" aria-hidden="true"><span></span><span></span><span></span></div>
+            <p class="eyebrow">READY WHEN YOU ARE</p>
+            <h2>Pick a sprint and load tickets to start standup.</h2>
+            <p>Each person's tickets, a blocker box, and a notes box will appear here.</p>
+          </div>
+
+          <div id="standup-loading" class="loading-state" hidden>
+            <div class="scan-animation" aria-hidden="true"></div>
+            <p class="eyebrow">LOADING SPRINT</p>
+            <h2>Reading tickets for this sprint…</h2>
+          </div>
+
+          <div id="standup-body" hidden>
+            <div class="result-header">
+              <div>
+                <p class="eyebrow">STANDUP</p>
+                <h2>Today's updates</h2>
+                <p id="standup-caption" class="muted"></p>
+              </div>
+              <div class="standup-date-field">
+                <label for="standup-date">Date</label>
+                <input id="standup-date" type="date">
+              </div>
+            </div>
+
+            <div id="status-filter-bar" class="status-filter-bar" hidden>
+              <span class="status-filter-label">Filter tickets by status</span>
+              <div id="status-filter-options" class="status-filter-options"></div>
+              <button id="status-filter-all" type="button" class="inline-link-button">All</button>
+              <button id="status-filter-none" type="button" class="inline-link-button">None</button>
+              <p class="muted status-filter-hint">Only the checked statuses are included in the exported report.</p>
+            </div>
+
+            <div id="standup-people" class="standup-people"></div>
+
+            <div class="standup-action-row">
+              <button id="generate-standup-report" type="button" class="primary-button standup-generate-button">
+                <span class="button-label">Generate &amp; export report</span>
+                <span class="button-loader" aria-hidden="true"></span>
+              </button>
+              <button id="copy-standup-text" type="button" class="secondary-button standup-copy-button">Copy as text</button>
+            </div>
+            <p id="standup-status" class="saved-token-status" hidden></p>
+            <div id="standup-download" class="standup-download" hidden>
+              <span>Report saved.</span>
+              <a id="standup-download-link" href="#" target="_blank" rel="noopener">Open HTML report</a>
+              <a id="standup-download-csv-link" href="#" target="_blank" rel="noopener">Download CSV</a>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <template id="standup-person-template">
+    <section class="standup-person-card" data-person>
+      <div class="standup-person-header">
+        <h3 data-person-name></h3>
+      </div>
+      <table class="standup-ticket-table">
+        <thead><tr><th>Jira ID</th><th>Title</th><th>Status</th><th>Update</th></tr></thead>
+        <tbody data-ticket-body></tbody>
+      </table>
+      <div class="standup-row-grid standup-row-grid-secondary standup-person-common">
+        <div>
+          <label>Blockers</label>
+          <textarea class="standup-blockers" rows="2" placeholder="Anything blocking this person? Leave blank if none."></textarea>
+        </div>
+        <div>
+          <label>Additional details</label>
+          <textarea class="standup-notes" rows="2" placeholder="Anything else worth noting"></textarea>
+        </div>
+      </div>
+    </section>
+  </template>
+
+  <template id="standup-ticket-row-template">
+    <tr data-ticket-row>
+      <td data-ticket-key></td>
+      <td data-ticket-summary></td>
+      <td><span class="ticket-status-pill" data-ticket-status></span></td>
+      <td><textarea class="standup-ticket-update" rows="2" placeholder="What's the update on this ticket"></textarea></td>
+    </tr>
+  </template>
+
+  <template id="roster-chip-template">
+    <span class="roster-chip" data-chip>
+      <span data-chip-label></span>
+      <button type="button" class="roster-chip-remove" aria-label="Remove">×</button>
+    </span>
+  </template>
+</body>
+</html>

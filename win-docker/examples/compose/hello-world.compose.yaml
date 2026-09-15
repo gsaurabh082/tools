@@ -1,0 +1,6 @@
+# Safe disposable Compose project used for WinColima end-to-end validation.
+name: wincolima-e2e
+
+services:
+  hello:
+    image: hello-world

@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Owner assignment, sprint placement, and Jira backlog report.">
+  <title>Assignment &amp; Backlog Report</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <script src="/static/assignments.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Jira Weekly Report home">
+        <span class="brand-mark" aria-hidden="true">JF</span>
+        <span><strong>Jira Weekly Report</strong><small>Assignment visibility</small></span>
+      </a>
+      <nav class="view-nav" aria-label="Report sections">
+        <a href="/">Weekly report</a>
+        <a href="/standup">Daily standup</a>
+        <a class="active" href="/assignments">Assignment &amp; backlog</a>
+        <a href="/sd-analysis">SD analysis</a>
+        <a href="/bulk-create">Bulk create</a>
+      </nav>
+      <div class="topbar-status"><span class="status-dot"></span><span>Read-only scan</span></div>
+    </header>
+
+    <main>
+      <section class="workspace">
+        <aside class="setup-card" aria-labelledby="assignment-setup-title">
+          <div class="section-heading">
+            <div><p class="eyebrow">CONNECTION</p><h2 id="assignment-setup-title">Run assignment scan</h2></div>
+            <span class="secure-note">Token encrypted</span>
+          </div>
+          <form id="assignment-form">
+            <label for="base-url">Jira URL</label>
+            <input id="base-url" type="url" placeholder="https://jira.your-company.com" required>
+
+            <div class="field-grid">
+              <div>
+                <label for="api-mode">Jira type</label>
+                <select id="api-mode">
+                  <option value="auto">Detect automatically</option>
+                  <option value="server">Data Center / Server</option>
+                  <option value="cloud">Jira Cloud</option>
+                </select>
+              </div>
+              <div>
+                <label for="auth-type">Authentication</label>
+                <select id="auth-type">
+                  <option value="auto">Choose automatically</option>
+                  <option value="bearer">Personal access token</option>
+                  <option value="basic">Email + API token</option>
+                </select>
+              </div>
+            </div>
+
+            <div id="username-field">
+              <label for="username">Username / Cloud email</label>
+              <input id="username" type="text" placeholder="your.name@company.com">
+            </div>
+
+            <label for="token">API token or PAT</label>
+            <div class="secret-input">
+              <input id="token" type="password" placeholder="Saved token will be used when available">
+              <button id="toggle-token" type="button" class="text-button">Show</button>
+            </div>
+            <label class="check-label">
+              <input id="save-token" type="checkbox" checked>
+              <span>Remember securely on this Windows account</span>
+            </label>
+            <p id="saved-token-status" class="saved-token-status" hidden></p>
+
+            <label for="current-sprint">Current sprint</label>
+            <input id="current-sprint" type="text" value="1051" placeholder="1051">
+
+            <details class="advanced">
+              <summary>Advanced assignment JQL</summary>
+              <label for="assignment-jql">Open-work query</label>
+              <textarea id="assignment-jql" rows="6" spellcheck="false"></textarea>
+              <p>By default, this scans every assigned person across every project. Edit for a one-time narrower report.</p>
+            </details>
+
+            <button id="run-button" class="primary-button" type="submit">
+              <span class="button-label">Run assignment report</span>
+              <span class="button-loader"></span>
+            </button>
+          </form>
+          <div id="form-error" class="error-message" role="alert" hidden></div>
+        </aside>
+
+        <section class="results" aria-live="polite">
+          <div id="empty-state" class="empty-state">
+            <div class="empty-visual"><span></span><span></span><span></span></div>
+            <p class="eyebrow">OWNER ALLOCATION</p>
+            <h2>Open assignments will appear here.</h2>
+            <p>Run the scan to find each person’s current-sprint, future-sprint,
+              backlog, and other-sprint work.</p>
+          </div>
+          <div id="loading-state" class="loading-state" hidden>
+            <div class="scan-animation"></div>
+            <p class="eyebrow">SCANNING OPEN WORK</p>
+            <h2>Building the assignment report…</h2>
+            <p>Reading assignees and sprint placement across the project.</p>
+          </div>
+
+          <div id="assignment-results" hidden>
+            <div class="result-header">
+              <div>
+                <p class="eyebrow">OWNER ALLOCATION</p>
+                <h2>Assignment &amp; backlog report</h2>
+                <p id="report-caption" class="muted"></p>
+              </div>
+              <div id="download-actions" class="download-actions"></div>
+            </div>
+            <div id="metric-grid" class="metric-grid"></div>
+
+            <section class="data-card">
+              <div class="card-heading"><div><p class="eyebrow">BY OWNER</p><h3>Where work is assigned</h3></div></div>
+              <div class="table-scroll">
+                <table>
+                  <thead><tr>
+                    <th>Owner</th><th>Total open</th><th>Current sprint</th><th>Future sprint</th>
+                    <th>Backlog</th><th>Other sprint</th><th>Overdue</th><th>No due date</th>
+                  </tr></thead>
+                  <tbody id="owner-table"></tbody>
+                </table>
+              </div>
+            </section>
+
+            <section class="data-card">
+              <div class="card-heading issue-heading">
+                <div><p class="eyebrow">ASSIGNED ITEMS</p><h3>Story placement</h3></div>
+                <div class="filters">
+                  <input id="issue-search" type="search" placeholder="Search owner name, issue or summary"
+                    aria-label="Search by owner name, issue, or summary">
+                  <select id="placement-filter">
+                    <option value="all">All locations</option>
+                    <option value="Current Sprint">Current sprint</option>
+                    <option value="Backlog">Backlog</option>
+                    <option value="Future Sprint">Future sprint</option>
+                    <option value="Other Sprint">Other sprint</option>
+                  </select>
+                  <select id="owner-filter" aria-label="Filter by owner"><option value="all">All owners</option></select>
+                  <select id="owner-sort" aria-label="Sort by owner name">
+                    <option value="owner-asc">Owner name A–Z</option>
+                    <option value="owner-desc">Owner name Z–A</option>
+                  </select>
+                </div>
+              </div>
+              <div class="table-scroll">
+                <table>
+                  <thead><tr>
+                    <th>Issue</th><th>Owner</th><th>Type</th><th>Status</th>
+                    <th>Location</th><th>Sprint</th><th>Due date</th>
+                  </tr></thead>
+                  <tbody id="issue-table"></tbody>
+                </table>
+              </div>
+              <p id="issue-count" class="table-footnote"></p>
+            </section>
+          </div>
+        </section>
+      </section>
+    </main>
+    <footer>Read-only allocation report · Jira issues remain unchanged</footer>
+  </div>
+</body>
+</html>

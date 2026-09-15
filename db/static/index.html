@@ -1,0 +1,1675 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>DOsewatch DB Manager</title>
+<style>
+  :root {
+    --bg: #f5f6f8;
+    --panel: #ffffff;
+    --border: #e2e5ea;
+    --text: #1f2430;
+    --muted: #6b7280;
+    --accent: #2f6feb;
+    --accent-dark: #1d4fb8;
+    --danger: #d64545;
+    --ok: #1a9c5b;
+    --radius: 10px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+  }
+  header {
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  header h1 {
+    font-size: 17px;
+    font-weight: 600;
+    margin: 0;
+  }
+  header .sub {
+    color: var(--muted);
+    font-size: 12px;
+  }
+  nav.tabs {
+    display: flex;
+    gap: 4px;
+    padding: 12px 24px 0 24px;
+  }
+  nav.tabs button {
+    background: none;
+    border: none;
+    padding: 10px 16px;
+    font-size: 14px;
+    color: var(--muted);
+    cursor: pointer;
+    border-radius: var(--radius) var(--radius) 0 0;
+  }
+  nav.tabs button.active {
+    background: var(--panel);
+    color: var(--accent);
+    font-weight: 600;
+  }
+  main {
+    padding: 0 24px 24px 24px;
+  }
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 0 var(--radius) var(--radius) var(--radius);
+    padding: 20px;
+    display: none;
+  }
+  .panel.active { display: block; }
+  .row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  label { font-size: 13px; color: var(--muted); }
+  select, input[type=text], input[type=password], input[type=number], textarea {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 14px;
+    background: #fff;
+    color: var(--text);
+  }
+  textarea {
+    width: 100%;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 13px;
+    resize: vertical;
+  }
+  button.btn {
+    border: none;
+    background: var(--accent);
+    color: white;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  button.btn:hover { background: var(--accent-dark); }
+  button.btn.secondary {
+    background: #eef1f6;
+    color: var(--text);
+  }
+  button.btn.secondary:hover { background: #e2e6ee; }
+  button.btn.danger { background: var(--danger); }
+  table.data {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 13px;
+  }
+  table.data th, table.data td {
+    border: 1px solid var(--border);
+    padding: 6px 10px;
+    text-align: left;
+    white-space: nowrap;
+  }
+  table.data th {
+    background: #f9fafb;
+    position: sticky;
+    top: 0;
+  }
+  .table-scroll {
+    max-height: 420px;
+    overflow: auto;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  .status {
+    font-size: 13px;
+    margin: 8px 0;
+    color: var(--muted);
+  }
+  .status.error { color: var(--danger); }
+  .status.ok { color: var(--ok); }
+  .conn-list { display: flex; flex-direction: column; gap: 8px; }
+  .conn-card {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .conn-card .meta { font-size: 13px; color: var(--muted); }
+  .conn-card .name { font-weight: 600; }
+  .modal-backdrop {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.35);
+    align-items: center; justify-content: center;
+    z-index: 10;
+  }
+  .modal-backdrop.active { display: flex; }
+  .modal {
+    background: var(--panel);
+    border-radius: var(--radius);
+    padding: 20px;
+    width: 360px;
+  }
+  .modal h3 { margin-top: 0; }
+  .modal .field { margin-bottom: 10px; display: flex; flex-direction: column; gap: 4px; }
+  .modal input { width: 100%; }
+  .match-item { padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .match-item b { color: var(--accent); }
+  .toolbar-right { margin-left: auto; }
+
+  /* ---- Schema tab (DBeaver-style tree + tabs) ---- */
+  .schema-layout { display: flex; gap: 12px; margin-top: 10px; height: 540px; }
+  .schema-tree { width: 300px; min-width: 220px; border: 1px solid var(--border); border-radius: 8px; overflow-y: auto; padding: 6px 0; background: #fafbfc; }
+  .schema-node { display: flex; align-items: center; gap: 6px; padding: 4px 8px; cursor: pointer; border-radius: 6px; white-space: nowrap; font-size: 13px; }
+  .schema-node:hover { background: #eef1f6; }
+  .schema-node.active { background: #e3ecfd; }
+  .schema-caret { width: 12px; color: var(--muted); font-size: 10px; text-align: center; user-select: none; }
+  .schema-col-row { display: flex; gap: 6px; padding: 2px 8px 2px 26px; font-size: 12px; color: #444; }
+  .schema-col-row .key { color: #b8860b; font-weight: 600; }
+  .schema-match { background: #fff2a8; border-radius: 3px; }
+  .schema-main { flex: 1; display: flex; flex-direction: column; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; min-width: 0; }
+  .schema-tabbar { display: flex; border-bottom: 1px solid var(--border); background: #fafbfc; overflow-x: auto; }
+  .schema-tab { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-right: 1px solid var(--border); cursor: pointer; font-size: 13px; white-space: nowrap; }
+  .schema-tab.active { background: #fff; border-bottom: 2px solid var(--accent); font-weight: 600; color: var(--accent); }
+  .schema-tab .x { color: #999; }
+  .schema-tab .x:hover { color: var(--danger); }
+  .schema-tabcontent { flex: 1; overflow: auto; padding: 14px; }
+  .row-count { color: var(--muted); font-size: 11px; margin-left: 2px; }
+  .schema-toolbar input { flex: 1; }
+
+  .search-mode-btn.active { background: var(--accent); color: #fff; }
+  .history-item { padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 12px; cursor: pointer; }
+  .history-item:hover { background: #f7fafd; }
+  .history-item code { font-size: 12px; color: var(--text); }
+  .history-item .meta { color: var(--muted); font-size: 11px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>DOsewatch DB Manager</h1>
+    <div class="sub">Local only - runs on this machine, talks to your saved connections</div>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button data-tab="connections" class="active">Connections</button>
+  <button data-tab="schema">Schema</button>
+  <button data-tab="search">Search</button>
+  <button data-tab="ask">Ask Claude</button>
+  <button data-tab="query">Query</button>
+</nav>
+
+<main>
+
+  <!-- CONNECTIONS TAB -->
+  <section id="tab-connections" class="panel active">
+    <div class="row">
+      <button class="btn" onclick="openAddModal()">Add connection</button>
+      <button class="btn secondary" onclick="loadConnections()">Refresh</button>
+    </div>
+    <div id="conn-list" class="conn-list"></div>
+  </section>
+
+  <!-- SCHEMA TAB -->
+  <section id="tab-schema" class="panel">
+    <div class="row">
+      <div>
+        <label>Connection</label><br/>
+        <select id="schema-conn" onchange="onSchemaConnChange()"></select>
+      </div>
+      <div>
+        <label>Database</label><br/>
+        <input type="text" id="schema-db" list="schema-db-list" placeholder="serphydose" onchange="loadSchema()" />
+        <datalist id="schema-db-list"></datalist>
+      </div>
+      <div class="toolbar-right">
+        <button class="btn" onclick="loadSchema()">Load schema</button>
+      </div>
+    </div>
+    <div id="schema-status" class="status"></div>
+    <div id="schema-browser" style="display:none;">
+      <div class="row schema-toolbar">
+        <input type="text" id="schema-filter" placeholder="Filter tables / columns..." oninput="renderSchemaTree()" />
+        <button class="btn secondary" onclick="expandAllSchema()">Expand all</button>
+        <button class="btn secondary" onclick="collapseAllSchema()">Collapse all</button>
+      </div>
+      <div class="schema-layout">
+        <div class="schema-tree" id="schema-tree"></div>
+        <div class="schema-main">
+          <div class="schema-tabbar" id="schema-tabbar"></div>
+          <div class="schema-tabcontent" id="schema-tabcontent"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEARCH TAB -->
+  <section id="tab-search" class="panel">
+    <div class="row" style="margin-bottom:4px;">
+      <button class="btn secondary search-mode-btn" id="search-mode-names" onclick="setSearchMode('names')">Table / column names</button>
+      <button class="btn secondary search-mode-btn active" id="search-mode-data" onclick="setSearchMode('data')">Row data (find text on server)</button>
+    </div>
+
+    <!-- Names mode -->
+    <div id="search-names-panel" style="display:none;">
+      <div class="row">
+        <div>
+          <label>Connection</label><br/>
+          <select id="search-conn" onchange="onSearchConnChange()"></select>
+        </div>
+        <div>
+          <label>Database</label><br/>
+          <input type="text" id="search-db" list="search-db-list" placeholder="serphydose" />
+          <datalist id="search-db-list"></datalist>
+        </div>
+        <div>
+          <label>Keyword</label><br/>
+          <input type="text" id="search-q" placeholder="e.g. patient" />
+        </div>
+        <div class="toolbar-right">
+          <button class="btn" onclick="runSearch()">Search</button>
+        </div>
+      </div>
+      <div id="search-status" class="status"></div>
+      <div id="search-results"></div>
+    </div>
+
+    <!-- Data mode -->
+    <div id="search-data-panel">
+      <div class="row">
+        <div>
+          <label>Connection</label><br/>
+          <select id="data-search-conn" onchange="onDataSearchConnChange()"></select>
+        </div>
+        <div>
+          <label>Database</label><br/>
+          <input type="text" id="data-search-db" list="data-search-db-list" placeholder="serphydose" onchange="onDataSearchDbChange()" />
+          <datalist id="data-search-db-list"></datalist>
+        </div>
+        <div>
+          <label>Table (optional)</label><br/>
+          <input type="text" id="data-search-table" list="data-search-table-list" placeholder="blank = scan multiple tables" />
+          <datalist id="data-search-table-list"></datalist>
+        </div>
+        <div>
+          <label>Value (optional)</label><br/>
+          <input type="text" id="data-search-value" placeholder="blank = preview all rows" />
+        </div>
+        <div>
+          <label>Rows per page</label><br/>
+          <input type="number" id="data-search-limit" value="1000" min="1" style="width:90px;" />
+        </div>
+        <div class="toolbar-right" style="display:flex; gap:8px;">
+          <button class="btn" onclick="runDataSearch()">Search data</button>
+          <button class="btn secondary" id="data-search-refresh-row" style="display:none;" onclick="runDataSearch()">Refresh</button>
+        </div>
+      </div>
+      <div class="status">Scans row data, not just names. Leave Value blank to just preview rows with no filter. Without a table, every table is scanned in full (no cap) - each table's results page independently, with a "Load more" button once there's more than one page.</div>
+      <div id="data-search-status" class="status"></div>
+      <div id="data-search-results"></div>
+    </div>
+  </section>
+
+  <!-- ASK CLAUDE TAB -->
+  <section id="tab-ask" class="panel">
+    <div class="row">
+      <div>
+        <label>Connection</label><br/>
+        <select id="ask-conn" onchange="onAskConnChange()"></select>
+      </div>
+      <div>
+        <label>Database</label><br/>
+        <input type="text" id="ask-db" list="ask-db-list" placeholder="serphydose" />
+        <datalist id="ask-db-list"></datalist>
+      </div>
+    </div>
+    <textarea id="ask-question" rows="4" placeholder="e.g. find me the relation between patient and study table, and find studies related to a specific patient"></textarea>
+    <div class="row" style="margin-top:10px;">
+      <button class="btn" onclick="sendToClaude()">Send to Claude</button>
+      <button class="btn secondary" onclick="checkClaudeAnswer()">Check for Claude's answer</button>
+    </div>
+    <div id="ask-status" class="status"></div>
+    <div id="ask-immediate"></div>
+    <div id="ask-answer"></div>
+    <div class="table-scroll" id="ask-results-wrap" style="display:none; margin-top:10px;">
+      <table class="data" id="ask-results-table"></table>
+    </div>
+  </section>
+
+  <!-- QUERY TAB -->
+  <section id="tab-query" class="panel">
+    <div class="row">
+      <div>
+        <label>Connection</label><br/>
+        <select id="query-conn" onchange="onQueryConnChange()"></select>
+      </div>
+      <div>
+        <label>Database</label><br/>
+        <input type="text" id="query-db" list="query-db-list" placeholder="serphydose" />
+        <datalist id="query-db-list"></datalist>
+      </div>
+      <div class="toolbar-right">
+        <button class="btn secondary" onclick="document.getElementById('query-sql-file').click()">Load .sql file</button>
+        <input type="file" id="query-sql-file" accept=".sql,.txt" style="display:none;" onchange="loadSqlFile(event)" />
+        <button class="btn" onclick="runQuery()">Run query</button>
+      </div>
+    </div>
+    <textarea id="query-sql" rows="6" placeholder="SELECT * FROM table_name LIMIT 1000&#10;-- multiple ;-separated statements are run in order"></textarea>
+    <div id="query-status" class="status"></div>
+    <div id="query-results"></div>
+    <div class="row" style="margin-top:14px;">
+      <button class="btn secondary" onclick="toggleQueryHistory()">Query history</button>
+    </div>
+    <div id="query-history" style="display:none; margin-top:8px;"></div>
+  </section>
+
+</main>
+
+<!-- ADD CONNECTION MODAL -->
+<div class="modal-backdrop" id="add-modal-backdrop">
+  <div class="modal">
+    <h3>Add connection</h3>
+    <div class="field"><label>Host</label><input type="text" id="add-host" /></div>
+    <div class="field"><label>Port</label><input type="number" id="add-port" value="3306" /></div>
+    <div class="field"><label>Username</label><input type="text" id="add-user" value="root" /></div>
+    <div class="field"><label>Password (blank = default)</label><input type="password" id="add-password" /></div>
+    <div class="field"><label>Database (optional - can pick later)</label><input type="text" id="add-database" /></div>
+    <div class="status" style="margin-top:-4px;">Connection name is set to the host automatically.</div>
+    <div class="row">
+      <button class="btn" onclick="saveConnection()">Save</button>
+      <button class="btn secondary" onclick="closeAddModal()">Cancel</button>
+    </div>
+    <div id="add-status" class="status"></div>
+  </div>
+</div>
+
+<script>
+let lastAskSql = '';
+
+// Small DOM-building helper: el('td', {text: 'x', class: 'y'}, [child, ...]).
+function el(tag, attrs, children) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (k === 'text') e.textContent = v;
+    else e.setAttribute(k, v);
+  }
+  (children || []).forEach(c => e.appendChild(c));
+  return e;
+}
+
+// ---- Tabs ----
+document.querySelectorAll('nav.tabs button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('nav.tabs button').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('main .panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+// ---- Connections ----
+async function loadConnections() {
+  const res = await fetch('/api/connections');
+  const conns = await res.json();
+
+  const list = document.getElementById('conn-list');
+  list.innerHTML = '';
+  if (conns.length === 0) {
+    list.innerHTML = '<div class="status">No connections saved yet.</div>';
+  }
+  conns.forEach(c => {
+    const div = document.createElement('div');
+    div.className = 'conn-card';
+    div.style.cursor = 'pointer';
+    div.title = 'Click to search this connection';
+    div.innerHTML = `
+      <div>
+        <div class="name">${c.host}</div>
+        <div class="meta">${c.user}@${c.host}:${c.port}/${c.database || '(none set)'}</div>
+      </div>
+      <div>
+        <button class="btn secondary" onclick="event.stopPropagation(); testConn('${c.name}')">Test</button>
+        <button class="btn danger" onclick="event.stopPropagation(); removeConn('${c.name}')">Remove</button>
+      </div>
+    `;
+    div.addEventListener('click', () => goToSearchWithConnection(c.name));
+    list.appendChild(div);
+  });
+
+  const names = conns.map(c => c.name);
+  fillSelect('schema-conn', names);
+  fillSelect('search-conn', names);
+  fillSelect('data-search-conn', names);
+  fillSelect('ask-conn', names);
+  fillSelect('query-conn', names);
+
+  // Preload every tab's database dropdown right away, for whichever connection
+  // ended up selected, so nobody has to type a database name anywhere.
+  await Promise.all([
+    preloadDatabases('schema-conn', 'schema-db'),
+    preloadDatabases('search-conn', 'search-db'),
+    preloadDatabases('data-search-conn', 'data-search-db'),
+    preloadDatabases('ask-conn', 'ask-db'),
+    preloadDatabases('query-conn', 'query-db'),
+  ]);
+  if (document.getElementById('schema-conn').value) loadSchema();
+  if (document.getElementById('data-search-conn').value) {
+    preloadTables('data-search-conn', 'data-search-db', 'data-search-table');
+  }
+}
+
+// ---- Shared database preloading (used by every tab) ----
+const dbListCache = {}; // connection name -> Promise<string[]>
+
+function getDatabasesForConnection(name) {
+  if (!dbListCache[name]) {
+    dbListCache[name] = (async () => {
+      try {
+        const res = await fetch(`/api/databases/${encodeURIComponent(name)}`);
+        const data = await res.json();
+        return data.ok ? (data.databases || []) : [];
+      } catch (e) {
+        return [];
+      }
+    })();
+  }
+  return dbListCache[name];
+}
+
+const DEFAULT_DATABASE = 'serphydose';
+
+// Database fields are text inputs paired with a <datalist id="X-list">, so
+// they behave like a searchable dropdown (type to filter/autocomplete)
+// instead of a plain <select> you have to scroll through.
+async function preloadDatabases(connSelectId, dbFieldId) {
+  const connSel = document.getElementById(connSelectId);
+  const dbField = document.getElementById(dbFieldId);
+  const datalist = document.getElementById(dbFieldId + '-list');
+  const name = connSel.value;
+  if (!name) {
+    datalist.innerHTML = '';
+    return;
+  }
+  const dbs = await getDatabasesForConnection(name);
+  datalist.innerHTML = '';
+  dbs.forEach(d => {
+    const opt = document.createElement('option');
+    opt.value = d;
+    datalist.appendChild(opt);
+  });
+  const current = dbField.value.trim();
+  if (!current && dbs.includes(DEFAULT_DATABASE)) {
+    dbField.value = DEFAULT_DATABASE;
+  }
+}
+
+async function onSchemaConnChange() {
+  await preloadDatabases('schema-conn', 'schema-db');
+  loadSchema();
+}
+
+async function onSearchConnChange() {
+  await preloadDatabases('search-conn', 'search-db');
+}
+
+function onAskConnChange() {
+  preloadDatabases('ask-conn', 'ask-db');
+}
+
+function onQueryConnChange() {
+  preloadDatabases('query-conn', 'query-db');
+}
+
+function fillSelect(id, names) {
+  const sel = document.getElementById(id);
+  const current = sel.value;
+  sel.innerHTML = '';
+  names.forEach(n => {
+    const opt = document.createElement('option');
+    opt.value = n; opt.textContent = n;
+    sel.appendChild(opt);
+  });
+  if (names.includes(current)) sel.value = current;
+}
+
+async function testConn(name) {
+  const res = await fetch(`/api/test/${encodeURIComponent(name)}`);
+  const data = await res.json();
+  alert(data.ok ? data.message : `Failed: ${data.message}`);
+}
+
+async function removeConn(name) {
+  if (!confirm(`Remove connection '${name}'?`)) return;
+  await fetch(`/api/connections/${encodeURIComponent(name)}`, { method: 'DELETE' });
+  loadConnections();
+}
+
+// Clicking a connection card in the Connections tab sets that connection as
+// the default for EVERY tab (Schema, Search, Data search, Ask, Query) - not
+// just Search - so nothing else has to be repicked when switching tabs.
+// Any tab can still be pointed at a different connection afterwards; that
+// per-tab change is independent and won't get overwritten until the next
+// time a connection card is clicked here.
+async function goToSearchWithConnection(name) {
+  ['schema-conn', 'search-conn', 'data-search-conn', 'ask-conn', 'query-conn'].forEach(id => {
+    document.getElementById(id).value = name;
+  });
+  setSearchMode('data');
+  await Promise.all([
+    preloadDatabases('schema-conn', 'schema-db'),
+    preloadDatabases('search-conn', 'search-db'),
+    preloadDatabases('data-search-conn', 'data-search-db'),
+    preloadDatabases('ask-conn', 'ask-db'),
+    preloadDatabases('query-conn', 'query-db'),
+  ]);
+  if (document.getElementById('schema-conn').value) loadSchema();
+  if (document.getElementById('data-search-conn').value) {
+    preloadTables('data-search-conn', 'data-search-db', 'data-search-table');
+  }
+  document.querySelector('nav.tabs button[data-tab="search"]').click();
+}
+
+function openAddModal() {
+  document.getElementById('add-modal-backdrop').classList.add('active');
+  document.getElementById('add-status').textContent = '';
+  document.getElementById('add-host').value = '';
+  document.getElementById('add-port').value = '3306';
+  document.getElementById('add-user').value = 'root';
+  document.getElementById('add-password').value = '';
+  document.getElementById('add-database').value = '';
+}
+function closeAddModal() {
+  document.getElementById('add-modal-backdrop').classList.remove('active');
+}
+
+async function saveConnection() {
+  const host = document.getElementById('add-host').value.trim();
+  const body = {
+    name: host, // connection name always matches the hostname
+    host: host,
+    port: parseInt(document.getElementById('add-port').value || '3306', 10),
+    user: document.getElementById('add-user').value.trim() || 'root',
+    password: document.getElementById('add-password').value,
+    database: document.getElementById('add-database').value.trim(),
+  };
+  if (!body.host) {
+    document.getElementById('add-status').textContent = 'Host is required.';
+    document.getElementById('add-status').className = 'status error';
+    return;
+  }
+  try {
+    const res = await fetch('/api/connections', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    if (res.ok) {
+      closeAddModal();
+      loadConnections();
+    } else {
+      const detail = await res.text();
+      document.getElementById('add-status').textContent = 'Could not save connection: ' + detail;
+      document.getElementById('add-status').className = 'status error';
+    }
+  } catch (e) {
+    document.getElementById('add-status').textContent = 'Could not reach the server: ' + e.message;
+    document.getElementById('add-status').className = 'status error';
+  }
+}
+
+// ---- Schema (DBeaver-style tree + tabs) ----
+const schemaState = {
+  database: null,
+  schema: {},        // table -> [{column, type, nullable, key}]
+  tables: [],         // sorted table names
+  expanded: new Set(),
+  tabs: [],           // [{id, title, type: 'overview'|'table', table, closable}]
+  activeTab: null,
+};
+
+async function loadSchema() {
+  const name = document.getElementById('schema-conn').value;
+  const database = document.getElementById('schema-db').value.trim();
+  const statusEl = document.getElementById('schema-status');
+  const browserEl = document.getElementById('schema-browser');
+  if (!name) { statusEl.textContent = 'Choose a connection first.'; statusEl.className = 'status error'; return; }
+
+  statusEl.textContent = 'Loading schema...';
+  statusEl.className = 'status';
+
+  const params = new URLSearchParams();
+  if (database) params.set('database', database);
+  let res, data;
+  try {
+    res = await fetch(`/api/schema/${encodeURIComponent(name)}?${params}`);
+    data = await res.json();
+  } catch (e) {
+    statusEl.textContent = 'Could not reach the server: ' + e.message;
+    statusEl.className = 'status error';
+    return;
+  }
+
+  if (!data.ok) {
+    if (data.error === 'no_database_selected') {
+      statusEl.textContent = 'No database selected. Available databases: ' + (data.databases || []).join(', ');
+    } else {
+      statusEl.textContent = 'Error: ' + data.error;
+    }
+    statusEl.className = 'status error';
+    browserEl.style.display = 'none';
+    return;
+  }
+
+  schemaState.database = data.database;
+  schemaState.schema = data.schema || {};
+  schemaState.tables = Object.keys(schemaState.schema).sort();
+  schemaState.expanded = new Set();
+  schemaState.tabs = [];
+  schemaState.activeTab = null;
+
+  statusEl.textContent = `${schemaState.tables.length} table(s) in '${data.database}'.`;
+  statusEl.className = 'status ok';
+  browserEl.style.display = 'block';
+  document.getElementById('schema-filter').value = '';
+  openSchemaOverviewTab();
+}
+
+function openSchemaOverviewTab() {
+  openSchemaTab({ id: '__overview__', title: schemaState.database, type: 'overview', closable: false });
+}
+
+function openSchemaTableTab(table) {
+  openSchemaTab({ id: table, title: table, type: 'table', table, closable: true });
+}
+
+function openSchemaTab(tab) {
+  if (!schemaState.tabs.find(t => t.id === tab.id)) schemaState.tabs.push(tab);
+  schemaState.activeTab = tab.id;
+  renderSchemaAll();
+}
+
+function closeSchemaTab(id, evt) {
+  if (evt) evt.stopPropagation();
+  schemaState.tabs = schemaState.tabs.filter(t => t.id !== id);
+  if (schemaState.activeTab === id) {
+    schemaState.activeTab = schemaState.tabs.length ? schemaState.tabs[schemaState.tabs.length - 1].id : null;
+  }
+  renderSchemaAll();
+}
+
+function toggleSchemaExpand(table, evt) {
+  if (evt) evt.stopPropagation();
+  if (schemaState.expanded.has(table)) schemaState.expanded.delete(table);
+  else schemaState.expanded.add(table);
+  renderSchemaTree();
+}
+
+function expandAllSchema() {
+  schemaState.tables.forEach(t => schemaState.expanded.add(t));
+  renderSchemaTree();
+}
+
+function collapseAllSchema() {
+  schemaState.expanded.clear();
+  renderSchemaTree();
+}
+
+function renderSchemaTree() {
+  const root = document.getElementById('schema-tree');
+  if (!root) return;
+  root.innerHTML = '';
+  const filter = (document.getElementById('schema-filter').value || '').trim().toLowerCase();
+
+  const rootRow = document.createElement('div');
+  rootRow.className = 'schema-node' + (schemaState.activeTab === '__overview__' ? ' active' : '');
+  rootRow.innerHTML = `<span class="schema-caret"></span><span>${schemaState.database} (${schemaState.tables.length} tables)</span>`;
+  rootRow.onclick = openSchemaOverviewTab;
+  root.appendChild(rootRow);
+
+  schemaState.tables.forEach(table => {
+    const cols = schemaState.schema[table] || [];
+    const colMatches = filter ? cols.filter(c => c.column.toLowerCase().includes(filter)) : [];
+    const tableNameMatches = filter && table.toLowerCase().includes(filter);
+    if (filter && !tableNameMatches && colMatches.length === 0) return;
+
+    const isExpanded = schemaState.expanded.has(table) || colMatches.length > 0;
+    const row = document.createElement('div');
+    row.className = 'schema-node' + (schemaState.activeTab === table ? ' active' : '');
+    const caret = document.createElement('span');
+    caret.className = 'schema-caret';
+    caret.textContent = isExpanded ? '▾' : '▸';
+    caret.onclick = (evt) => toggleSchemaExpand(table, evt);
+    const nameSpan = document.createElement('span');
+    nameSpan.textContent = table;
+    if (tableNameMatches) nameSpan.classList.add('schema-match');
+    const countSpan = document.createElement('span');
+    countSpan.className = 'row-count';
+    countSpan.textContent = `${cols.length} col${cols.length === 1 ? '' : 's'}`;
+    row.appendChild(caret);
+    row.appendChild(nameSpan);
+    row.appendChild(countSpan);
+    row.addEventListener('click', () => openSchemaTableTab(table));
+    root.appendChild(row);
+
+    if (isExpanded) {
+      (filter && colMatches.length ? colMatches : cols).forEach(c => {
+        const colRow = document.createElement('div');
+        colRow.className = 'schema-col-row';
+        const nameEl = document.createElement('span');
+        nameEl.textContent = c.column;
+        if (filter && c.column.toLowerCase().includes(filter)) nameEl.classList.add('schema-match');
+        const typeEl = document.createElement('span');
+        typeEl.style.color = 'var(--muted)';
+        typeEl.textContent = c.type;
+        colRow.appendChild(nameEl);
+        colRow.appendChild(typeEl);
+        if (c.key === 'PRI') {
+          const keyEl = document.createElement('span');
+          keyEl.className = 'key';
+          keyEl.textContent = 'PK';
+          colRow.appendChild(keyEl);
+        }
+        root.appendChild(colRow);
+      });
+    }
+  });
+}
+
+function renderSchemaTabBar() {
+  const bar = document.getElementById('schema-tabbar');
+  bar.innerHTML = '';
+  schemaState.tabs.forEach(t => {
+    const tabEl = document.createElement('div');
+    tabEl.className = 'schema-tab' + (schemaState.activeTab === t.id ? ' active' : '');
+    tabEl.addEventListener('click', () => { schemaState.activeTab = t.id; renderSchemaAll(); });
+    const titleEl = document.createElement('span');
+    titleEl.textContent = t.title;
+    tabEl.appendChild(titleEl);
+    if (t.closable) {
+      const xEl = document.createElement('span');
+      xEl.className = 'x';
+      xEl.textContent = '×';
+      xEl.addEventListener('click', (evt) => closeSchemaTab(t.id, evt));
+      tabEl.appendChild(xEl);
+    }
+    bar.appendChild(tabEl);
+  });
+}
+
+function renderSchemaTabContent() {
+  const content = document.getElementById('schema-tabcontent');
+  content.innerHTML = '';
+  const tab = schemaState.tabs.find(t => t.id === schemaState.activeTab);
+  if (!tab) {
+    content.innerHTML = '<div class="status">Click a table on the left, or the database name for an overview.</div>';
+    return;
+  }
+  if (tab.type === 'overview') return renderSchemaOverview(content);
+  renderSchemaTableDetail(content, tab.table);
+}
+
+function renderSchemaOverview(content) {
+  const statusDiv = document.createElement('div');
+  statusDiv.className = 'status ok';
+  statusDiv.textContent = `${schemaState.tables.length} tables in '${schemaState.database}'. Click a row to view its columns.`;
+  content.appendChild(statusDiv);
+
+  const table = document.createElement('table');
+  table.className = 'data';
+  const thead = '<tr><th>Table</th><th>Columns</th></tr>';
+  const rowsHtml = schemaState.tables.map(t => {
+    const cols = schemaState.schema[t] || [];
+    return `<tr style="cursor:pointer;" data-table="${t.replace(/"/g, '&quot;')}"><td>${t}</td><td>${cols.length}</td></tr>`;
+  }).join('');
+  table.innerHTML = thead + rowsHtml;
+  content.appendChild(table);
+  table.querySelectorAll('tr[data-table]').forEach(tr => {
+    tr.addEventListener('click', () => openSchemaTableTab(tr.dataset.table));
+  });
+}
+
+function renderSchemaTableDetail(content, table) {
+  const cols = schemaState.schema[table] || [];
+  const headerRow = document.createElement('div');
+  headerRow.style.display = 'flex';
+  headerRow.style.alignItems = 'center';
+  headerRow.style.justifyContent = 'space-between';
+  const h = document.createElement('h3');
+  h.style.marginTop = '0';
+  h.textContent = table;
+  const btnGroup = document.createElement('div');
+  btnGroup.style.display = 'flex';
+  btnGroup.style.gap = '8px';
+  const queryBtn = document.createElement('button');
+  queryBtn.className = 'btn secondary';
+  queryBtn.textContent = 'Query this table';
+  queryBtn.onclick = () => queryTableInQueryTab(table);
+  const dropTableBtn = document.createElement('button');
+  dropTableBtn.className = 'btn danger';
+  dropTableBtn.textContent = 'Drop table';
+  dropTableBtn.onclick = () => deleteSchemaTable(table);
+  btnGroup.appendChild(queryBtn);
+  btnGroup.appendChild(dropTableBtn);
+  headerRow.appendChild(h);
+  headerRow.appendChild(btnGroup);
+  content.appendChild(headerRow);
+
+  const t = document.createElement('table');
+  t.className = 'data';
+  t.appendChild(el('thead', {}, [el('tr', {}, [
+    el('th', { text: 'Column' }), el('th', { text: 'Type' }), el('th', { text: 'Nullable' }),
+    el('th', { text: 'Key' }), el('th', { text: '' }),
+  ])]));
+  const tbody = el('tbody');
+  cols.forEach(c => {
+    const delBtn = el('button', { class: 'btn danger', text: 'Delete' });
+    delBtn.onclick = () => deleteSchemaColumn(table, c.column);
+    tbody.appendChild(el('tr', {}, [
+      el('td', { text: c.column }),
+      el('td', { text: c.type }),
+      el('td', { text: c.nullable }),
+      el('td', { text: c.key || '' }),
+      el('td', {}, [delBtn]),
+    ]));
+  });
+  t.appendChild(tbody);
+  content.appendChild(t);
+}
+
+// Dropping a column is irreversible - it and all its data are gone for
+// good - so this asks for a simple double confirmation before proceeding.
+async function deleteSchemaColumn(table, column) {
+  if (!confirm(`This permanently deletes the column "${column}", and everything stored in it, from "${table}" - with no undo.\n\nAre you sure?`)) {
+    return;
+  }
+  const name = document.getElementById('schema-conn').value;
+  const database = document.getElementById('schema-db').value;
+  const statusEl = document.getElementById('schema-status');
+  let res, data;
+  try {
+    res = await fetch(`/api/schema/${encodeURIComponent(name)}/drop_column`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ database, table, column }),
+    });
+    data = await res.json();
+  } catch (e) {
+    alert('Could not reach the server: ' + e.message);
+    return;
+  }
+  if (!data.ok) {
+    alert('Failed to drop column: ' + data.error);
+    return;
+  }
+  schemaState.schema[table] = (schemaState.schema[table] || []).filter(c => c.column !== column);
+  statusEl.textContent = `Dropped column "${column}" from "${table}".`;
+  statusEl.className = 'status ok';
+  renderSchemaAll();
+}
+
+// Dropping a whole table is the most destructive action here - structure
+// AND every row, gone for good. Same simple confirm gate as
+// deleteSchemaColumn, but the prompt spells out that it's the whole table.
+async function deleteSchemaTable(table) {
+  if (!confirm(`This permanently deletes the table "${table}" - its structure AND every row in it - with no undo.\n\nAre you sure?`)) {
+    return;
+  }
+  const name = document.getElementById('schema-conn').value;
+  const database = document.getElementById('schema-db').value;
+  const statusEl = document.getElementById('schema-status');
+  let res, data;
+  try {
+    res = await fetch(`/api/schema/${encodeURIComponent(name)}/drop_table`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ database, table }),
+    });
+    data = await res.json();
+  } catch (e) {
+    alert('Could not reach the server: ' + e.message);
+    return;
+  }
+  if (!data.ok) {
+    alert('Failed to drop table: ' + data.error);
+    return;
+  }
+
+  delete schemaState.schema[table];
+  schemaState.tables = schemaState.tables.filter(t => t !== table);
+  schemaState.expanded.delete(table);
+  schemaState.tabs = schemaState.tabs.filter(t => t.id !== table);
+  if (schemaState.activeTab === table) schemaState.activeTab = '__overview__';
+  delete tableListCache[`${name}::${database || ''}`]; // stale now - let it refetch next time
+
+  statusEl.textContent = `Dropped table "${table}".`;
+  statusEl.className = 'status ok';
+  renderSchemaAll();
+}
+
+// Bridges the Schema tab to the Query tab: carries over the same connection
+// and database, drops in a starter SELECT, and switches tabs - so you never
+// have to retype a table name you just looked at.
+function queryTableInQueryTab(table) {
+  const conn = document.getElementById('schema-conn').value;
+  const database = document.getElementById('schema-db').value;
+  document.getElementById('query-conn').value = conn;
+  preloadDatabases('query-conn', 'query-db').then(() => {
+    if (database) document.getElementById('query-db').value = database;
+  });
+  document.getElementById('query-sql').value = `SELECT * FROM \`${table}\` LIMIT 1000`;
+  document.querySelector('nav.tabs button[data-tab="query"]').click();
+}
+
+function renderSchemaAll() {
+  renderSchemaTree();
+  renderSchemaTabBar();
+  renderSchemaTabContent();
+}
+
+// ---- Search ----
+function setSearchMode(mode) {
+  const isNames = mode === 'names';
+  document.getElementById('search-names-panel').style.display = isNames ? 'block' : 'none';
+  document.getElementById('search-data-panel').style.display = isNames ? 'none' : 'block';
+  document.getElementById('search-mode-names').classList.toggle('active', isNames);
+  document.getElementById('search-mode-data').classList.toggle('active', !isNames);
+}
+
+// Table list, per connection+database, shared with the Schema tab's fetch
+// pattern (same /api/schema endpoint) so the dropdown is always the real
+// current table list rather than free-typed and possibly wrong.
+const tableListCache = {}; // "connName::database" -> Promise<string[]>
+
+function getTablesForConnection(name, database) {
+  const key = `${name}::${database || ''}`;
+  if (!tableListCache[key]) {
+    tableListCache[key] = (async () => {
+      try {
+        const params = new URLSearchParams();
+        if (database) params.set('database', database);
+        const res = await fetch(`/api/schema/${encodeURIComponent(name)}?${params}`);
+        const data = await res.json();
+        return data.ok ? Object.keys(data.schema || {}).sort() : [];
+      } catch (e) {
+        return [];
+      }
+    })();
+  }
+  return tableListCache[key];
+}
+
+async function preloadTables(connSelectId, dbSelectId, tableFieldId) {
+  const name = document.getElementById(connSelectId).value;
+  const database = document.getElementById(dbSelectId).value;
+  const datalist = document.getElementById(tableFieldId + '-list');
+  if (!name) {
+    datalist.innerHTML = '';
+    return;
+  }
+  const tables = await getTablesForConnection(name, database);
+  datalist.innerHTML = '';
+  tables.forEach(t => {
+    const opt = document.createElement('option');
+    opt.value = t;
+    datalist.appendChild(opt);
+  });
+  // No forced default here - blank stays "scan multiple tables", which is
+  // itself a deliberate, useful value.
+}
+
+async function onDataSearchConnChange() {
+  await preloadDatabases('data-search-conn', 'data-search-db');
+  preloadTables('data-search-conn', 'data-search-db', 'data-search-table');
+}
+
+function onDataSearchDbChange() {
+  preloadTables('data-search-conn', 'data-search-db', 'data-search-table');
+}
+
+async function runDataSearch() {
+  const name = document.getElementById('data-search-conn').value;
+  const database = document.getElementById('data-search-db').value.trim();
+  const table = document.getElementById('data-search-table').value.trim();
+  const value = document.getElementById('data-search-value').value.trim();
+  const statusEl = document.getElementById('data-search-status');
+  const resultsEl = document.getElementById('data-search-results');
+  resultsEl.innerHTML = '';
+  if (!name) { statusEl.textContent = 'Choose a connection first.'; statusEl.className = 'status error'; return; }
+
+  statusEl.textContent = value ? 'Searching row data - this can take a moment...' : 'Loading data preview - this can take a moment...';
+  statusEl.className = 'status';
+  document.getElementById('data-search-refresh-row').style.display = 'inline-block';
+
+  const limit = parseInt(document.getElementById('data-search-limit').value, 10) || 1000;
+
+  const params = new URLSearchParams({ q: value, limit: String(limit), offset: '0' });
+  if (database) params.set('database', database);
+  if (table) params.set('table', table);
+  let res, data;
+  try {
+    res = await fetch(`/api/search_value/${encodeURIComponent(name)}?${params}`);
+    data = await res.json();
+  } catch (e) {
+    statusEl.textContent = 'Could not reach the server: ' + e.message;
+    statusEl.className = 'status error';
+    return;
+  }
+
+  if (!data.ok) {
+    if (data.error === 'no_database_selected') {
+      statusEl.textContent = 'No database selected. Available databases: ' + (data.databases || []).join(', ');
+    } else {
+      statusEl.textContent = 'Error: ' + data.error;
+    }
+    statusEl.className = 'status error';
+    return;
+  }
+
+  if (!data.results.length) {
+    statusEl.textContent = value
+      ? `No rows containing '${value}' found in '${data.database}'.`
+      : `No rows found in '${data.database}' (table(s) may be empty).`;
+    statusEl.className = 'status';
+    return;
+  }
+
+  const totalRows = data.results.reduce((sum, r) => sum + r.rows.length, 0);
+  const moreNote = data.results.some(r => r.has_more) ? ' (more available per table - see "Load more")' : '';
+  statusEl.textContent = (value
+    ? `${totalRows} matching row(s) so far across ${data.results.length} table(s) in '${data.database}'.`
+    : `Previewing ${totalRows} row(s) so far across ${data.results.length} table(s) in '${data.database}'.`) + moreNote;
+  statusEl.className = 'status ok';
+
+  data.results.forEach(r => renderDataSearchBlock(r, { name, database, table, value, limit }));
+}
+
+function renderDataSearchBlock(r, ctx) {
+  const resultsEl = document.getElementById('data-search-results');
+  const columns = Object.keys(r.rows[0]);
+  let offset = r.rows.length;
+
+  const header = document.createElement('div');
+  header.style.display = 'flex';
+  header.style.justifyContent = 'space-between';
+  header.style.alignItems = 'center';
+  const h = document.createElement('h4');
+  h.style.margin = '0';
+  h.textContent = `${r.table} (${r.rows.length}${r.has_more ? '+' : ''})`;
+  header.appendChild(h);
+
+  const btnGroup = document.createElement('div');
+  btnGroup.style.display = 'flex';
+  btnGroup.style.gap = '8px';
+  const dlBtn = document.createElement('button');
+  dlBtn.className = 'btn secondary';
+  dlBtn.textContent = 'Download CSV';
+  dlBtn.onclick = () => downloadCsv(columns, r.rows);
+  btnGroup.appendChild(dlBtn);
+  const moreBtn = document.createElement('button');
+  moreBtn.className = 'btn secondary';
+  moreBtn.textContent = 'Load more';
+  moreBtn.style.display = r.has_more ? 'inline-block' : 'none';
+  btnGroup.appendChild(moreBtn);
+  header.appendChild(btnGroup);
+  resultsEl.appendChild(header);
+
+  const wrap = document.createElement('div');
+  wrap.className = 'table-scroll';
+  const tableEl = document.createElement('table');
+  tableEl.className = 'data';
+  tableEl.appendChild(el('thead', {}, [el('tr', {}, [
+    ...columns.map(c => el('th', { text: c })),
+    el('th', { text: '' }),
+  ])]));
+  const tbody = el('tbody');
+  tableEl.appendChild(tbody);
+  wrap.appendChild(tableEl);
+  resultsEl.appendChild(wrap);
+
+  const addRows = (rows) => {
+    rows.forEach(row => {
+      const delBtn = el('button', { class: 'btn danger', text: 'Delete' });
+      const tr = el('tr', {}, [
+        ...columns.map(c => el('td', { text: row[c] === null ? '' : String(row[c]) })),
+        el('td', {}, [delBtn]),
+      ]);
+      delBtn.onclick = () => deleteSearchRow(r.table, row, ctx.database, tr, h, r, ctx.name);
+      tbody.appendChild(tr);
+    });
+    h.textContent = `${r.table} (${r.rows.length}${r.has_more ? '+' : ''})`;
+  };
+  addRows(r.rows);
+
+  moreBtn.onclick = async () => {
+    moreBtn.disabled = true;
+    moreBtn.textContent = 'Loading...';
+    const params = new URLSearchParams({
+      q: ctx.value, limit: String(ctx.limit), offset: String(offset), table: r.table,
+    });
+    if (ctx.database) params.set('database', ctx.database);
+    try {
+      const res = await fetch(`/api/search_value/${encodeURIComponent(ctx.name)}?${params}`);
+      const data = await res.json();
+      if (!data.ok || !data.results.length) {
+        moreBtn.style.display = 'none';
+        return;
+      }
+      const next = data.results[0];
+      offset += next.rows.length;
+      r.rows = r.rows.concat(next.rows);
+      addRows(next.rows);
+      r.has_more = next.has_more;
+      moreBtn.style.display = next.has_more ? 'inline-block' : 'none';
+    } finally {
+      moreBtn.disabled = false;
+      moreBtn.textContent = 'Load more';
+    }
+  };
+}
+
+// Deletes exactly the one row shown (matched on every column's value, with
+// a server-side LIMIT 1) - not "all rows like this", just this one. Asks
+// for a plain confirmation first, since a single-row delete is recoverable
+// in spirit (re-insert the same values) even though the DB itself has no undo.
+// Shared by the Search tab's data-search results and the Query tab's
+// single-table SELECT results. `headerEl` (with a live row count in its
+// text) is optional - pass null and use `onDeleted` instead if the caller
+// wants to update its own count display (e.g. Query tab).
+async function deleteSearchRow(table, row, database, trEl, headerEl, resultGroup, name, onDeleted) {
+  if (!name) name = document.getElementById('data-search-conn').value; // back-compat default
+  const summary = Object.entries(row).slice(0, 5).map(([k, v]) => `${k}=${v}`).join(', ');
+  if (!confirm(`Delete this one row from "${table}"?\n\n${summary}${Object.keys(row).length > 5 ? ', ...' : ''}`)) {
+    return;
+  }
+  let res, data;
+  try {
+    res = await fetch(`/api/delete_row/${encodeURIComponent(name)}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ database, table, row }),
+    });
+    data = await res.json();
+  } catch (e) {
+    alert('Could not reach the server: ' + e.message);
+    return;
+  }
+  if (!data.ok) {
+    alert('Failed to delete row: ' + data.error);
+    return;
+  }
+  if (data.affected === 0) {
+    alert('No row matched (it may have already been deleted or changed).');
+    return;
+  }
+  trEl.remove();
+  resultGroup.rows = resultGroup.rows.filter(r => r !== row);
+  if (headerEl) headerEl.textContent = `${table} (${resultGroup.rows.length})`;
+  if (onDeleted) onDeleted();
+}
+
+async function runSearch() {
+  const name = document.getElementById('search-conn').value;
+  const database = document.getElementById('search-db').value.trim();
+  const q = document.getElementById('search-q').value.trim();
+  const statusEl = document.getElementById('search-status');
+  const resultsEl = document.getElementById('search-results');
+  resultsEl.innerHTML = '';
+  if (!name) { statusEl.textContent = 'Choose a connection first.'; statusEl.className = 'status error'; return; }
+
+  statusEl.textContent = 'Searching...';
+  statusEl.className = 'status';
+
+  const params = new URLSearchParams({ q });
+  if (database) params.set('database', database);
+  const res = await fetch(`/api/search/${encodeURIComponent(name)}?${params}`);
+  const data = await res.json();
+
+  if (!data.ok) {
+    if (data.error === 'no_database_selected') {
+      statusEl.textContent = 'No database selected. Available databases: ' + (data.databases || []).join(', ');
+      statusEl.className = 'status error';
+    } else {
+      statusEl.textContent = 'Error: ' + data.error;
+      statusEl.className = 'status error';
+    }
+    return;
+  }
+
+  statusEl.textContent = `${data.matches.length} match(es) in '${data.database}'.`;
+  statusEl.className = 'status ok';
+
+  if (data.matches.length) {
+    const dlBtn = document.createElement('button');
+    dlBtn.className = 'btn secondary';
+    dlBtn.textContent = 'Download CSV';
+    dlBtn.style.marginBottom = '10px';
+    dlBtn.onclick = () => downloadCsv(['table', 'column', 'type'], data.matches);
+    resultsEl.appendChild(dlBtn);
+  }
+
+  const grouped = {};
+  data.matches.forEach(m => {
+    grouped[m.table] = grouped[m.table] || [];
+    grouped[m.table].push(m);
+  });
+  Object.keys(grouped).sort().forEach(table => {
+    const div = document.createElement('div');
+    div.className = 'match-item';
+    const cols = grouped[table].map(m => `${m.column} (${m.type})`).join(', ');
+    div.innerHTML = `<b>${table}</b>: ${cols}`;
+    resultsEl.appendChild(div);
+  });
+}
+
+// ---- Ask Claude ----
+function relationshipsHtml(declared, guessed) {
+  let html = '';
+  if (declared && declared.length) {
+    html += '<div style="margin-top:8px;"><b>Declared foreign keys:</b></div>';
+    declared.forEach(r => {
+      html += `<div class="match-item">${r.table}.${r.column} &rarr; ${r.references_table}.${r.references_column}</div>`;
+    });
+  }
+  if (guessed && guessed.length) {
+    html += '<div style="margin-top:8px;"><b>Possible relationships (by column naming, not a declared foreign key):</b></div>';
+    guessed.forEach(r => {
+      html += `<div class="match-item">${r.table}.${r.column} likely &rarr; ${r.likely_references_table}</div>`;
+    });
+  }
+  if (!declared?.length && !guessed?.length) {
+    html += '<div class="status">No declared or guessed relationships found between the matched tables.</div>';
+  }
+  return html;
+}
+
+function renderResultsTable(tableEl, wrapEl, columns, rows) {
+  tableEl.innerHTML = '';
+  if (!rows || rows.length === 0) {
+    wrapEl.style.display = 'none';
+    return;
+  }
+  const thead = '<tr>' + columns.map(c => `<th>${c}</th>`).join('') + '</tr>';
+  const body = rows.map(r => '<tr>' + columns.map(c => `<td>${r[c] === null ? '' : r[c]}</td>`).join('') + '</tr>').join('');
+  tableEl.innerHTML = thead + body;
+  wrapEl.style.display = 'block';
+}
+
+async function sendToClaude() {
+  const name = document.getElementById('ask-conn').value;
+  const database = document.getElementById('ask-db').value.trim() || null;
+  const question = document.getElementById('ask-question').value.trim();
+  const statusEl = document.getElementById('ask-status');
+  const immediateEl = document.getElementById('ask-immediate');
+  const answerEl = document.getElementById('ask-answer');
+  const resultsTableEl = document.getElementById('ask-results-table');
+  const resultsWrapEl = document.getElementById('ask-results-wrap');
+  immediateEl.innerHTML = '';
+  answerEl.innerHTML = '';
+  resultsWrapEl.style.display = 'none';
+
+  if (!name) { statusEl.textContent = 'Choose a connection first.'; statusEl.className = 'status error'; return; }
+  if (!question) { statusEl.textContent = 'Type a question first.'; statusEl.className = 'status error'; return; }
+
+  statusEl.textContent = 'Asking Claude Code and matching tables - this can take up to a minute...';
+  statusEl.className = 'status';
+
+  let res, data;
+  try {
+    res = await fetch('/api/ask', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, database, question }),
+    });
+    data = await res.json();
+  } catch (e) {
+    statusEl.textContent = 'Could not reach the server: ' + e.message;
+    statusEl.className = 'status error';
+    return;
+  }
+
+  if (!data || !data.ok) {
+    if (data && data.error === 'no_database_selected') {
+      statusEl.textContent = 'No database selected. Available databases: ' + (data.databases || []).join(', ');
+    } else if (data && data.error) {
+      statusEl.textContent = 'Error: ' + data.error;
+    } else if (data && data.detail) {
+      statusEl.textContent = 'Server error: ' + JSON.stringify(data.detail);
+    } else {
+      statusEl.textContent = `Unexpected response (HTTP ${res.status}): ` + JSON.stringify(data);
+    }
+    statusEl.className = 'status error';
+    return;
+  }
+
+  const truncNote = data.matched_tables_truncated
+    ? ` (showing top ${data.matched_tables.length}, more were matched but trimmed for focus)`
+    : '';
+
+  if (data.mode === 'sync') {
+    lastAskSql = data.sql || '';
+    let html = `<div style="margin-top:10px;"><b>Explanation:</b></div>
+      <div class="match-item">${(data.explanation || '').replace(/</g, '&lt;')}</div>
+      <div style="margin-top:10px;"><b>SQL:</b></div>
+      <textarea readonly rows="4" style="width:100%;">${lastAskSql.replace(/</g, '&lt;')}</textarea>
+      <div class="row" style="margin-top:8px;">
+        <button class="btn" onclick="loadAnswerIntoQuery()">Load into Query tab</button>
+      </div>`;
+    answerEl.innerHTML = html;
+
+    if (data.query_error) {
+      statusEl.textContent = `Claude wrote the SQL, but running it failed: ${data.query_error}`;
+      statusEl.className = 'status error';
+    } else {
+      statusEl.textContent = `Answered directly via Claude Code. Matched tables in '${data.database}': ${data.matched_tables.join(', ') || '(none)'}${truncNote}.`;
+      statusEl.className = 'status ok';
+      renderResultsTable(resultsTableEl, resultsWrapEl, data.columns, data.rows);
+    }
+    immediateEl.innerHTML = relationshipsHtml(data.declared_relationships, data.guessed_relationships);
+    return;
+  }
+
+  // mode === 'handoff': Claude Code wasn't available/failed - fall back to the chat relay
+  const reason = data.claude_code_error ? ` (${data.claude_code_error})` : '';
+  statusEl.textContent = `Couldn't get an instant answer${reason}. Saved your question instead - matched tables in ` +
+    `'${data.database}': ${data.matched_tables.join(', ') || '(none)'}${truncNote}. Now go to your Claude chat and say ` +
+    'something like "check my DB question", then come back and click "Check for Claude\'s answer".';
+  statusEl.className = 'status';
+  immediateEl.innerHTML = relationshipsHtml(data.declared_relationships, data.guessed_relationships);
+}
+
+async function checkClaudeAnswer() {
+  const statusEl = document.getElementById('ask-status');
+  const answerEl = document.getElementById('ask-answer');
+  let res, data;
+  try {
+    res = await fetch('/api/ask/response');
+    data = await res.json();
+  } catch (e) {
+    statusEl.textContent = 'Could not reach the server: ' + e.message;
+    statusEl.className = 'status error';
+    return;
+  }
+
+  if (!data || !data.ok) {
+    if (data && data.pending) {
+      statusEl.textContent = 'No answer yet - ask Claude in your chat to check your DB question first.';
+      statusEl.className = 'status';
+    } else if (data && data.error) {
+      statusEl.textContent = 'Error: ' + data.error;
+      statusEl.className = 'status error';
+    } else {
+      statusEl.textContent = `Unexpected response (HTTP ${res.status}): ` + JSON.stringify(data);
+      statusEl.className = 'status error';
+    }
+    answerEl.innerHTML = '';
+    return;
+  }
+
+  statusEl.textContent = "Claude's answer is ready.";
+  statusEl.className = 'status ok';
+  lastAskSql = data.sql || '';
+  answerEl.innerHTML = `
+    <div style="margin-top:10px;"><b>Explanation:</b></div>
+    <div class="match-item">${(data.explanation || '').replace(/</g, '&lt;')}</div>
+    <div style="margin-top:10px;"><b>SQL:</b></div>
+    <textarea readonly rows="4" style="width:100%;">${lastAskSql.replace(/</g, '&lt;')}</textarea>
+    <div class="row" style="margin-top:8px;">
+      <button class="btn" onclick="loadAnswerIntoQuery()">Load into Query tab</button>
+    </div>
+  `;
+}
+
+function loadAnswerIntoQuery() {
+  document.getElementById('query-sql').value = lastAskSql;
+  document.querySelector('nav.tabs button[data-tab="query"]').click();
+}
+
+// ---- Query ----
+function loadSqlFile(evt) {
+  const file = evt.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    document.getElementById('query-sql').value = reader.result;
+    document.getElementById('query-status').textContent = `Loaded ${file.name} (${file.size} bytes).`;
+    document.getElementById('query-status').className = 'status ok';
+  };
+  reader.onerror = () => {
+    document.getElementById('query-status').textContent = `Could not read ${file.name}.`;
+    document.getElementById('query-status').className = 'status error';
+  };
+  reader.readAsText(file);
+  evt.target.value = ''; // allow picking the same file again later
+}
+
+async function runQuery() {
+  const name = document.getElementById('query-conn').value;
+  const database = document.getElementById('query-db').value.trim() || null;
+  const sql = document.getElementById('query-sql').value.trim();
+  const statusEl = document.getElementById('query-status');
+  const resultsEl = document.getElementById('query-results');
+  resultsEl.innerHTML = '';
+
+  if (!name) { statusEl.textContent = 'Choose a connection first.'; statusEl.className = 'status error'; return; }
+  if (!sql) { statusEl.textContent = 'Type or load a SQL query first.'; statusEl.className = 'status error'; return; }
+
+  statusEl.textContent = 'Running...';
+  statusEl.className = 'status';
+
+  let res, data;
+  try {
+    res = await fetch('/api/query_multi', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, database, sql }),
+    });
+    data = await res.json();
+  } catch (e) {
+    statusEl.textContent = 'Could not reach the server: ' + e.message;
+    statusEl.className = 'status error';
+    return;
+  }
+
+  if (!data.ok) {
+    statusEl.textContent = 'Query failed: ' + data.error;
+    statusEl.className = 'status error';
+    return;
+  }
+
+  const results = data.results || [];
+  const failed = results.find(r => !r.ok);
+  const okCount = results.filter(r => r.ok).length;
+
+  if (results.length <= 1) {
+    statusEl.textContent = failed
+      ? `Statement failed: ${failed.error}`
+      : `${results[0] ? results[0].row_count ?? 0 : 0} row(s)/affected.`;
+  } else {
+    statusEl.textContent = failed
+      ? `${okCount} of ${results.length} statement(s) ran before it stopped at an error.`
+      : `All ${results.length} statement(s) ran successfully.`;
+  }
+  statusEl.className = failed ? 'status error' : 'status ok';
+
+  results.forEach((r, i) => {
+    resultsEl.appendChild(renderQueryStatementBlock(r, i + 1, results.length, { name, database }));
+  });
+}
+
+// Only offer row deletion when the source table is unambiguous - a plain
+// "SELECT ... FROM one_table ..." with no JOIN and no comma-joined tables.
+// Anything else (joins, multiple tables, aggregates spanning tables) has no
+// single row to map a delete onto, so we deliberately don't guess.
+function extractSingleTableName(sql) {
+  const trimmed = sql.trim();
+  if (!/^select\b/i.test(trimmed)) return null;
+  if (/\bjoin\b/i.test(trimmed)) return null;
+  const m = trimmed.match(/\bfrom\s+`?([a-zA-Z_][a-zA-Z0-9_]*)`?/i);
+  if (!m) return null;
+  const afterFrom = trimmed.slice(m.index + m[0].length).trim();
+  if (afterFrom.startsWith(',')) return null; // old-style "FROM a, b" join
+  return m[1];
+}
+
+function renderQueryStatementBlock(r, index, total, ctx) {
+  const block = document.createElement('div');
+  block.style.marginTop = '14px';
+
+  const header = document.createElement('div');
+  header.style.display = 'flex';
+  header.style.justifyContent = 'space-between';
+  header.style.alignItems = 'center';
+  const sqlPreview = document.createElement('code');
+  sqlPreview.style.fontSize = '12px';
+  sqlPreview.textContent = total > 1 ? `[${index}/${total}] ${r.sql}` : r.sql;
+  header.appendChild(sqlPreview);
+  if (r.ok && r.rows && r.rows.length) {
+    const dlBtn = document.createElement('button');
+    dlBtn.className = 'btn secondary';
+    dlBtn.textContent = 'Download CSV';
+    dlBtn.onclick = () => downloadCsv(r.columns, r.rows);
+    header.appendChild(dlBtn);
+  }
+  block.appendChild(header);
+
+  if (!r.ok) {
+    const errDiv = document.createElement('div');
+    errDiv.className = 'status error';
+    errDiv.textContent = 'Error: ' + r.error;
+    block.appendChild(errDiv);
+    return block;
+  }
+
+  if (!r.rows || r.rows.length === 0) {
+    const okDiv = document.createElement('div');
+    okDiv.className = 'status ok';
+    okDiv.textContent = `OK - ${r.row_count ?? 0} row(s) affected (no result set).`;
+    block.appendChild(okDiv);
+    return block;
+  }
+
+  const sourceTable = extractSingleTableName(r.sql);
+
+  const wrap = document.createElement('div');
+  wrap.className = 'table-scroll';
+  const tableEl = document.createElement('table');
+  tableEl.className = 'data';
+  tableEl.appendChild(el('thead', {}, [el('tr', {}, [
+    ...r.columns.map(c => el('th', { text: c })),
+    ...(sourceTable ? [el('th', { text: '' })] : []),
+  ])]));
+  const tbody = el('tbody');
+  const countLabel = document.createElement('div');
+  countLabel.className = 'muted';
+  countLabel.style.marginTop = '6px';
+  countLabel.textContent = `${r.rows.length} row(s).`;
+  r.rows.forEach(row => {
+    const cells = r.columns.map(c => el('td', { text: row[c] === null ? '' : String(row[c]) }));
+    if (sourceTable) {
+      const delBtn = el('button', { class: 'btn danger', text: 'Delete' });
+      const tr = el('tr', {}, [...cells, el('td', {}, [delBtn])]);
+      delBtn.onclick = () => deleteSearchRow(sourceTable, row, ctx.database, tr, null, r, ctx.name, () => {
+        countLabel.textContent = `${r.rows.length} row(s).`;
+      });
+      tbody.appendChild(tr);
+    } else {
+      tbody.appendChild(el('tr', {}, cells));
+    }
+  });
+  tableEl.appendChild(tbody);
+  wrap.appendChild(tableEl);
+  block.appendChild(wrap);
+  if (sourceTable) block.appendChild(countLabel);
+
+  if (!sourceTable) {
+    const note = document.createElement('div');
+    note.className = 'muted';
+    note.style.marginTop = '6px';
+    note.textContent = 'Row delete is only available for a plain SELECT from a single table (not joins/multi-table queries).';
+    block.appendChild(note);
+  }
+  return block;
+}
+
+// ---- Query history ----
+async function toggleQueryHistory() {
+  const panel = document.getElementById('query-history');
+  if (panel.style.display !== 'none') {
+    panel.style.display = 'none';
+    return;
+  }
+  panel.style.display = 'block';
+  panel.innerHTML = '<div class="status">Loading history...</div>';
+  let res, data;
+  try {
+    res = await fetch('/api/history?limit=50');
+    data = await res.json();
+  } catch (e) {
+    panel.innerHTML = '<div class="status error">Could not reach the server: ' + e.message + '</div>';
+    return;
+  }
+  if (!data.ok) {
+    panel.innerHTML = '<div class="status error">Could not load history.</div>';
+    return;
+  }
+  if (!data.history.length) {
+    panel.innerHTML = '<div class="status">No queries run yet - run one above and it will show up here.</div>';
+    return;
+  }
+  panel.innerHTML = '';
+  data.history.forEach(h => {
+    const div = document.createElement('div');
+    div.className = 'history-item';
+    let when = h.timestamp;
+    try { when = new Date(h.timestamp).toLocaleString(); } catch (e) {}
+    const statusText = h.ok ? `${h.row_count ?? 0} row(s)` : `error: ${h.error}`;
+    const sqlPreview = (h.sql || '').replace(/</g, '&lt;').slice(0, 160);
+    div.innerHTML = `<div class="meta">${h.connection}${h.database ? '/' + h.database : ''} - ${when} - ${statusText}</div><code>${sqlPreview}</code>`;
+    div.addEventListener('click', async () => {
+      document.getElementById('query-conn').value = h.connection;
+      await preloadDatabases('query-conn', 'query-db');
+      if (h.database) document.getElementById('query-db').value = h.database;
+      document.getElementById('query-sql').value = h.sql || '';
+      panel.style.display = 'none';
+    });
+    panel.appendChild(div);
+  });
+}
+
+function downloadCsv(columns, rows) {
+  if (!rows || rows.length === 0) { alert('Nothing to download.'); return; }
+  const escape = v => {
+    if (v === null || v === undefined) return '';
+    const s = String(v).replace(/"/g, '""');
+    return /[",\n]/.test(s) ? `"${s}"` : s;
+  };
+  const lines = [columns.join(',')];
+  rows.forEach(row => lines.push(columns.map(c => escape(row[c])).join(',')));
+  const blob = new Blob([lines.join('\n')], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'query_results.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+loadConnections();
+</script>
+
+</body>
+</html>

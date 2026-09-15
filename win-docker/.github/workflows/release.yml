@@ -1,0 +1,38 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  package:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with: { go-version: '1.23.x' }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - name: Build control plane
+        shell: pwsh
+        run: go build -trimpath -ldflags "-s -w -X main.version=${{ github.ref_name }}" -o dist/wincolima.exe ./cmd/wincolima
+      - name: Build dashboard package
+        shell: pwsh
+        working-directory: apps/desktop
+        run: |
+          npm install
+          npm run package:nsis
+      - name: Install WiX and build MSI
+        shell: pwsh
+        run: |
+          dotnet tool install --global wix --version 4.*
+          $env:PATH += ";$env:USERPROFILE\.dotnet\tools"
+          New-Item -ItemType Directory -Force -Path dist\msi-input | Out-Null
+          Copy-Item dist\wincolima.exe dist\msi-input\wincolima.exe
+          Copy-Item apps\desktop\release\win-unpacked\WinDock.exe dist\msi-input\WinDock.exe
+          .\installer\build-msi.ps1 -PublishDir (Resolve-Path dist\msi-input) -OutputPath dist\WinDock.msi
+      - uses: softprops/action-gh-release@v2
+        with: { files: 'dist/**' }

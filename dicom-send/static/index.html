@@ -1,0 +1,881 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>DICOM Send</title>
+<style>
+  :root {
+    --bg: #f5f6f8;
+    --panel: #ffffff;
+    --border: #e2e5ea;
+    --text: #1f2430;
+    --muted: #6b7280;
+    --accent: #2f6feb;
+    --accent-dark: #1d4fb8;
+    --danger: #d64545;
+    --warn: #b8860b;
+    --ok: #1a9c5b;
+    --radius: 10px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); }
+  header {
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 24px;
+  }
+  header h1 { font-size: 17px; font-weight: 600; margin: 0; }
+  header .sub { color: var(--muted); font-size: 12px; }
+  main { padding: 24px; max-width: 980px; margin: 0 auto; }
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .panel h2 {
+    font-size: 14px;
+    margin: 0 0 4px 0;
+    font-weight: 600;
+  }
+  .panel .hint { font-size: 12px; color: var(--muted); margin-bottom: 14px; line-height: 1.5; }
+  .field { margin-bottom: 14px; display: flex; flex-direction: column; gap: 4px; }
+  label { font-size: 13px; color: var(--muted); }
+  input[type=text], input[type=number] {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 14px;
+    width: 100%;
+  }
+  input:disabled { background: #f4f5f7; color: var(--muted); }
+  .folder-row { display: flex; gap: 8px; }
+  .folder-row input { flex: 1; }
+  button.btn {
+    border: none;
+    background: var(--accent);
+    color: white;
+    padding: 9px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  button.btn:hover { background: var(--accent-dark); }
+  button.btn:disabled { background: #b9c4d6; cursor: not-allowed; }
+  button.btn.secondary { background: #eef1f6; color: var(--text); }
+  button.btn.secondary:hover { background: #e2e6ee; }
+  button.btn.secondary:disabled { background: #f4f5f7; color: #aeb4bf; }
+  button.btn.danger { background: var(--danger); }
+  button.btn.danger:hover { background: #b83a3a; }
+  button.btn.small { padding: 6px 10px; font-size: 12px; }
+  .status { font-size: 13px; margin: 10px 0; color: var(--muted); white-space: pre-wrap; }
+  .status.error { color: var(--danger); }
+  .status.ok { color: var(--ok); }
+
+  /* targets table */
+  table.targets { width: 100%; border-collapse: collapse; font-size: 13px; }
+  table.targets th {
+    text-align: left;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: var(--muted);
+    font-weight: 600;
+    padding: 0 6px 6px 6px;
+  }
+  table.targets td { padding: 4px 6px; vertical-align: middle; }
+  table.targets tr.disabled td input { opacity: .55; }
+  .echo-cell { font-size: 12px; white-space: nowrap; }
+  .echo-cell.ok { color: var(--ok); }
+  .echo-cell.bad { color: var(--danger); }
+  .echo-cell.pending { color: var(--muted); }
+  .col-en { width: 34px; }
+  .col-port { width: 90px; }
+  .col-act { width: 150px; }
+
+  /* toggles */
+  .toggle-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 0;
+    border-top: 1px solid var(--border);
+  }
+  .toggle-row:first-of-type { border-top: none; }
+  .toggle-row .tr-text { flex: 1; }
+  .toggle-row .tr-text .t { font-size: 13px; font-weight: 600; }
+  .toggle-row .tr-text .d { font-size: 12px; color: var(--muted); line-height: 1.45; }
+  .switch { position: relative; display: inline-block; width: 40px; height: 22px; flex: none; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .slider {
+    position: absolute; cursor: pointer; inset: 0;
+    background: #ccd2dc; border-radius: 22px; transition: .15s;
+  }
+  .slider:before {
+    position: absolute; content: "";
+    height: 16px; width: 16px; left: 3px; bottom: 3px;
+    background: white; border-radius: 50%; transition: .15s;
+  }
+  .switch input:checked + .slider { background: var(--accent); }
+  .switch input:checked + .slider:before { transform: translateX(18px); }
+
+  .sub-settings {
+    margin: 4px 0 12px 0;
+    padding: 12px;
+    background: #fafbfc;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  .sub-settings.hidden { display: none; }
+  .range-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 13px; }
+  .range-row input[type=number] { width: 84px; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  /* progress */
+  .bar-outer { background: #e7eaf0; border-radius: 999px; height: 8px; overflow: hidden; margin: 8px 0; }
+  .bar-inner { background: var(--accent); height: 100%; width: 0%; transition: width .3s; }
+  .bar-inner.done { background: var(--ok); }
+  .bar-inner.bad { background: var(--danger); }
+  .now { font-size: 13px; color: var(--text); min-height: 18px; }
+  .now .wait { color: var(--warn); }
+  table.prog { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 12px; }
+  table.prog th {
+    text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: .04em;
+    color: var(--muted); font-weight: 600; padding: 4px 6px; border-bottom: 1px solid var(--border);
+  }
+  table.prog td { padding: 5px 6px; border-bottom: 1px solid #f0f2f5; }
+  .pill {
+    display: inline-block; padding: 1px 7px; border-radius: 999px;
+    font-size: 11px; font-weight: 600;
+  }
+  .pill.pending { background: #eef1f6; color: var(--muted); }
+  .pill.running { background: #e4edfd; color: var(--accent-dark); }
+  .pill.done { background: #e3f6ec; color: var(--ok); }
+  .pill.failed { background: #fbe6e6; color: var(--danger); }
+  .pill.cancelled { background: #f0f0f0; color: var(--muted); }
+  pre.log {
+    background: #11151c;
+    color: #d8e0ee;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    max-height: 300px;
+    overflow: auto;
+    white-space: pre-wrap;
+    margin-top: 6px;
+  }
+  #send-log-details {
+    margin-top: 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+  }
+  #send-log-details summary {
+    cursor: pointer; font-size: 13px; color: var(--muted); font-weight: 600; user-select: none;
+  }
+  .plan-note { font-size: 12px; color: var(--muted); margin-top: 6px; }
+  .actions { display: flex; gap: 8px; align-items: center; }
+
+  /* modal */
+  .modal-backdrop {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.35);
+    align-items: center; justify-content: center;
+    z-index: 10;
+  }
+  .modal-backdrop.active { display: flex; }
+  .modal {
+    background: var(--panel);
+    border-radius: var(--radius);
+    padding: 16px;
+    width: 520px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+  }
+  .modal h3 { margin: 0 0 10px 0; }
+  .crumb { font-size: 12px; color: var(--muted); margin-bottom: 8px; word-break: break-all; }
+  .shortcuts { display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
+  .entry-list { flex: 1; overflow: auto; border: 1px solid var(--border); border-radius: 8px; }
+  .entry {
+    padding: 8px 12px; cursor: pointer; font-size: 13px; border-bottom: 1px solid var(--border);
+  }
+  .entry:hover { background: #f2f4f8; }
+  .entry.up { color: var(--muted); }
+  .modal-actions { display: flex; justify-content: space-between; margin-top: 10px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>DICOM Send</h1>
+  <div class="sub">Local only - wraps send-to-dicom.sh on this machine</div>
+</header>
+
+<main>
+
+  <!-- FOLDER -->
+  <div class="panel">
+    <div class="field" style="margin-bottom:0;">
+      <label>Folder to send</label>
+      <div class="folder-row">
+        <input type="text" id="folder" placeholder="C:\path\to\study-folder" />
+        <button class="btn secondary" onclick="openBrowser()">Browse...</button>
+      </div>
+      <div class="plan-note" id="plan-note">Pick a folder to see how it splits into series.</div>
+    </div>
+  </div>
+
+  <!-- TARGETS -->
+  <div class="panel">
+    <h2>Destinations</h2>
+    <div class="hint">
+      The folder is sent to each enabled destination one after another, never in parallel -
+      sending to several at once would multiply exactly the load this screen is trying to limit.
+      <b>Test</b> sends a C-ECHO so you can confirm a target is up before committing to a long send.
+    </div>
+    <table class="targets">
+      <thead>
+        <tr>
+          <th class="col-en"></th>
+          <th>Label</th>
+          <th>Host</th>
+          <th class="col-port">Port</th>
+          <th>Called AET</th>
+          <th>Calling AET</th>
+          <th class="col-act"></th>
+        </tr>
+      </thead>
+      <tbody id="targets-body"></tbody>
+    </table>
+    <div class="actions" style="margin-top:12px;">
+      <button class="btn secondary small" onclick="addTarget()">+ Add destination</button>
+      <button class="btn secondary small" onclick="testAll()">Test all</button>
+    </div>
+  </div>
+
+  <!-- PACING -->
+  <div class="panel">
+    <h2>Pacing</h2>
+    <div class="hint">
+      Off, the whole folder goes to one DcmSnd process and leaves as fast as the link allows -
+      that burst is what backs the downstream up. On, the folder is split into series
+      (each subfolder holding files) and sent one series at a time with a random gap in between.
+      Random rather than fixed so the traffic never settles into a lockstep rhythm.
+    </div>
+
+    <div class="toggle-row">
+      <label class="switch"><input type="checkbox" id="throttle_enabled" onchange="syncUI()"><span class="slider"></span></label>
+      <div class="tr-text">
+        <div class="t">Spread the send out over time</div>
+        <div class="d">Pause a random interval between series.</div>
+      </div>
+    </div>
+
+    <div class="sub-settings hidden" id="throttle-settings">
+      <div class="range-row">
+        <span>Between series, wait a random</span>
+        <input type="number" id="series_min_s" min="0" step="0.5" />
+        <span>to</span>
+        <input type="number" id="series_max_s" min="0" step="0.5" />
+        <span>seconds</span>
+      </div>
+
+      <div class="toggle-row" style="margin-top:6px;">
+        <label class="switch"><input type="checkbox" id="file_delay_enabled" onchange="syncUI()"><span class="slider"></span></label>
+        <div class="tr-text">
+          <div class="t">Also stagger files inside each series</div>
+          <div class="d">
+            Each instance goes as its own association with its own random gap. The gentlest option
+            on the receiver, but noticeably slower - one JVM launch per file.
+          </div>
+        </div>
+      </div>
+      <div class="range-row" id="file-range" style="margin-top:4px;">
+        <span>Between files, wait a random</span>
+        <input type="number" id="file_min_s" min="0" step="0.1" />
+        <span>to</span>
+        <input type="number" id="file_max_s" min="0" step="0.1" />
+        <span>seconds</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- HEALTH -->
+  <div class="panel">
+    <h2>Health checks and retry</h2>
+    <div class="hint">
+      Liveness is measured with a DICOM C-ECHO to the same AET/host/port you're sending to -
+      if the target answers an echo it is accepting associations.
+    </div>
+
+    <div class="toggle-row">
+      <label class="switch"><input type="checkbox" id="gate_enabled" onchange="syncUI()"><span class="slider"></span></label>
+      <div class="tr-text">
+        <div class="t">Check health before each series</div>
+        <div class="d">Hold off while the target isn't answering, then carry on once it is.</div>
+      </div>
+    </div>
+
+    <div class="toggle-row">
+      <label class="switch"><input type="checkbox" id="retry_enabled" onchange="syncUI()"><span class="slider"></span></label>
+      <div class="tr-text">
+        <div class="t">Retry failed series once the target recovers</div>
+        <div class="d">
+          A failed series is retried only after an echo succeeds, with a growing backoff -
+          so a struggling receiver isn't met with an immediate retry storm.
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-settings hidden" id="health-settings">
+      <div class="grid3">
+        <div class="field">
+          <label>Max retries per series</label>
+          <input type="number" id="max_retries" min="0" max="10" />
+        </div>
+        <div class="field">
+          <label>Backoff per retry (s)</label>
+          <input type="number" id="retry_backoff_s" min="0" step="1" />
+        </div>
+        <div class="field">
+          <label>Health probes before giving up</label>
+          <input type="number" id="wait_attempts" min="1" max="100" />
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="field">
+          <label>Seconds between health probes</label>
+          <input type="number" id="wait_interval_s" min="1" step="1" />
+        </div>
+        <div class="field">
+          <label>If the target never comes back</label>
+          <select id="abort_target_on_unhealthy"
+                  style="border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:14px;">
+            <option value="true">Stop sending to that target</option>
+            <option value="false">Skip the series and continue</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEND -->
+  <div class="panel">
+    <div class="actions">
+      <button class="btn" id="send-btn" onclick="startSend()">Send</button>
+      <button class="btn danger" id="cancel-btn" onclick="cancelSend()" style="display:none;">Cancel</button>
+      <button class="btn secondary small" onclick="saveSettings()">Save these settings as default</button>
+    </div>
+
+    <div id="send-status" class="status"></div>
+
+    <div id="progress-wrap" style="display:none;">
+      <div class="bar-outer"><div class="bar-inner" id="bar"></div></div>
+      <div class="now" id="now"></div>
+      <table class="prog">
+        <thead>
+          <tr>
+            <th>Destination</th>
+            <th>State</th>
+            <th>Health</th>
+            <th>Series</th>
+            <th>Files sent</th>
+            <th>Failed</th>
+            <th>Retries</th>
+          </tr>
+        </thead>
+        <tbody id="prog-body"></tbody>
+      </table>
+    </div>
+
+    <details id="send-log-details" style="display:none;">
+      <summary id="send-log-summary">Output log</summary>
+      <pre id="send-log" class="log"></pre>
+    </details>
+  </div>
+</main>
+
+<!-- FOLDER BROWSER MODAL -->
+<div class="modal-backdrop" id="browse-modal">
+  <div class="modal">
+    <h3>Choose a folder</h3>
+    <div class="crumb" id="browse-path">Loading...</div>
+    <div class="shortcuts" id="browse-shortcuts"></div>
+    <div class="entry-list" id="browse-entries"></div>
+    <div class="modal-actions">
+      <button class="btn secondary" onclick="closeBrowser()">Cancel</button>
+      <button class="btn" onclick="selectCurrentFolder()">Select this folder</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentBrowsePath = null;
+let targets = [];
+let pollTimer = null;
+let logLen = 0;
+let defaultsCache = null;
+
+const $ = id => document.getElementById(id);
+
+/* ---------------------------------------------------------------- targets */
+
+function addTarget(t) {
+  targets.push(Object.assign({
+    label: '', enabled: true,
+    host: (defaultsCache && defaultsCache.host) || 'localhost',
+    port: (defaultsCache && defaultsCache.port) || 2001,
+    called_aet: (defaultsCache && defaultsCache.called_aet) || 'DW_SCP',
+    calling_aet: (defaultsCache && defaultsCache.calling_aet) || 'ct01',
+    echo: null, echoText: ''
+  }, t || {}));
+  renderTargets();
+}
+
+function removeTarget(i) {
+  targets.splice(i, 1);
+  if (!targets.length) addTarget();
+  else renderTargets();
+}
+
+function renderTargets() {
+  const body = $('targets-body');
+  body.innerHTML = '';
+  targets.forEach((t, i) => {
+    const tr = document.createElement('tr');
+    if (!t.enabled) tr.className = 'disabled';
+    tr.innerHTML = `
+      <td class="col-en"><input type="checkbox" ${t.enabled ? 'checked' : ''} data-i="${i}" data-k="enabled" /></td>
+      <td><input type="text" value="${esc(t.label)}" placeholder="optional" data-i="${i}" data-k="label" /></td>
+      <td><input type="text" value="${esc(t.host)}" data-i="${i}" data-k="host" /></td>
+      <td class="col-port"><input type="number" value="${esc(t.port)}" data-i="${i}" data-k="port" /></td>
+      <td><input type="text" value="${esc(t.called_aet)}" data-i="${i}" data-k="called_aet" /></td>
+      <td><input type="text" value="${esc(t.calling_aet)}" data-i="${i}" data-k="calling_aet" /></td>
+      <td class="col-act">
+        <div style="display:flex;gap:6px;align-items:center;">
+          <button class="btn secondary small" data-test="${i}">Test</button>
+          <button class="btn secondary small" data-del="${i}" title="Remove">&times;</button>
+        </div>
+        <div class="echo-cell ${t.echo === true ? 'ok' : t.echo === false ? 'bad' : 'pending'}">${esc(t.echoText || '')}</div>
+      </td>`;
+    body.appendChild(tr);
+  });
+
+  body.querySelectorAll('input[data-k]').forEach(el => {
+    el.addEventListener(el.type === 'checkbox' ? 'change' : 'input', e => {
+      const i = +e.target.dataset.i, k = e.target.dataset.k;
+      targets[i][k] = e.target.type === 'checkbox' ? e.target.checked
+                    : e.target.type === 'number' ? (parseInt(e.target.value, 10) || 0)
+                    : e.target.value;
+      if (k === 'enabled') renderTargets();
+    });
+  });
+  body.querySelectorAll('button[data-test]').forEach(el => {
+    el.onclick = () => testTarget(+el.dataset.test);
+  });
+  body.querySelectorAll('button[data-del]').forEach(el => {
+    el.onclick = () => removeTarget(+el.dataset.del);
+  });
+}
+
+function esc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+async function testTarget(i) {
+  const t = targets[i];
+  t.echo = null; t.echoText = 'testing...'; renderTargets();
+  try {
+    const res = await fetch('/api/echo', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ host: t.host, port: t.port, called_aet: t.called_aet, calling_aet: t.calling_aet })
+    });
+    const d = await res.json();
+    t.echo = !!d.ok;
+    t.echoText = d.ok ? `responding (${d.ms} ms)` : 'no response';
+    if (!d.ok && d.detail) appendLogLine(`C-ECHO ${d.scp} failed: ${d.detail.split('\n').slice(-1)[0]}`);
+  } catch (e) {
+    t.echo = false; t.echoText = 'test failed';
+  }
+  renderTargets();
+}
+
+async function testAll() {
+  for (let i = 0; i < targets.length; i++) {
+    if (targets[i].enabled) await testTarget(i);
+  }
+}
+
+/* ------------------------------------------------------------- plan/folder */
+
+let planTimer = null;
+$('folder').addEventListener('input', () => {
+  clearTimeout(planTimer);
+  planTimer = setTimeout(refreshPlan, 400);
+});
+
+async function refreshPlan() {
+  const folder = $('folder').value.trim();
+  const note = $('plan-note');
+  if (!folder) { note.textContent = 'Pick a folder to see how it splits into series.'; return; }
+  note.textContent = 'Checking folder...';
+  try {
+    const res = await fetch('/api/plan?folder=' + encodeURIComponent(folder));
+    const d = await res.json();
+    if (!d.ok) { note.textContent = d.error; return; }
+    let msg = `${d.files} file(s) in ${d.groups} series.`;
+    if ($('throttle_enabled').checked && d.groups > 1) {
+      const lo = +$('series_min_s').value || 0, hi = +$('series_max_s').value || 0;
+      const gaps = d.groups - 1;
+      const avg = ((lo + hi) / 2) * gaps;
+      msg += ` Pacing adds roughly ${fmtDur(gaps * lo)}-${fmtDur(gaps * hi)} of waiting (about ${fmtDur(avg)} typical), on top of transfer time.`;
+    }
+    if ($('throttle_enabled').checked && $('file_delay_enabled').checked && d.files > 1) {
+      const lo = +$('file_min_s').value || 0, hi = +$('file_max_s').value || 0;
+      const gaps = d.files - d.groups;
+      msg += ` File staggering adds about ${fmtDur(gaps * (lo + hi) / 2)} more.`;
+    }
+    note.textContent = msg;
+  } catch (e) {
+    note.textContent = 'Could not check the folder: ' + e.message;
+  }
+}
+
+function fmtDur(s) {
+  s = Math.round(s);
+  if (s < 60) return s + 's';
+  const m = Math.floor(s / 60), r = s % 60;
+  if (m < 60) return r ? `${m}m ${r}s` : `${m}m`;
+  const h = Math.floor(m / 60);
+  return `${h}h ${m % 60}m`;
+}
+
+/* -------------------------------------------------------------------- UI */
+
+function syncUI() {
+  const th = $('throttle_enabled').checked;
+  $('throttle-settings').classList.toggle('hidden', !th);
+  const fd = $('file_delay_enabled').checked;
+  ['file_min_s', 'file_max_s'].forEach(id => $(id).disabled = !fd);
+  $('file-range').style.opacity = fd ? 1 : .5;
+
+  const showHealth = $('gate_enabled').checked || $('retry_enabled').checked;
+  $('health-settings').classList.toggle('hidden', !showHealth);
+  $('max_retries').disabled = !$('retry_enabled').checked;
+  $('retry_backoff_s').disabled = !$('retry_enabled').checked;
+
+  refreshPlan();
+}
+
+function readForm() {
+  return {
+    folder: $('folder').value.trim(),
+    targets: targets.map(t => ({
+      label: t.label, enabled: t.enabled, host: t.host, port: t.port,
+      called_aet: t.called_aet, calling_aet: t.calling_aet
+    })),
+    throttle: {
+      enabled: $('throttle_enabled').checked,
+      series_min_s: +$('series_min_s').value || 0,
+      series_max_s: +$('series_max_s').value || 0,
+      file_delay_enabled: $('file_delay_enabled').checked,
+      file_min_s: +$('file_min_s').value || 0,
+      file_max_s: +$('file_max_s').value || 0
+    },
+    health: {
+      gate_enabled: $('gate_enabled').checked,
+      retry_enabled: $('retry_enabled').checked,
+      max_retries: +$('max_retries').value || 0,
+      retry_backoff_s: +$('retry_backoff_s').value || 0,
+      wait_attempts: +$('wait_attempts').value || 1,
+      wait_interval_s: +$('wait_interval_s').value || 1,
+      abort_target_on_unhealthy: $('abort_target_on_unhealthy').value === 'true'
+    }
+  };
+}
+
+function applyConfig(d) {
+  const th = d.throttle || {}, h = d.health || {};
+  $('throttle_enabled').checked = !!th.enabled;
+  $('series_min_s').value = th.series_min_s != null ? th.series_min_s : 2;
+  $('series_max_s').value = th.series_max_s != null ? th.series_max_s : 8;
+  $('file_delay_enabled').checked = !!th.file_delay_enabled;
+  $('file_min_s').value = th.file_min_s != null ? th.file_min_s : 0.2;
+  $('file_max_s').value = th.file_max_s != null ? th.file_max_s : 1.5;
+
+  $('gate_enabled').checked = !!h.gate_enabled;
+  $('retry_enabled').checked = !!h.retry_enabled;
+  $('max_retries').value = h.max_retries != null ? h.max_retries : 2;
+  $('retry_backoff_s').value = h.retry_backoff_s != null ? h.retry_backoff_s : 5;
+  $('wait_attempts').value = h.wait_attempts != null ? h.wait_attempts : 6;
+  $('wait_interval_s').value = h.wait_interval_s != null ? h.wait_interval_s : 10;
+  $('abort_target_on_unhealthy').value = (h.abort_target_on_unhealthy === false) ? 'false' : 'true';
+
+  targets = [];
+  (d.targets && d.targets.length ? d.targets : [{}]).forEach(t => targets.push(Object.assign({
+    label: '', enabled: true, host: d.host, port: d.port,
+    called_aet: d.called_aet, calling_aet: d.calling_aet, echo: null, echoText: ''
+  }, t)));
+  renderTargets();
+  syncUI();
+}
+
+async function loadDefaults() {
+  try {
+    const res = await fetch('/api/defaults');
+    defaultsCache = await res.json();
+  } catch (e) {
+    defaultsCache = { host: 'localhost', port: 2001, called_aet: 'DW_SCP', calling_aet: 'ct01' };
+  }
+  applyConfig(defaultsCache);
+  ['series_min_s', 'series_max_s', 'file_min_s', 'file_max_s'].forEach(id => {
+    $(id).addEventListener('input', () => { clearTimeout(planTimer); planTimer = setTimeout(refreshPlan, 400); });
+  });
+  pollJob(); // pick up a run already in progress (e.g. after a page refresh)
+}
+
+async function saveSettings() {
+  const f = readForm();
+  const statusEl = $('send-status');
+  try {
+    const res = await fetch('/api/settings', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ targets: f.targets, throttle: f.throttle, health: f.health })
+    });
+    const d = await res.json();
+    statusEl.textContent = d.ok ? 'Saved - these become the defaults next time you open this page.'
+                               : 'Could not save: ' + d.error;
+    statusEl.className = d.ok ? 'status ok' : 'status error';
+  } catch (e) {
+    statusEl.textContent = 'Could not save: ' + e.message;
+    statusEl.className = 'status error';
+  }
+}
+
+/* ------------------------------------------------------------------ send */
+
+async function startSend() {
+  const payload = readForm();
+  const statusEl = $('send-status');
+
+  if (!payload.folder) { statusEl.textContent = 'Choose a folder first.'; statusEl.className = 'status error'; return; }
+  if (!payload.targets.some(t => t.enabled)) { statusEl.textContent = 'Enable at least one destination.'; statusEl.className = 'status error'; return; }
+
+  $('send-btn').disabled = true;
+  logLen = 0;
+  $('send-log').textContent = '';
+  statusEl.textContent = 'Starting...';
+  statusEl.className = 'status';
+
+  let d;
+  try {
+    const res = await fetch('/api/send', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    d = await res.json();
+  } catch (e) {
+    statusEl.textContent = 'Could not reach the server: ' + e.message;
+    statusEl.className = 'status error';
+    $('send-btn').disabled = false;
+    return;
+  }
+
+  if (!d.ok) {
+    statusEl.textContent = 'Error: ' + d.error;
+    statusEl.className = 'status error';
+    $('send-btn').disabled = false;
+    return;
+  }
+
+  statusEl.textContent = `Sending ${d.files} file(s) in ${d.groups} series to ${d.targets.length} destination(s).`;
+  statusEl.className = 'status';
+  $('progress-wrap').style.display = 'block';
+  $('send-log-details').style.display = 'block';
+  $('cancel-btn').style.display = 'inline-block';
+  startPolling();
+}
+
+async function cancelSend() {
+  $('cancel-btn').disabled = true;
+  try { await fetch('/api/cancel', { method: 'POST' }); } catch (e) {}
+  $('cancel-btn').disabled = false;
+}
+
+function startPolling() {
+  if (pollTimer) clearInterval(pollTimer);
+  pollJob();
+  pollTimer = setInterval(pollJob, 1000);
+}
+
+function appendLogLine(line) {
+  const logEl = $('send-log');
+  logEl.textContent += (logEl.textContent ? '\n' : '') + line;
+  $('send-log-details').style.display = 'block';
+}
+
+async function pollJob() {
+  let d;
+  try {
+    const res = await fetch('/api/job?log_from=' + logLen);
+    d = await res.json();
+  } catch (e) { return; }
+
+  if (d.state === 'idle') return;
+
+  $('progress-wrap').style.display = 'block';
+  $('send-log-details').style.display = 'block';
+
+  const bar = $('bar');
+  bar.style.width = (d.percent || 0) + '%';
+  bar.className = 'bar-inner' + (d.state === 'done' ? ' done' : (d.state === 'error' || d.state === 'cancelled') ? ' bad' : '');
+
+  const anyFailed = (d.targets || []).some(t => t.state === 'failed');
+  let nowText = '';
+  if (d.state === 'running') {
+    nowText = d.current || 'Working...';
+    if (d.waiting_seconds_left != null) {
+      nowText = `<span class="wait">${esc(nowText)} (${d.waiting_seconds_left}s)</span>`;
+      $('now').innerHTML = nowText;
+    } else {
+      $('now').textContent = nowText;
+    }
+    $('cancel-btn').style.display = 'inline-block';
+    $('send-btn').disabled = true;
+  } else {
+    $('now').textContent = `${d.state === 'done' ? 'Finished' : d.state === 'cancelled' ? 'Cancelled' : 'Stopped'} after ${fmtDur(d.elapsed)} - ${d.done_units}/${d.total_units} file-sends attempted.`;
+    $('cancel-btn').style.display = 'none';
+    $('send-btn').disabled = false;
+    if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+    const statusEl = $('send-status');
+    if (d.state === 'done') {
+      statusEl.textContent = anyFailed ? 'Finished, but some series failed - see the log.' : 'All series sent successfully.';
+      statusEl.className = anyFailed ? 'status error' : 'status ok';
+    } else if (d.state === 'cancelled') {
+      statusEl.textContent = 'Cancelled.'; statusEl.className = 'status';
+    } else if (d.state === 'error') {
+      statusEl.textContent = 'Error: ' + (d.error || 'unknown'); statusEl.className = 'status error';
+    }
+  }
+
+  const body = $('prog-body');
+  body.innerHTML = '';
+  (d.targets || []).forEach(t => {
+    const tr = document.createElement('tr');
+    const healthTxt = t.health === 'ok' ? 'responding' : t.health === 'down' ? 'not responding' : '-';
+    tr.innerHTML = `
+      <td>${esc(t.name)}<div style="color:var(--muted);font-size:11px;">${esc(t.scp)}</div></td>
+      <td><span class="pill ${esc(t.state)}">${esc(t.state)}</span></td>
+      <td class="${t.health === 'ok' ? 'echo-cell ok' : t.health === 'down' ? 'echo-cell bad' : 'echo-cell pending'}">${healthTxt}</td>
+      <td>${t.groups_done}/${t.groups_total}${t.groups_skipped ? ` (${t.groups_skipped} skipped)` : ''}</td>
+      <td>${t.files_sent}</td>
+      <td>${t.files_failed || 0}</td>
+      <td>${t.retries || 0}</td>`;
+    body.appendChild(tr);
+  });
+
+  if (d.log && d.log.length) {
+    const logEl = $('send-log');
+    logEl.textContent += (logEl.textContent ? '\n' : '') + d.log.join('\n');
+    logEl.scrollTop = logEl.scrollHeight;
+    logLen = d.log_len;
+    const lineCount = logEl.textContent.split('\n').length;
+    $('send-log-summary').textContent = `Output log (${lineCount} line${lineCount === 1 ? '' : 's'}) - click to expand`;
+    if (anyFailed || d.state === 'error') $('send-log-details').open = true;
+  }
+}
+
+/* ---------------------------------------------------------------- browser */
+
+async function openBrowser() {
+  $('browse-modal').classList.add('active');
+  await renderBrowse(null);
+}
+
+function closeBrowser() {
+  $('browse-modal').classList.remove('active');
+}
+
+function selectCurrentFolder() {
+  if (currentBrowsePath) {
+    $('folder').value = currentBrowsePath;
+    refreshPlan();
+  }
+  closeBrowser();
+}
+
+async function renderBrowse(path) {
+  const pathEl = $('browse-path');
+  const shortcutsEl = $('browse-shortcuts');
+  const entriesEl = $('browse-entries');
+  pathEl.textContent = 'Loading...';
+  entriesEl.innerHTML = '';
+
+  const params = path ? new URLSearchParams({ path }) : new URLSearchParams();
+  let data;
+  try {
+    const res = await fetch(`/api/browse?${params}`);
+    data = await res.json();
+  } catch (e) {
+    pathEl.textContent = 'Could not reach the server: ' + e.message;
+    return;
+  }
+
+  if (!data.ok) {
+    pathEl.textContent = 'Error: ' + data.error;
+    return;
+  }
+
+  currentBrowsePath = data.path;
+  pathEl.textContent = data.path || 'Choose a starting point below';
+
+  shortcutsEl.innerHTML = '';
+  if (data.shortcuts) {
+    Object.entries(data.shortcuts).forEach(([label, p]) => {
+      const btn = document.createElement('button');
+      btn.className = 'btn secondary';
+      btn.textContent = label;
+      btn.onclick = () => renderBrowse(p);
+      shortcutsEl.appendChild(btn);
+    });
+  }
+  if (data.drives && data.drives.length) {
+    data.drives.forEach(dr => {
+      const btn = document.createElement('button');
+      btn.className = 'btn secondary';
+      btn.textContent = dr;
+      btn.onclick = () => renderBrowse(dr);
+      shortcutsEl.appendChild(btn);
+    });
+  }
+
+  entriesEl.innerHTML = '';
+  if (data.parent) {
+    const up = document.createElement('div');
+    up.className = 'entry up';
+    up.textContent = '.. (up one level)';
+    up.onclick = () => renderBrowse(data.parent);
+    entriesEl.appendChild(up);
+  }
+  (data.entries || []).forEach(e => {
+    const div = document.createElement('div');
+    div.className = 'entry';
+    div.textContent = e.name;
+    div.onclick = () => renderBrowse(e.path);
+    entriesEl.appendChild(div);
+  });
+  if (!data.parent && (!data.entries || data.entries.length === 0) && !(data.shortcuts && Object.keys(data.shortcuts).length)) {
+    entriesEl.innerHTML = '<div class="entry">No subfolders here.</div>';
+  }
+}
+
+loadDefaults();
+</script>
+
+</body>
+</html>

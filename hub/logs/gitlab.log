@@ -1,0 +1,20 @@
+[hub] 2026-09-11T17:11:16.504506 launching gitlab
+[hub] cwd: C:\Users\250020392\OneDrive - GE HealthCare\Desktop\local-setup\gitlab
+[hub] cmd: C:\Users\250020392\OneDrive - GE HealthCare\Desktop\local-setup\gitlab\.venv\Scripts\python.exe run.py
+
+INFO:     Started server process [7044]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:51786 (Press CTRL+C to quit)
+[GitLab Focus] Opening http://127.0.0.1:51786
+INFO:     127.0.0.1:60923 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60923 - "GET /static/styles.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53525 - "GET /static/app.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53525 - "GET /api/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53537 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59484 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60923 - "GET /api/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53525 - "GET /api/dashboard HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52001 - "GET /api/dashboard HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52001 - "GET /api/code-review/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52001 - "GET /api/code-review/config HTTP/1.1" 200 OK

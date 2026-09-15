@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>GitLab Focus</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2218%22 fill=%22%230a6b73%22/><path d=%22M18 34h8l5-15 7 28 5-13h6%22 fill=%22none%22 stroke=%22white%22 stroke-width=%225%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/></svg>">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 36 36"><rect width="36" height="36" rx="11"/><path d="M9 19h5l3-9 4 17 3-8h4"/></svg>
+        </span>
+        <span><strong>GitLab</strong><small>Focus</small></span>
+      </div>
+
+      <nav class="primary-nav" aria-label="Main navigation">
+        <p class="nav-label">Workspace</p>
+        <button class="nav-item active" data-view="overview">
+          <span class="nav-icon">⌂</span><span>Overview</span>
+        </button>
+        <button class="nav-item" data-view="merge-requests">
+          <span class="nav-icon">⑂</span><span>Merge requests</span><span class="nav-count" id="nav-mr-count">—</span>
+        </button>
+        <button class="nav-item" data-view="my-mrs">
+          <span class="nav-icon">◔</span><span>Merge requests by me</span><span class="nav-count" id="nav-my-mr-count">—</span>
+        </button>
+        <button class="nav-item" data-view="reports">
+          <span class="nav-icon">▤</span><span>SD report</span>
+        </button>
+        <button class="nav-item" data-view="code-review">
+          <span class="nav-icon">⧉</span><span>Code review</span>
+        </button>
+        <button class="nav-item" data-view="tasks">
+          <span class="nav-icon">✓</span><span>My action center</span><span class="nav-dot hidden" id="nav-task-dot"></span>
+        </button>
+        <button class="nav-item" data-view="projects">
+          <span class="nav-icon">▱</span><span>Projects</span>
+        </button>
+        <p class="nav-label nav-label-spaced">System</p>
+        <button class="nav-item" data-view="settings">
+          <span class="nav-icon">⚙</span><span>Connection</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="connection-pill"><span class="status-dot" id="connection-dot"></span><span id="connection-text">Connecting…</span></div>
+        <p>Local dashboard<br><span>Token stays on this machine</span></p>
+      </div>
+    </aside>
+
+    <div class="main-column">
+      <header class="topbar">
+        <button class="icon-button mobile-menu" id="mobile-menu" aria-label="Toggle navigation">☰</button>
+        <div class="global-search">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4"/></svg>
+          <input id="global-search" type="search" placeholder="Search projects, merge requests, authors…" autocomplete="off">
+          <kbd>Ctrl K</kbd>
+        </div>
+        <div class="topbar-actions">
+          <span class="refresh-time" id="refresh-time">Not refreshed</span>
+          <button class="button button-quiet" id="refresh-button"><span class="refresh-icon">↻</span><span>Refresh</span></button>
+          <div class="user-avatar" id="user-avatar" title="Current GitLab user">YO</div>
+        </div>
+      </header>
+
+      <main class="content">
+        <div class="notice hidden" id="notice" role="status"></div>
+        <div class="demo-banner hidden" id="demo-banner">
+          <span class="demo-icon">◇</span>
+          <div><strong>Preview mode</strong><span>You’re viewing realistic sample data. Add a GitLab token to connect this workspace.</span></div>
+          <button class="button button-small" data-connect-token>Connect GitLab</button>
+        </div>
+
+        <section class="view active" id="view-overview">
+          <div class="page-heading heading-row">
+            <div><p class="eyebrow" id="group-path">PIA RESTRICTED</p><h1>Good <span id="day-period">morning</span>, <span id="first-name">there</span>.</h1><p>Here’s what needs your attention across the group.</p></div>
+            <a class="button button-secondary" id="open-group" href="#" target="_blank" rel="noreferrer">Open in GitLab <span>↗</span></a>
+          </div>
+
+          <div class="metric-grid" id="metric-grid">
+            <button class="metric-card accent-coral" data-filter="needs_approval">
+              <span class="metric-icon">✓</span><span class="metric-value skeleton-text" data-metric="needs_my_approval">—</span>
+              <span class="metric-label">Needs my approval</span><span class="metric-trend">Review queue →</span>
+            </button>
+            <button class="metric-card accent-blue" data-filter="waiting_reply">
+              <span class="metric-icon">↩</span><span class="metric-value skeleton-text" data-metric="waiting_for_reply">—</span>
+              <span class="metric-label">Waiting for reply</span><span class="metric-trend">Your open threads →</span>
+            </button>
+            <button class="metric-card accent-violet" data-filter="assigned">
+              <span class="metric-icon">◎</span><span class="metric-value skeleton-text" data-metric="assigned_to_me">—</span>
+              <span class="metric-label">Assigned to me</span><span class="metric-trend">Take action →</span>
+            </button>
+            <button class="metric-card accent-mint" data-filter="all">
+              <span class="metric-icon">⑂</span><span class="metric-value skeleton-text" data-metric="open_merge_requests">—</span>
+              <span class="metric-label">Open merge requests</span><span class="metric-trend">Across all projects →</span>
+            </button>
+          </div>
+
+          <div class="overview-grid">
+            <article class="panel attention-panel">
+              <div class="panel-heading"><div><p class="eyebrow">PRIORITY QUEUE</p><h2>Needs attention</h2></div><button class="text-button" data-view-link="merge-requests">View all <span>→</span></button></div>
+              <div class="priority-list" id="priority-list"><div class="empty-state compact"><div class="loading-ring"></div><p>Loading your review queue…</p></div></div>
+            </article>
+
+            <article class="panel pulse-panel">
+              <div class="panel-heading"><div><p class="eyebrow">GROUP PULSE</p><h2>Merge health</h2></div><span class="score-pill" id="health-score">—</span></div>
+              <div class="donut-row">
+                <div class="donut" id="health-donut"><div><strong id="healthy-count">—</strong><span>on track</span></div></div>
+                <div class="health-legend">
+                  <button data-health-filter="healthy"><i class="legend-dot healthy"></i><span>On track</span><strong id="legend-healthy">—</strong></button>
+                  <button data-health-filter="stale"><i class="legend-dot stale"></i><span>Stale</span><strong id="legend-stale">—</strong></button>
+                  <button data-health-filter="pipeline_failed"><i class="legend-dot failed"></i><span>Pipeline failed</span><strong id="legend-failed">—</strong></button>
+                </div>
+              </div>
+              <div class="pulse-foot"><span>Health combines freshness and pipeline state</span><span id="pulse-total">— MRs</span></div>
+            </article>
+
+            <article class="panel task-panel">
+              <div class="panel-heading"><div><p class="eyebrow">MY ISSUES</p><h2>Pending tasks</h2></div><button class="text-button" data-view-link="tasks">Action center <span>→</span></button></div>
+              <div id="task-preview" class="task-preview"></div>
+            </article>
+
+            <article class="panel project-panel">
+              <div class="panel-heading"><div><p class="eyebrow">PROJECTS</p><h2>Busiest folders</h2></div><button class="text-button" data-view-link="projects">Browse <span>→</span></button></div>
+              <div id="project-preview" class="project-preview"></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="view" id="view-merge-requests">
+          <div class="page-heading"><p class="eyebrow">REVIEW WORKSPACE</p><h1>Merge requests</h1><p>Find every open merge request and move the right work forward.</p></div>
+          <div class="toolbar panel">
+            <div class="filter-tabs" id="mr-filter-tabs">
+              <button class="active" data-attention="all">All <span id="filter-all-count">0</span></button>
+              <button data-attention="needs_approval">Needs approval <span id="filter-approval-count">0</span></button>
+              <button data-attention="waiting_reply">Waiting reply <span id="filter-waiting-count">0</span></button>
+              <button data-attention="assigned">Assigned <span id="filter-assigned-count">0</span></button>
+              <button data-attention="stale">Stale <span id="filter-stale-count">0</span></button>
+            </div>
+            <div class="toolbar-controls">
+              <label class="field field-search"><span>⌕</span><input type="search" id="mr-search" placeholder="Search title, author or !ID"></label>
+              <label class="field"><span class="sr-only">Project folder</span><select id="project-filter"><option value="">All project folders</option></select></label>
+              <label class="field"><span class="sr-only">Pipeline</span><select id="pipeline-filter"><option value="">Any pipeline</option><option value="passed">Passed</option><option value="running">Running</option><option value="failed">Failed</option><option value="none">No pipeline</option></select></label>
+            </div>
+          </div>
+          <div class="panel table-panel">
+            <div class="table-meta"><span id="mr-result-count">Loading merge requests…</span><button class="text-button" id="clear-filters">Clear filters</button></div>
+            <div class="mr-table" id="mr-table"></div>
+          </div>
+        </section>
+
+        <section class="view" id="view-my-mrs">
+          <div class="page-heading"><p class="eyebrow">MY CONTRIBUTIONS</p><h1>Merge requests by me</h1><p>Everything you authored across the group, grouped by where it stands.</p></div>
+          <div class="action-columns" id="my-mr-columns"></div>
+        </section>
+
+        <section class="view" id="view-reports">
+          <div class="page-heading"><p class="eyebrow">CONTRIBUTOR REPORT</p><h1>SD report</h1><p>Pick a person to pull their open and merged merge requests, grouped under each SD work item.</p></div>
+          <div class="toolbar panel">
+            <form id="report-form" class="report-form">
+              <label class="field field-search report-author"><span>⌕</span><input type="search" id="report-author" list="report-authors" placeholder="Type a name or username" autocomplete="off" required><datalist id="report-authors"></datalist></label>
+              <div class="report-states">
+                <label><input type="checkbox" id="report-state-opened" value="opened" checked> Open</label>
+                <label><input type="checkbox" id="report-state-merged" value="merged" checked> Merged</label>
+                <label><input type="checkbox" id="report-state-closed" value="closed"> Closed</label>
+              </div>
+              <button class="button" type="submit" id="report-generate">Generate report</button>
+              <button class="button button-secondary" type="button" id="report-copy" disabled>Copy report</button>
+            </form>
+          </div>
+          <div class="report-summary hidden" id="report-summary"></div>
+          <div class="report-groups" id="report-groups"><div class="empty-state"><strong>No report yet</strong><p>Choose a contributor and select Generate report.</p></div></div>
+        </section>
+
+        <section class="view" id="view-code-review">
+          <div class="page-heading"><p class="eyebrow">BRANCH REVIEW</p><h1>Code review</h1><p>Pick a branch, pull its diff against the target, and copy a ready-made prompt to review it with Claude.</p></div>
+          <div class="toolbar panel">
+            <form id="review-form" class="review-form">
+              <label class="field review-project"><span class="sr-only">Project</span><select id="review-project"><option value="">Select a project…</option></select></label>
+              <label class="field field-search review-branch"><span>⑂</span><input type="search" id="review-source" list="review-branches" placeholder="Branch to review" autocomplete="off" required></label>
+              <label class="field field-search review-branch"><span>→</span><input type="search" id="review-target" list="review-branches" placeholder="Target branch (default)" autocomplete="off"></label>
+              <button class="button" type="submit" id="review-load">Load diff</button>
+              <datalist id="review-branches"></datalist>
+            </form>
+          </div>
+          <div class="review-config panel" id="review-config">
+            <label class="field review-root-field"><span class="sr-only">Local projects folder</span><span class="review-config-label">Local projects folder</span><input type="text" id="review-root" placeholder="C:\Users\...\project" autocomplete="off"></label>
+            <button class="button button-secondary" type="button" id="review-root-save">Save folder</button>
+            <span class="review-checkout-status" id="review-checkout-status"></span>
+          </div>
+          <div class="review-note panel hidden" id="review-note"></div>
+          <div class="review-summary hidden" id="review-summary"></div>
+          <div class="review-actions hidden" id="review-actions">
+            <button class="button" id="review-run-claude">Review with Claude</button>
+            <button class="button button-secondary" id="review-copy-verdict">Copy verdict</button>
+            <button class="button button-secondary" id="review-copy-result">Copy full review</button>
+            <button class="button button-secondary" id="review-copy-prompt">Copy review prompt</button>
+            <button class="button button-secondary" id="review-copy-diff">Copy raw diff</button>
+            <a class="button button-secondary" id="review-open-compare" href="#" target="_blank" rel="noreferrer">Open compare in GitLab ↗</a>
+          </div>
+
+          <div class="review-results hidden" id="review-results">
+            <details class="review-collapse" id="collapse-readiness" open>
+              <summary><span class="collapse-title">Reviewer readiness</span><span class="collapse-badge" id="readiness-badge">—</span></summary>
+              <div class="collapse-body" id="readiness-content"></div>
+            </details>
+            <details class="review-collapse" id="collapse-claude">
+              <summary><span class="collapse-title">Claude code review</span><span class="collapse-badge" id="claude-badge">not run</span></summary>
+              <div class="collapse-body markdown" id="review-result"><div class="empty-state compact"><p>Select “Review with Claude” above to generate an automated review.</p></div></div>
+            </details>
+            <details class="review-collapse" id="collapse-diff">
+              <summary><span class="collapse-title">Diff</span><span class="collapse-badge" id="diff-badge">—</span></summary>
+              <div class="collapse-body" id="review-body"></div>
+            </details>
+
+            <article class="panel comments-panel" id="comments-panel">
+              <div class="panel-heading">
+                <div><p class="eyebrow">POST TO GITLAB</p><h2>Comments to post</h2></div>
+                <div class="comments-actions">
+                  <button class="text-button" type="button" id="comments-select-all">Select all</button>
+                  <button class="button button-small" type="button" id="comments-post">Post selected to GitLab</button>
+                </div>
+              </div>
+              <p class="comments-target" id="comments-target"></p>
+              <div class="comments-list" id="comments-list"></div>
+            </article>
+          </div>
+
+          <div class="review-body-placeholder" id="review-placeholder"><div class="empty-state"><strong>No branch loaded</strong><p>Choose a project and branch, then select Load diff.</p></div></div>
+        </section>
+
+        <section class="view" id="view-tasks">
+          <div class="page-heading"><p class="eyebrow">PERSONAL QUEUE</p><h1>My action center</h1><p>Reviews, conversations, assignments, and issues waiting on you.</p></div>
+          <div class="action-columns" id="action-columns"></div>
+        </section>
+
+        <section class="view" id="view-projects">
+          <div class="page-heading heading-row"><div><p class="eyebrow">GROUP DIRECTORY</p><h1>Projects</h1><p>Search every project and subgroup folder from one place.</p></div><label class="field project-search"><span>⌕</span><input type="search" id="project-search" placeholder="Search project or folder"></label></div>
+          <div class="project-summary" id="project-summary"></div>
+          <div class="folder-groups" id="folder-groups"></div>
+        </section>
+
+        <section class="view" id="view-settings">
+          <div class="page-heading"><p class="eyebrow">LOCAL CONFIGURATION</p><h1>GitLab connection</h1><p>The browser never receives your access token. FastAPI makes requests from this computer.</p></div>
+          <div class="settings-layout">
+            <article class="panel settings-card">
+              <div class="settings-hero"><span class="settings-icon">⌁</span><div><h2 id="settings-status-title">Checking connection…</h2><p id="settings-status-copy">Reading the local configuration.</p></div></div>
+              <dl class="config-list">
+                <div><dt>Group URL</dt><dd id="config-group-url">—</dd></div>
+                <div><dt>Mode</dt><dd id="config-mode">—</dd></div>
+                <div><dt>Write actions</dt><dd id="config-write">—</dd></div>
+                <div><dt>Refresh cache</dt><dd id="config-cache">—</dd></div>
+                <div><dt>Stale threshold</dt><dd id="config-stale">—</dd></div>
+              </dl>
+              <div class="connection-actions">
+                <button class="button" id="settings-connect-token" data-connect-token>Connect with token</button>
+                <button class="button button-secondary" id="toggle-write-actions">Enable GitLab write actions</button>
+                <span id="connection-refresh-hint" class="connection-refresh-hint hidden">Token saved. Refresh to load live data.</span>
+              </div>
+            </article>
+            <article class="panel setup-card">
+              <p class="eyebrow">SETUP</p><h2>Connect from this dashboard</h2>
+              <ol class="setup-steps">
+                <li><span>1</span><div><strong>Create a GitLab token</strong><p>Use <code>read_api</code> scope. Add <code>api</code> only if you enable approvals.</p></div></li>
+                <li><span>2</span><div><strong>Select “Connect with token”</strong><p>The server validates it before saving anything.</p></div></li>
+                <li><span>3</span><div><strong>Refresh when ready</strong><p>The displayed data stays unchanged until you refresh.</p></div></li>
+              </ol>
+              <div class="security-note"><strong>Security note</strong><p>Keep <code>.env</code> private. It is ignored by Git and never exposed by the configuration API.</p></div>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div class="drawer-backdrop hidden" id="drawer-backdrop"></div>
+  <aside class="detail-drawer" id="detail-drawer" aria-hidden="true">
+    <div class="drawer-header"><span class="eyebrow">MERGE REQUEST DETAILS</span><button class="icon-button" id="drawer-close" aria-label="Close details">×</button></div>
+    <div id="drawer-content"></div>
+  </aside>
+
+  <div class="modal-backdrop hidden" id="token-modal-backdrop"></div>
+  <section class="connection-modal hidden" id="token-modal" role="dialog" aria-modal="true" aria-labelledby="token-modal-title">
+    <form id="token-form">
+      <div class="modal-heading">
+        <span class="connection-lock">⌁</span>
+        <div><p class="eyebrow">LOCAL CONNECTION</p><h2 id="token-modal-title">Connect your GitLab account</h2></div>
+        <button class="icon-button" type="button" id="token-modal-close" aria-label="Close token prompt">×</button>
+      </div>
+      <p class="modal-copy">Enter a personal access token for <strong id="token-group-name">pia_restricted</strong>. It will be validated, then saved only in this dashboard’s local <code>.env</code> file.</p>
+      <label class="token-field" for="gitlab-token">
+        <span>GitLab personal access token</span>
+        <div><input id="gitlab-token" name="token" type="password" minlength="8" maxlength="512" autocomplete="off" spellcheck="false" placeholder="Paste token here" required><button type="button" id="toggle-token" aria-label="Show token">Show</button></div>
+      </label>
+      <p class="token-help">Recommended scope: <code>read_api</code>. The value is never returned to the browser after saving.</p>
+      <div class="modal-error hidden" id="token-error" role="alert"></div>
+      <div class="modal-actions"><button class="button button-secondary" type="button" id="token-cancel">Cancel</button><button class="button" type="submit" id="token-submit">Validate &amp; save token</button></div>
+    </form>
+  </section>
+
+  <div class="toast-region" id="toast-region" aria-live="polite"></div>
+  <script type="module" src="/static/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+{
+  "name": "wincolima-desktop",
+  "version": "0.1.2",
+  "private": true,
+  "author": "Saurabh Gupta",
+  "description": "WinDock desktop dashboard — created and owned by Saurabh Gupta",
+  "main": "out/main/main.js",
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.electron.json",
+    "build": "vite build && tsc -p tsconfig.electron.json",
+    "dev": "npm run build && electron .",
+    "package:nsis": "npm run build && electron-builder --win nsis"
+  },
+  "dependencies": {
+    "@emotion/react": "11.14.0",
+    "@emotion/styled": "11.14.0",
+    "@mui/icons-material": "7.0.2",
+    "@mui/material": "7.0.2",
+    "electron-updater": "6.6.2",
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.15.2",
+    "@types/react": "19.1.2",
+    "@types/react-dom": "19.1.2",
+    "@vitejs/plugin-react": "4.4.1",
+    "electron": "36.2.0",
+    "electron-builder": "26.0.12",
+    "typescript": "5.8.3",
+    "vite": "6.3.5"
+  },
+  "build": {
+    "appId": "org.wincolima.desktop",
+    "productName": "WinDock",
+    "copyright": "Copyright © 2026 Saurabh Gupta. All rights reserved.",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "out/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "../../dist/wincolima.exe",
+        "to": "bin/wincolima.exe"
+      },
+      {
+        "from": "../../scripts/packaged-bootstrap.ps1",
+        "to": "bootstrap/packaged-bootstrap.ps1"
+      }
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "artifactName": "${productName}-${version}-setup.${ext}",
+      "legalTrademarks": "WinDock — created and owned by Saurabh Gupta",
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "perMachine": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "menuCategory": "WinDock — Created by Saurabh Gupta",
+      "uninstallDisplayName": "WinDock — Created and owned by Saurabh Gupta",
+      "include": "build/installer.nsh"
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "wincolima",
+        "repo": "wincolima"
+      }
+    ]
+  },
+  "allowScripts": {
+    "electron@36.2.0": true,
+    "electron-winstaller@5.4.0": true,
+    "esbuild@0.25.12": true
+  }
+}

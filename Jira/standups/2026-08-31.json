@@ -1,0 +1,117 @@
+{
+  "standup_date": "2026-08-31",
+  "sprint": "1055",
+  "generated_at": "2026-08-31T15:54:14",
+  "entries": [
+    {
+      "person_id": "550025448",
+      "person": "AamirHusain Syed1",
+      "tickets": [
+        {
+          "key": "SD-19070",
+          "summary": "[DoseWatch] DC Scan Fix - minimist (npm)",
+          "update": ""
+        },
+        {
+          "key": "SD-19066",
+          "summary": "flatted / flat (npm)",
+          "update": ""
+        },
+        {
+          "key": "SD-19069",
+          "summary": "[DoseWatch] DC Scan Fix - getobject (npm)",
+          "update": ""
+        }
+      ],
+      "blockers": "",
+      "notes": "On leave"
+    },
+    {
+      "person_id": "250007071",
+      "person": "Anant Singh",
+      "tickets": [
+        {
+          "key": "SD-19049",
+          "summary": "Handlebars",
+          "update": "IN progrees with code changes"
+        },
+        {
+          "key": "SD-19048",
+          "summary": "Lodash / lodash-es",
+          "update": ""
+        },
+        {
+          "key": "SD-19047",
+          "summary": "Apache CXF - part 2",
+          "update": "IN progrees with code changes"
+        }
+      ],
+      "blockers": "",
+      "notes": ""
+    },
+    {
+      "person_id": "250008846",
+      "person": "Praveen Maurya",
+      "tickets": [
+        {
+          "key": "SD-19124",
+          "summary": "Denmark  DRL Template Update",
+          "update": "Debugging RF issue iwth old version"
+        },
+        {
+          "key": "SD-19058",
+          "summary": "ActiveMQ Artemis (8 modules)",
+          "update": "Analysis in progress"
+        }
+      ],
+      "blockers": "",
+      "notes": "Waiting for UK template update to finish denmark & UK together"
+    },
+    {
+      "person_id": "250019548",
+      "person": "saleem dheen",
+      "tickets": [
+        {
+          "key": "SD-19060",
+          "summary": "Spring Framework (spring-core) -DICOM Listener",
+          "update": "Started working"
+        },
+        {
+          "key": "SD-19121",
+          "summary": "Pen Quiz- Dose Services modules(SD-19059)",
+          "update": "Code in review"
+        },
+        {
+          "key": "SD-19054",
+          "summary": "Quartz Scheduler",
+          "update": "Will close the ticket"
+        },
+        {
+          "key": "SD-19057",
+          "summary": "Spring Framework(spring-core)",
+          "update": "Code in review"
+        },
+        {
+          "key": "SD-19065",
+          "summary": "Pen Quiz -GEAdvancedLogs Password",
+          "update": "Duplicate of SD-19121 will close"
+        }
+      ],
+      "blockers": "",
+      "notes": ""
+    },
+    {
+      "person_id": "250020392",
+      "person": "saurabh gupta",
+      "tickets": [
+        {
+          "key": "SD-19108",
+          "summary": "Acquisition Duration resolver: manufacturer/modality test coverage",
+          "update": "Tested with Vishwa prod data - changes working for GE\nphillips & Siemens data trying ot get details of translator configuration\ncorner case merge request raised"
+        }
+      ],
+      "blockers": "",
+      "notes": ""
+    }
+  ]
+}

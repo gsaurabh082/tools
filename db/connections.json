@@ -1,0 +1,23 @@
+{
+  "10.12.56.212": {
+    "host": "10.12.56.212",
+    "port": 3306,
+    "user": "root",
+    "password": "Stra67000",
+    "database": "serphydose"
+  },
+  "10.12.132.24": {
+    "host": "10.12.132.24",
+    "port": 3306,
+    "user": "root",
+    "password": "Stra67000",
+    "database": ""
+  },
+  "10.12.57.207": {
+    "host": "10.12.57.207",
+    "port": 3306,
+    "user": "root",
+    "password": "Stra67000",
+    "database": ""
+  }
+}

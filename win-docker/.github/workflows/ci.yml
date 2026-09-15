@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  control-plane:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with: { go-version: '1.23.x' }
+      - name: Vet and test Go
+        shell: pwsh
+        run: |
+          go mod tidy
+          $unformatted = gofmt -l (Get-ChildItem -Recurse -Filter *.go | ForEach-Object FullName)
+          if ($unformatted) { throw "Go files must be formatted:`n$($unformatted -join "`n")" }
+          go vet ./...
+          go test -race -coverprofile=coverage.out ./...
+          go tool cover -func=coverage.out
+      - name: Build signed-artifact candidate
+        shell: pwsh
+        run: go build -trimpath -ldflags "-s -w -X main.version=$env:GITHUB_SHA" -o dist/wincolima.exe ./cmd/wincolima
+      - uses: actions/upload-artifact@v4
+        with: { name: wincolima-cli, path: dist/wincolima.exe }
+  desktop:
+    runs-on: windows-2022
+    defaults: { run: { working-directory: apps/desktop } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: npm ci --ignore-scripts
+      - run: npm run typecheck
+      - run: npm run build
+      - name: Audit production dependencies
+        run: npm audit --omit=dev --audit-level=high

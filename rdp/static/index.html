@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Local RDP host launcher and manager.">
+  <title>RDP Host Manager</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="RDP Host Manager home">
+        <span class="brand-mark" aria-hidden="true">RDP</span>
+        <span>
+          <strong>RDP Host Manager</strong>
+          <small>Saved hosts &amp; one-click connect</small>
+        </span>
+      </a>
+      <div class="topbar-status">
+        <span class="status-dot" aria-hidden="true"></span>
+        <span>Hosts stored on this PC only</span>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div>
+          <p class="eyebrow">LOCAL RDP LAUNCHER</p>
+          <p class="hero-copy">Save a host once. Connect logs you in as
+            <code>.\vmadmin</code> automatically, using the default password
+            unless you've set a custom one for that host.</p>
+        </div>
+        <div class="hero-meta">
+          <span>Default user</span>
+          <strong id="hero-default-user">.\vmadmin</strong>
+          <span>Default password</span>
+          <strong>Used until you set one</strong>
+        </div>
+      </section>
+
+      <section class="workspace">
+        <aside class="setup-card" aria-labelledby="form-title">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow" id="form-eyebrow">ADD HOST</p>
+              <h2 id="form-title">Save a new host</h2>
+            </div>
+            <span class="secure-note">Encrypted on this account</span>
+          </div>
+
+          <form id="host-form">
+            <input type="hidden" id="host-id" value="">
+
+            <label for="alias">Alias / name</label>
+            <input id="alias" name="alias" type="text" placeholder="e.g. Build Agent 3" required maxlength="120">
+
+            <label for="ip">Host IP or hostname</label>
+            <input id="ip" name="ip" type="text" placeholder="10.20.30.40" required maxlength="260" autocomplete="off">
+
+            <label for="username">Username</label>
+            <input id="username" name="username" type="text" placeholder=".\vmadmin" maxlength="200" autocomplete="off">
+
+            <label for="password">Password</label>
+            <div class="secret-input">
+              <input id="password" name="password" type="password"
+                placeholder="Leave blank to use the default password" autocomplete="new-password" maxlength="300">
+              <button id="toggle-password" type="button" class="text-button" aria-label="Show password">Show</button>
+            </div>
+            <label class="check-label" id="keep-password-row" hidden>
+              <input id="keep-password" type="checkbox" checked>
+              <span>Keep the currently saved password</span>
+            </label>
+            <p class="muted" id="password-hint">Blank = default password (LocalAdm1n!). Type one to save it for this host.</p>
+
+            <div class="form-actions">
+              <button id="save-button" class="primary-button" type="submit">
+                <span class="button-label">Save host</span>
+                <span class="button-loader" aria-hidden="true"></span>
+              </button>
+              <button id="cancel-edit" class="secondary-button" type="button" hidden>Cancel edit</button>
+            </div>
+          </form>
+          <div id="form-error" class="error-message" role="alert" hidden></div>
+        </aside>
+
+        <section class="results" aria-live="polite">
+          <div class="result-header">
+            <div>
+              <p class="eyebrow">SAVED HOSTS</p>
+              <h2>Your hosts</h2>
+              <p class="muted" id="host-count"></p>
+            </div>
+          </div>
+
+          <div id="list-error" class="error-message" role="alert" hidden></div>
+
+          <div id="empty-state" class="empty-state" hidden>
+            <p class="eyebrow">NO HOSTS YET</p>
+            <h2>Add your first host on the left.</h2>
+            <p>Once saved, Connect will log straight in without a login prompt.</p>
+          </div>
+
+          <div class="table-scroll">
+            <table id="hosts-table">
+              <thead>
+                <tr>
+                  <th>Alias</th>
+                  <th>Host</th>
+                  <th>Username</th>
+                  <th>Password</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="hosts-body"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+    </main>
+    <footer>Hosts and passwords are encrypted with Windows DPAPI for this Windows account and never leave this PC.
+      Connecting stages the credential in Windows Credential Manager just long enough for mstsc to use it, then removes it.</footer>
+  </div>
+</body>
+</html>

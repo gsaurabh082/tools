@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Paste a list of SD tickets to get an engineering-comment and DW-version analysis.">
+  <title>SD Ticket Analysis</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <script src="/static/sd_analysis.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Jira Weekly Report home">
+        <span class="brand-mark" aria-hidden="true">JF</span>
+        <span><strong>Jira Weekly Report</strong><small>SD ticket analysis</small></span>
+      </a>
+      <nav class="view-nav" aria-label="Report sections">
+        <a href="/">Weekly report</a>
+        <a href="/standup">Daily standup</a>
+        <a href="/assignments">Assignment &amp; backlog</a>
+        <a class="active" href="/sd-analysis">SD analysis</a>
+        <a href="/bulk-create">Bulk create</a>
+      </nav>
+      <div class="topbar-status"><span class="status-dot"></span><span>Read-only scan</span></div>
+    </header>
+
+    <main>
+      <section class="workspace">
+        <aside class="setup-card" aria-labelledby="sd-setup-title">
+          <div class="section-heading">
+            <div><p class="eyebrow">CONNECTION</p><h2 id="sd-setup-title">Analyze SD tickets</h2></div>
+            <span class="secure-note">Token encrypted</span>
+          </div>
+          <form id="sd-analysis-form">
+            <label for="base-url">Jira URL</label>
+            <input id="base-url" type="url" placeholder="https://jira.your-company.com" required>
+
+            <div class="field-grid">
+              <div>
+                <label for="api-mode">Jira type</label>
+                <select id="api-mode">
+                  <option value="auto">Detect automatically</option>
+                  <option value="server">Data Center / Server</option>
+                  <option value="cloud">Jira Cloud</option>
+                </select>
+              </div>
+              <div>
+                <label for="auth-type">Authentication</label>
+                <select id="auth-type">
+                  <option value="auto">Choose automatically</option>
+                  <option value="bearer">Personal access token</option>
+                  <option value="basic">Email + API token</option>
+                </select>
+              </div>
+            </div>
+
+            <div id="username-field">
+              <label for="username">Username / Cloud email</label>
+              <input id="username" type="text" placeholder="your.name@company.com">
+            </div>
+
+            <label for="token">API token or PAT</label>
+            <div class="secret-input">
+              <input id="token" type="password" placeholder="Saved token will be used when available">
+              <button id="toggle-token" type="button" class="text-button">Show</button>
+            </div>
+            <label class="check-label">
+              <input id="save-token" type="checkbox" checked>
+              <span>Remember securely on this Windows account</span>
+            </label>
+            <p id="saved-token-status" class="saved-token-status" hidden></p>
+
+            <label for="tickets">SD tickets</label>
+            <textarea id="tickets" rows="14" spellcheck="false"
+              placeholder="One ticket per line, e.g.&#10;SD-16275&#10;SD-18650&#10;SD-19075/SD-19076/SD-18950 (slash-joined keys are combined into one row)"></textarea>
+            <p class="muted" style="margin: 6px 0 0; font-size: 11px;">Paste up to 200 rows. Use a slash to combine linked tickets (e.g. duplicates) into a single output row.</p>
+
+            <button id="run-button" class="primary-button" type="submit">
+              <span class="button-label">Run SD analysis</span>
+              <span class="button-loader"></span>
+            </button>
+          </form>
+          <div id="form-error" class="error-message" role="alert" hidden></div>
+        </aside>
+
+        <section class="results" aria-live="polite">
+          <div id="empty-state" class="empty-state">
+            <div class="empty-visual"><span></span><span></span><span></span></div>
+            <p class="eyebrow">ENGINEERING COMMENT REVIEW</p>
+            <h2>Your SD analysis will appear here.</h2>
+            <p>Paste a list of SD keys and run the scan to see each ticket's
+              latest engineering comment, DW version, created date, and age.</p>
+          </div>
+          <div id="loading-state" class="loading-state" hidden>
+            <div class="scan-animation"></div>
+            <p class="eyebrow">READING COMMENTS</p>
+            <h2>Building the SD analysis…</h2>
+            <p>Fetching each ticket's fields and comments from Jira.</p>
+          </div>
+
+          <div id="sd-results" hidden>
+            <div class="result-header">
+              <div>
+                <p class="eyebrow">ENGINEERING COMMENT REVIEW</p>
+                <h2>SD ticket analysis</h2>
+                <p id="report-caption" class="muted"></p>
+              </div>
+              <div id="download-actions" class="download-actions"></div>
+            </div>
+            <div id="metric-grid" class="metric-grid"></div>
+
+            <section class="data-card">
+              <div class="card-heading issue-heading">
+                <div><p class="eyebrow">PER TICKET</p><h3>Engineering comment, DW version, and age</h3></div>
+                <div class="filters">
+                  <input id="row-search" type="search" placeholder="Search SD key, summary, or comment text"
+                    aria-label="Search by SD key, summary, or comment text">
+                  <select id="age-filter" aria-label="Filter by age">
+                    <option value="all">All tickets</option>
+                    <option value="old">Older than 1 year</option>
+                    <option value="recent">1 year or newer</option>
+                  </select>
+                </div>
+              </div>
+              <div class="table-scroll">
+                <table>
+                  <thead><tr>
+                    <th>SD</th><th>Summary</th><th>Status</th><th>Created</th><th>Age</th>
+                    <th>Affected version(s)</th><th>Fix version(s)</th><th>Engineering comment</th>
+                  </tr></thead>
+                  <tbody id="sd-table"></tbody>
+                </table>
+              </div>
+              <p id="row-count" class="table-footnote"></p>
+            </section>
+          </div>
+        </section>
+      </section>
+    </main>
+    <footer>Read-only ticket scan · Jira issues remain unchanged</footer>
+  </div>
+</body>
+</html>

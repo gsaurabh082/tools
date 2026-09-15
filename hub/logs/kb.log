@@ -1,0 +1,32 @@
+[hub] 2026-08-31T13:43:04.405110 launching kb
+[hub] cwd: C:\Users\250020392\OneDrive - GE HealthCare\Desktop\local-setup\kb\dosewatch-quickfind
+[hub] cmd: C:\windows\system32\cmd.exe /c C:\Users\250020392\OneDrive - GE HealthCare\Desktop\local-setup\kb\dosewatch-quickfind\Start DoseWatch Quick.bat
+
+Starting DoseWatch Quick (API + UI)...
+UI:  http://127.0.0.1:3000
+API: http://127.0.0.1:8080
+
+> dosewatch-quick@0.1.0 dev
+> node scripts/dev.mjs
+
+Starting DoseWatch Quick API on http://127.0.0.1:8080 …
+INFO:     Started server process [3500]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8080 (Press CTRL+C to quit)
+INFO:     127.0.0.1:53579 - "GET /api/health HTTP/1.1" 200 OK
+DoseWatch Quick API is ready. Source indexing continues in the background.
+Starting DoseWatch Quick UI …
+
+  vinext dev  (Vite 8.0.13)
+
+(node:30196) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[2m1:43:13 pm[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m Re-optimizing dependencies because vite config has changed
+[2m1:43:13 pm[22m [36m[1m[vite][22m[39m [34m[2m(rsc)[22m[39m Re-optimizing dependencies because vite config has changed
+Using secrets defined in .env.local
+[2m1:43:17 pm[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [optimizer] bundling dependencies...
+[2m1:43:17 pm[22m [36m[1m[vite][22m[39m [34m[2m(rsc)[22m[39m [optimizer] bundling dependencies...
+[2m1:43:19 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m Re-optimizing dependencies because vite config has changed
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m3000[22m/[39m
+  [32m➜[39m  [1mDebug[22m:   [2m[33mhttp://localhost:[1m3000[22m[2m/__debug[39m[22m

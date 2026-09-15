@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package wincolima.v1;
+
+option go_package = "github.com/wincolima/wincolima/api/gen/go/wincolima/v1";
+
+service RuntimeService {
+  rpc GetStatus(GetStatusRequest) returns (RuntimeStatus);
+  rpc ListContainers(ListContainersRequest) returns (ListContainersResponse);
+  rpc ContainerAction(ContainerActionRequest) returns (ContainerActionResponse);
+  rpc StreamContainerLogs(StreamContainerLogsRequest) returns (stream LogLine);
+}
+
+message GetStatusRequest {}
+message ListContainersRequest { bool all = 1; }
+message RuntimeStatus { string distro = 1; string state = 2; string runtime = 3; bool docker_ready = 4; uint32 cpus = 5; uint32 memory_gib = 6; }
+message Container { string id = 1; string name = 2; string image = 3; string status = 4; }
+message ListContainersResponse { repeated Container containers = 1; }
+message ContainerActionRequest { string id = 1; enum Action { ACTION_UNSPECIFIED = 0; START = 1; STOP = 2; RESTART = 3; DELETE = 4; } Action action = 2; }
+message ContainerActionResponse { string output = 1; }
+message StreamContainerLogsRequest { string id = 1; uint32 tail = 2; bool follow = 3; }
+message LogLine { string line = 1; string stream = 2; }

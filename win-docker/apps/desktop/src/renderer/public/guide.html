@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WinDock Setup Guide</title>
+    <style>
+      :root { color-scheme: dark; --page:#09111f; --panel:#132137; --line:#263b58; --text:#edf5ff; --muted:#a9bad1; --cyan:#5ee7f2; --green:#76d978; --amber:#ffcf70; }
+      * { box-sizing: border-box; } body { margin:0; color:var(--text); background:linear-gradient(135deg,#09111f,#0d192b 65%,#10243a); font:15px/1.55 "Segoe UI",system-ui,sans-serif; }
+      header { padding:38px max(28px,calc((100vw - 1000px)/2)); border-bottom:1px solid var(--line); background:rgba(11,25,44,.84); }
+      h1 { margin:0; font-size:32px; letter-spacing:-.03em; } h2 { margin:0 0 12px; font-size:21px; } p { margin:8px 0; color:var(--muted); }
+      main { max-width:1000px; margin:0 auto; padding:28px; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; } section { background:rgba(19,33,55,.92); border:1px solid var(--line); border-radius:14px; padding:22px; } .wide { grid-column:1/-1; }
+      .owner { color:var(--cyan); font-weight:650; } .lead { max-width:720px; font-size:17px; } ol,ul { padding-left:21px; color:var(--muted); } li { margin:7px 0; }
+      code { color:#d8f7ff; background:#0a1525; border:1px solid #263b58; border-radius:5px; padding:2px 5px; font-family:Consolas,monospace; font-size:.92em; }
+      pre { margin:13px 0 0; padding:15px; overflow:auto; background:#081322; border:1px solid #233a59; border-radius:9px; color:#d6f5ff; font:13px/1.55 Consolas,monospace; }
+      .ready { color:var(--green); font-weight:650; } .note { border-left:3px solid var(--amber); padding:10px 13px; background:rgba(255,207,112,.07); border-radius:0 8px 8px 0; } footer { max-width:1000px; margin:0 auto; padding:0 28px 36px; color:#8093ad; font-size:13px; }
+      @media (max-width:720px) { main { grid-template-columns:1fr; padding:18px; } .wide { grid-column:auto; } header { padding:26px 18px; } }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>WinDock setup guide</h1>
+      <p class="owner">Created and owned by Saurabh Gupta</p>
+      <p class="lead">Offline instructions for Docker, Compose, private registries, and Kubernetes on WSL2—without Docker Desktop.</p>
+    </header>
+    <main>
+      <section class="wide">
+        <h2>Start here</h2>
+        <ol><li>Install and open WinDock.</li><li>On its first launch, it checks WSL2, Docker CLI, kubectl, and Buildx and repairs missing prerequisites with Windows permission when required.</li><li>Wait for the dashboard badge to show <span class="ready">Engine ready</span>.</li></ol>
+        <p><strong>Which command should I use?</strong> Use <code>docker</code> for normal development: containers, images, Compose, Buildx, and existing CI scripts. Use <code>wincolima</code> only to manage the WinDock runtime itself: start/stop, resources, diagnostics, and embedded Kubernetes.</p>
+        <pre>docker context use wincolima<br>docker version<br>docker run --rm hello-world</pre>
+      </section>
+      <section>
+        <h2>Containers and images</h2>
+        <p>Use <strong>Run container</strong> for common runs, or use your existing terminal workflow.</p>
+        <pre>docker run -d --name web -p 8080:80 nginx<br>docker logs web<br>docker pull nginx:alpine</pre>
+        <p>Published ports are available from Windows at <code>http://localhost:PORT</code>.</p>
+      </section>
+      <section>
+        <h2>Compose projects</h2>
+        <p>Choose a Compose file in the <strong>Compose</strong> tab. WinDock remembers recent projects and can restart the project selected for auto-start.</p>
+        <pre>docker compose up -d<br>docker compose ps<br>docker compose down</pre>
+      </section>
+      <section>
+        <h2>Private registries</h2>
+        <p>Use the <strong>Registry</strong> tab for Docker Hub, Harbor, Nexus, or another OCI registry. Docker stores the credential in its credential manager. WinDock keeps only the registry and username so you do not need to re-enter a token for normal pulls and builds.</p>
+        <pre>docker pull registry.example.com/team/app:tag<br>docker buildx build --load -t sample:local .</pre>
+      </section>
+      <section>
+        <h2>Kubernetes</h2>
+        <p>Enable embedded Kubernetes from the <strong>Kubernetes</strong> tab. WinDock runs k3s in its managed WSL distribution.</p>
+        <pre>wincolima kubernetes status<br>wincolima kubernetes kubectl get nodes<br>wincolima kubernetes kubectl get pods -A</pre>
+      </section>
+      <section class="wide">
+        <h2>Recovery and diagnostics</h2>
+        <ul><li>For a source checkout, double-click <code>launch-wincolima.bat</code>.</li><li>For a packaged installation, close and reopen WinDock; its embedded bootstrapper repairs the runtime when possible.</li><li>Run <code>wincolima status</code> to check Docker and Kubernetes.</li><li>Read <code>%LOCALAPPDATA%\WinColima\desktop.log</code> if recovery needs attention.</li></ul>
+        <p class="note"><strong>Safety:</strong> <code>wincolima delete --purge</code> removes containers, images, and volumes from the managed distribution. Use it only when that data can be discarded.</p>
+      </section>
+    </main>
+    <footer>© 2026 Saurabh Gupta · WinDock is created and owned by Saurabh Gupta · Offline guide based on the WinDock README. No GitHub connection is required.</footer>
+  </body>
+</html>

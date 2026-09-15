@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Jenkins Pipeline Chain</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">
+          <svg viewBox="0 0 38 38"><rect x="2" y="2" width="34" height="34" rx="9" /><path d="M11 19l5 5 11-11" /></svg>
+        </div>
+        <div>
+          <strong>Pipeline Chain</strong>
+          <small>Jenkins + GitLab</small>
+        </div>
+      </div>
+      <nav class="primary-nav">
+        <p class="nav-label">Workspace</p>
+        <button class="nav-item active" data-view="chains">
+          <span class="nav-icon">&#9776;</span><span>Chains</span>
+        </button>
+        <button class="nav-item" data-view="runs">
+          <span class="nav-icon">&#9679;</span><span>Runs</span><span class="nav-count hidden" id="active-run-count">0</span>
+        </button>
+        <button class="nav-item" data-view="settings">
+          <span class="nav-icon">&#9881;</span><span>Settings</span>
+        </button>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="connection-pill">
+          <span class="status-dot" id="jenkins-dot"></span>
+          <span id="jenkins-status-text">Jenkins not configured</span>
+        </div>
+        <div class="connection-pill">
+          <span class="status-dot" id="gitlab-dot"></span>
+          <span id="gitlab-status-text">GitLab not configured</span>
+        </div>
+        <p><span>Local tool.</span> Credentials stay in this app's .env.</p>
+      </div>
+    </aside>
+
+    <div class="main-column">
+      <header class="topbar">
+        <h1 id="view-title">Chains</h1>
+        <div class="topbar-actions">
+          <span class="refresh-time" id="refresh-time"></span>
+          <button class="button button-secondary" id="new-chain-btn">+ New chain</button>
+        </div>
+      </header>
+
+      <main class="content">
+        <section id="view-chains" class="view">
+          <div id="chains-list" class="card-grid"></div>
+        </section>
+
+        <section id="view-runs" class="view hidden">
+          <div id="runs-list" class="stack"></div>
+        </section>
+
+        <section id="view-settings" class="view hidden">
+          <form id="settings-form" class="panel-form">
+            <h2>Jenkins</h2>
+            <label>Jenkins username
+              <input type="text" id="cfg-jenkins-user" autocomplete="off" />
+            </label>
+            <label>Jenkins API token
+              <input type="password" id="cfg-jenkins-token" autocomplete="off" placeholder="Leave blank to keep the saved token" />
+            </label>
+
+            <h2>GitLab</h2>
+            <label>GitLab personal access token (api scope)
+              <input type="password" id="cfg-gitlab-token" autocomplete="off" placeholder="Leave blank to keep the saved token" />
+            </label>
+
+            <h2>Polling &amp; retries</h2>
+            <div class="grid-3">
+              <label>Poll interval (s)
+                <input type="number" id="cfg-poll-seconds" min="5" max="600" />
+              </label>
+              <label>Max retries per step
+                <input type="number" id="cfg-max-retries" min="0" max="20" />
+              </label>
+              <label>Retry delay (s)
+                <input type="number" id="cfg-retry-delay" min="5" max="3600" />
+              </label>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="button">Save settings</button>
+              <span id="settings-status" class="hint"></span>
+            </div>
+          </form>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div id="modal-root"></div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

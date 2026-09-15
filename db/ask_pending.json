@@ -1,0 +1,6448 @@
+{
+  "timestamp": "2026-07-30T18:47:29.066741+00:00",
+  "connection": "10.12.56.212",
+  "database": "serphydose",
+  "question": "find me patient with XA study",
+  "keywords": [
+    "patient",
+    "study"
+  ],
+  "matched_schema": {
+    "patient": [
+      {
+        "column": "ID",
+        "type": "bigint",
+        "nullable": "NO",
+        "key": "PRI"
+      },
+      {
+        "column": "PATIENT_ID",
+        "type": "varchar",
+        "nullable": "NO",
+        "key": "MUL"
+      },
+      {
+        "column": "DOMAIN_KEY",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "MIDDLE_NAME",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "NAME_SUFFIX",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "LAST_NAME",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "SEX",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "BIRTH_DATE",
+        "type": "datetime",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "FIRST_NAME",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "NAME_PREFIX",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PHYSICAL_PATIENT_KEY",
+        "type": "bigint",
+        "nullable": "NO",
+        "key": "MUL"
+      },
+      {
+        "column": "DT_CREATED",
+        "type": "datetime",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CREATOR",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DT_UPDATED",
+        "type": "datetime",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "UPDATOR",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DT_LAST_UPDATE",
+        "type": "timestamp",
+        "nullable": "YES",
+        "key": "MUL"
+      }
+    ],
+    "mr_image_orientation_patient": [
+      {
+        "column": "id",
+        "type": "bigint",
+        "nullable": "NO",
+        "key": "PRI"
+      },
+      {
+        "column": "mr_serie_key",
+        "type": "bigint",
+        "nullable": "NO",
+        "key": "UNI"
+      },
+      {
+        "column": "row_x",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "row_y",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "row_z",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "column_x",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "column_y",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "column_z",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      }
+    ],
+    "nm_patient_characteristics": [
+      {
+        "column": "ID",
+        "type": "bigint",
+        "nullable": "NO",
+        "key": "PRI"
+      },
+      {
+        "column": "BMI",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "BODY_AREA_FORMULA_CODE_KEY",
+        "type": "bigint",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "BODY_AREA",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "FASTING_DURATION",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "GLUCOSE",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "HYDRATION_VOL",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "OBS_DT",
+        "type": "datetime",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PATIENT_HEIGHT",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PATIENT_WEIGHT",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "recent_physical_activity",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SERUM_CREATININE",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      }
+    ],
+    "nm_patient_states": [
+      {
+        "column": "NM_PATIENT_CHARACTERISTICS_KEY",
+        "type": "bigint",
+        "nullable": "NO",
+        "key": "PRI"
+      },
+      {
+        "column": "TERM_CODE_TYPE_KEY",
+        "type": "bigint",
+        "nullable": "NO",
+        "key": "PRI"
+      }
+    ],
+    "patient_hash": [
+      {
+        "column": "PATIENT_HASH",
+        "type": "varchar",
+        "nullable": "NO",
+        "key": "PRI"
+      },
+      {
+        "column": "PATIENT_ID",
+        "type": "varchar",
+        "nullable": "NO",
+        "key": ""
+      },
+      {
+        "column": "DATE_CREATED",
+        "type": "datetime",
+        "nullable": "NO",
+        "key": ""
+      }
+    ],
+    "physical_patient": [
+      {
+        "column": "ID",
+        "type": "bigint",
+        "nullable": "NO",
+        "key": "PRI"
+      },
+      {
+        "column": "DT_CREATED",
+        "type": "datetime",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CREATOR",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DT_UPDATED",
+        "type": "datetime",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "UPDATOR",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DT_LAST_UPDATE",
+        "type": "timestamp",
+        "nullable": "YES",
+        "key": "MUL"
+      }
+    ],
+    "ae": [
+      {
+        "column": "ID",
+        "type": "int",
+        "nullable": "NO",
+        "key": "PRI"
+      },
+      {
+        "column": "PERFORMED_AE_TITLE",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "STATION_NAME",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "AET",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "RETRIEVE_AE_TITLE",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DEPARTMENT_KEY",
+        "type": "int",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "SDM_KEY",
+        "type": "int",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "IGNORED_SR_NUMBERS",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DELETED",
+        "type": "int",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "IP",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PORT",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "NAME",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "MODALITY_WORKLIST_ENABLED",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "FACILITY_KEY",
+        "type": "int",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "INNOVA_LOG_FTP_CONNECTION_KEY",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CT_LOG_SFTP_CONNECTION_KEY",
+        "type": "int",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "RIS_AE_KEY",
+        "type": "int",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "IVRLE_TS_FORCED",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "TIMEZONE",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DOMAIN_KEY",
+        "type": "int",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "DEVICE_TYPE",
+        "type": "char",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SOFTWARE_VERSION",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DT_CREATED",
+        "type": "timestamp",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DT_UPDATED",
+        "type": "timestamp",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DT_DELETED",
+        "type": "timestamp",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DT_LAST_UPDATE",
+        "type": "timestamp",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "DICOM_OVER_THE_WEB_CONNECTION_KEY",
+        "type": "bigint",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "DMWL_QUERY_FREQUENCY_IN_MIN",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DEVICE_KEY",
+        "type": "bigint",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "QUERY_RETRIEVE_CAPABLE",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "ALTERNATE_AET",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "AE_TABLE_KEY",
+        "type": "bigint",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "PATIENT_HEAD_POSITION_X",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PATIENT_HEAD_POSITION_Z",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "QR_ADVANCED_OPERATION_DELAY",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SKIN_DOSE_MAP_ENABLED",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PRISTINA_LOG_SFTP_CONNECTION_KEY",
+        "type": "bigint",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "EMAIL_DELAY_IN_S",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PROCESSING_CLASS_KEY",
+        "type": "int",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "pacs_ae_key",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "cmove_dest_aet",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "pacs_retry_delay_in_s",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "pacs_max_retry_number",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "scu_aet",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "OIQ_ENABLED",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      }
+    ],
+    "clinical_context": [
+      {
+        "column": "ID",
+        "type": "bigint",
+        "nullable": "NO",
+        "key": "PRI"
+      },
+      {
+        "column": "PREV_ADR_TO_CM",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PREV_TO_CM_COMMENT",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "ASTHMA_ALLERGIES",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "EGFR_IN_ML_MIN",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CREATININE_IN_MICROMOLE_L",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DIABETES",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PATIENT_METFORMIN",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "NEPHROTOXIC_DRUGS",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "HEART_DISEASE",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "HEART_DISEASE_COMMENT",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "HAEMATOCRIT",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PATIENT_PREMEDICATED",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PATIENT_PREMEDICATED_COMMENT",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PREGNANT",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PREGNANT_COMMENT",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "ADVERSE_EVENT",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "ADVERSE_EVENT_COMMENT",
+        "type": "text",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CREATININE_AFTER_3_DAYS",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "HYPOTENSION",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PATIENT_PERIMETER",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "FETUS_DEPTH",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "MEASURED_BY_USER_KEY",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "PREGNANCY_WEEK",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PREGNANCY_DATE",
+        "type": "datetime",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "STUDY_INSTANCE_UID",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "MODALITY",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "cardiac_implant",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "cardiac_implant_comment",
+        "type": "text",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "metallic_intraocular_foreign_bodies",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "implantable_neurostimulation_systems",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "implantable_neurostimulation_systems_comment",
+        "type": "text",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "cochlear_ear_implants",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "cochlear_ear_implants_comment",
+        "type": "text",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "drug_infusion_pump",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "catheters_with_metallic_components",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "metallic_fragments",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "cerebral_artery_aneurysm_clips",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "magnetic_dental_implants",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "artificial_limb",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "hearing_aid",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "piercings",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "stents",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "renal_disease",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "renal_disease_comment",
+        "type": "text",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "had_contrast_dose_in_the_past_24_hours",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "had_contrast_dose_in_the_past_24_hours_comment",
+        "type": "text",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "prior_allergic_reaction_to_gadolinium",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "dialysis",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "hypertension",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "history_of_renal_disease",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "history_of_renal_disease_comment",
+        "type": "text",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "has_risk_factors_for_nephrogenic_systemic_fibrosis",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "prior_adverse_contrast_event",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "prior_adverse_contrast_event_comment",
+        "type": "text",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "sedation_required",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "sedation_required_comment",
+        "type": "text",
+        "nullable": "YES",
+        "key": ""
+      }
+    ],
+    "clinical_order": [
+      {
+        "column": "ID",
+        "type": "bigint",
+        "nullable": "NO",
+        "key": "PRI"
+      },
+      {
+        "column": "ORDER_CONTROL",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "IMAGING_REQUEST_KEY",
+        "type": "bigint",
+        "nullable": "NO",
+        "key": "MUL"
+      },
+      {
+        "column": "PLACER_GROUP_NUMBER",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PATIENT_KEY",
+        "type": "bigint",
+        "nullable": "NO",
+        "key": "MUL"
+      },
+      {
+        "column": "ORDER_STATUS",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PARENT_CLINICAL_ORDER_KEY",
+        "type": "bigint",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "ORDERING_PHYSICIAN_KEY",
+        "type": "bigint",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "ORDER_TYPE",
+        "type": "char",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "REQUESTED_DATE",
+        "type": "datetime",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "OBSERVATION_DATE",
+        "type": "datetime",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "OBSERVATION_END_DATE",
+        "type": "datetime",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "REASON_FOR_STUDY",
+        "type": "text",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "RELEVANT_CLINICAL_INFORMATION",
+        "type": "text",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DIAGNOSTIC_SERV_SECT_ID",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "RESULT_STATUS",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DT_INSERTED",
+        "type": "timestamp",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DT_LAST_UPDATE",
+        "type": "timestamp",
+        "nullable": "YES",
+        "key": ""
+      }
+    ],
+    "ct_detailed_export": [
+      {
+        "column": "FACILITY_KEY",
+        "type": "int",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "FACILITY_DESCRIPTION",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "STUDY_DATE",
+        "type": "datetime",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "STUDY_TIME",
+        "type": "datetime",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "STUDY_KEY",
+        "type": "bigint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "STUDY_INSTANCE_UID",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "STUDY_ID",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "ACCESSION_NUMBER",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "STUDY_DESCRIPTION",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "OLD_STUDY_DESCRIPTION",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "STANDARD_STUDY_DESCRIPTION",
+        "type": "mediumtext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "INSTITUTION_NAME",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "REFERRING_PHYSICIAN_LAST_NAME",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "REFERRING_PHYSICIAN_FIRST_NAME",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "REQUESTING_PHYSICIAN_LAST_NAME",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "REQUESTING_PHYSICIAN_FIRST_NAME",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PERFORMING_PHYSICIAN_LAST_NAME",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "PERFORMING_PHYSICIAN_FIRST_NAME",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "READING_PHYSICIAN_LAST_NAME",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "READING_PHYSICIAN_FIRST_NAME",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "OPERATOR_LAST_NAME",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "OPERATOR_FIRST_NAME",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "TOTAL_EFFECTIVE_DOSE",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CONTRAST_PRODUCT_NAME",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CONTRAST_CONCENTRATION",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CONTRAST_INJECTED_VOLUME",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CONTRAST_LOT_INJECTION",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "AE_KEY",
+        "type": "int",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "AE_AET",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "AE_NAME",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "AE_DEVICE_GROUPS",
+        "type": "longtext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "MANUFACTURER_NAME",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SDM_MODEL",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PERFORMED_AE_TITLE",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "STUDY_PROTOCOL_NAME",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PATIENT_ID",
+        "type": "bigint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PATIENT_PID",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PATIENT_FIRST_NAME",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PATIENT_LAST_NAME",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PATIENT_BIRTHDATE",
+        "type": "date",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "AGE_CLASS",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PATIENT_SEX",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PATIENT_WEIGHT",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PATIENT_SIZE",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PATIENT_BMI",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CORRECTION_FACTOR",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CTDI_VOL_MAX",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "REVISED_CTDI_VOL_MAX",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CT_DOSE_LENGTH_PRODUCT_TOTAL",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "REVISED_TOTAL_DLP",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "TOTAL_NUMBER_OF_IRRADIATION_EVENT",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "HAS_ALERTS",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "JUSTIFICATION_AUTHOR",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "JUSTIFICATION_DATE",
+        "type": "date",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "JUSTIFICATION_CODE",
+        "type": "longtext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "JUSTIFICATION_COMMENT",
+        "type": "longtext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "NUM_SERIES",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "NUM_SERIES_NON_LOCALIZER",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "NUM_SERIES_NON_SMART_PREP_OR_LOCALIZER",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "IQ_VOTES",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "ALERTS_REVIEWED",
+        "type": "char",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PREV_ADR_TO_CM",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PREV_TO_CM_COMMENT",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "ASTHMA_ALLERGIES",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "EGFR_IN_ML_MIN",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CREATININE_IN_MICROMOLE_L",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DIABETES",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PATIENT_METFORMIN",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "NEPHROTOXIC_DRUGS",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "HEART_DISEASE",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "HEART_DISEASE_COMMENT",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "HAEMATOCRIT",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PATIENT_PREMEDICATED",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PATIENT_PREMEDICATED_COMMENT",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PREGNANT",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PREGNANT_COMMENT",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "ADVERSE_EVENT",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "ADVERSE_EVENT_COMMENT",
+        "type": "mediumtext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CREATININE_AFTER_3_DAYS",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "HYPOTENSION",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "ACQUISITION_TYPE",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SERIES_DESCRIPTION",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SERIES_PROTOCOL_NAME",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SERIES_INSTANCE_UID",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SERIES_KEY",
+        "type": "bigint",
+        "nullable": "NO",
+        "key": "PRI"
+      },
+      {
+        "column": "SERIES_DATE",
+        "type": "datetime",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DISTANCE_SOURCE_TO_DETECTOR",
+        "type": "float",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "GENERATOR_POWER",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "RECONSTRUCTION_DIAMETER",
+        "type": "float",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DISTANCE_SOURCE_TO_PATIENT",
+        "type": "float",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "START_SLICE_LOCATION",
+        "type": "float",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "END_SLICE_LOCATION",
+        "type": "float",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "FOCAL_SPOTS",
+        "type": "float",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "GANTRY_DETECTOR_TILT",
+        "type": "float",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SLICE_THICKNESS",
+        "type": "float",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SPACING_BETWEEN_SLICES",
+        "type": "float",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CONVOLUTION_KERNEL",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "MACRO_WIDTH",
+        "type": "float",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SCAN_FOV_TYPE",
+        "type": "smallint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DATA_COLLECTION_DIAMETER",
+        "type": "float",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "NUMBER_OF_MACRO_ROWS_IN_DETECTOR",
+        "type": "float",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "TEN_TIME_GE_NOISE_INDEX",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "IMAGE_PER_SERIE",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "TABLE_HEIGHT",
+        "type": "float",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "FILTER_TYPE",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "ROTATION_DIRECTION",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "TARGET_REGION",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "EXPOSURE_TIME",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SCANNING_LENGTH",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "NOMINAL_SINGLE_COLLIMATION_WIDTH",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "NOMINAL_TOTAL_COLLIMATION_WIDTH",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "NUMBER_OF_XRAY_SOURCES",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SERIE_KVP",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "MAXIMUM_XRAY_TUBE_CURRENT",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "XRAY_TUBE_CURRENT",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PITCH_FACTOR",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "IDENTIFICATION_OF_XRAY_SOURCE",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "EXPOSURE_TIME_PER_ROTATION",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "MEAN_CTDI_VOL",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "REVISED_CTDI_VOL",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CTDIW_PHANTOM_TYPE",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DLP",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "REVISED_DLP",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "TABLE_SPEED",
+        "type": "float",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "TABLE_FEED_PER_ROTATION",
+        "type": "float",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "ITERATIVE_RECON_LEVEL",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "ITERATIVE_RECON_ANNOTATION",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "REVOLUTION_TIME",
+        "type": "float",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "GANTRY_PERIOD",
+        "type": "float",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DURATION_OF_XRAY_ON",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CTDI_VOL_SSDE",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CTDI_VOL_SSDE_TG_220",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CTDI_VOL_SSDE_FROM_DEVICE",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CTDI_VOL_SSDE_CORR_FACT",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DELTA_X",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DELTA_Y",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "MAX_PATIENT_WIDTH",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "MAX_PATIENT_THICKNESS",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SERIES_NUMBER",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SSDE_LAT",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SSDE_AP",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SSDE_EFFECTIVE_DIAMETER",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SSDE_FACTOR",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "AAPM_FACTOR_SSDE_TG_220",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "AAPM_FACTOR_SSDE_FROM_DEVICE",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "AAPM_FACTOR_SSDE_CORR_FACT",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "EFFECTIVE_MAS",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "WE_DIAMETER_TG_220",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "WE_DIAMETER_FROM_DEVICE",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "WE_DIAMETER_CORRECTION_FACTOR",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PROTOCOL_AGE_CATEGORY",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "IQ_SCORE",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CONTRAST_TO_NOISE_RATIO",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SIGNAL_TO_NOISE_RATIO",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SERIES_COMPUTATION_STATUS",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DRL_NAME",
+        "type": "longtext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DRL_TRACKING_STATUS",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CT_SERIES_DRL_CTDI_NATIONAL",
+        "type": "longtext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CT_SERIES_DRL_DLP_NATIONAL",
+        "type": "longtext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CT_SERIES_DRL_CTDI_LOCAL",
+        "type": "longtext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CT_SERIES_DRL_DLP_LOCAL",
+        "type": "longtext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CT_SERIES_DRL_CTDI_SITE",
+        "type": "longtext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CT_SERIES_DRL_DLP_SITE",
+        "type": "longtext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "ALERT_TRACKING_STATUS",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CT_SERIES_ALERT_CTDI_LEVEL1",
+        "type": "longtext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CT_SERIES_ALERT_CTDI_LEVEL2",
+        "type": "longtext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CT_SERIES_ALERT_DLP_LEVEL1",
+        "type": "longtext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CT_SERIES_ALERT_DLP_LEVEL2",
+        "type": "longtext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "blind_acquisition_state",
+        "type": "enum",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "blind_acquisition_ratio",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "blind_acquisition_scanning_length",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "ctdivol_notification_value_configured",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "ctdivol_notification_value",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "ctdivol_forward_estimate",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "dlp_notification_value_configured",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "dlp_notification_value",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "dlp_forward_estimate",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "notif_reason_for_proceeding",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "irradiation_authorizing_notif_last_name",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "irradiation_authorizing_notif_first_name",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "ctdivol_alert_value_configured",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "ctdivol_alert_value",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "accumulated_ctdivol_forward_estimate",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "dlp_alert_value_configured",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "dlp_alert_value",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "accumulated_dlp_forward_estimate",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "alert_reason_for_proceeding",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "irradiation_authorizing_alert_last_name",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "irradiation_authorizing_alert_first_name",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "alternative_dose_alert_behavior_active",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      }
+    ],
+    "ct_general_export": [
+      {
+        "column": "FACILITY_KEY",
+        "type": "int",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "FACILITY_DESCRIPTION",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "STUDY_DATE",
+        "type": "datetime",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "STUDY_TIME",
+        "type": "datetime",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "STUDY_KEY",
+        "type": "bigint",
+        "nullable": "NO",
+        "key": "PRI"
+      },
+      {
+        "column": "STUDY_INSTANCE_UID",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "STUDY_ID",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "ACCESSION_NUMBER",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "STUDY_DESCRIPTION",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "OLD_STUDY_DESCRIPTION",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "STANDARD_STUDY_DESCRIPTION",
+        "type": "text",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "INSTITUTION_NAME",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "REFERRING_PHYSICIAN_LAST_NAME",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "REFERRING_PHYSICIAN_FIRST_NAME",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "REQUESTING_PHYSICIAN_LAST_NAME",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "REQUESTING_PHYSICIAN_FIRST_NAME",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PERFORMING_PHYSICIAN_LAST_NAME",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "PERFORMING_PHYSICIAN_FIRST_NAME",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "READING_PHYSICIAN_LAST_NAME",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "READING_PHYSICIAN_FIRST_NAME",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "OPERATOR_LAST_NAME",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "OPERATOR_FIRST_NAME",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "TOTAL_EFFECTIVE_DOSE",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CONTRAST_PRODUCT_NAME",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CONTRAST_CONCENTRATION",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CONTRAST_INJECTED_VOLUME",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CONTRAST_LOT_INJECTION",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "AE_KEY",
+        "type": "int",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "AE_AET",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "AE_NAME",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "AE_DEVICE_GROUPS",
+        "type": "mediumtext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "MANUFACTURER_NAME",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SDM_MODEL",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PERFORMED_AE_TITLE",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "STUDY_PROTOCOL_NAME",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PATIENT_ID",
+        "type": "bigint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PATIENT_PID",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PATIENT_FIRST_NAME",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PATIENT_LAST_NAME",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PATIENT_BIRTHDATE",
+        "type": "date",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "AGE_CLASS",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PATIENT_SEX",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PATIENT_WEIGHT",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PATIENT_SIZE",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PATIENT_BMI",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CORRECTION_FACTOR",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CTDI_VOL_MAX",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "REVISED_CTDI_VOL_MAX",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CT_DOSE_LENGTH_PRODUCT_TOTAL",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "REVISED_TOTAL_DLP",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "TOTAL_NUMBER_OF_IRRADIATION_EVENT",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "HAS_ALERTS",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "JUSTIFICATION_AUTHOR",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "JUSTIFICATION_DATE",
+        "type": "date",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "JUSTIFICATION_CODE",
+        "type": "mediumtext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "JUSTIFICATION_COMMENT",
+        "type": "mediumtext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "NUM_SERIES",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "NUM_SERIES_NON_LOCALIZER",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "NUM_SERIES_NON_SMART_PREP_OR_LOCALIZER",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "IQ_VOTES",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "IQ_SCORE_MIN",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "IQ_SCORE_MAX",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CNR_MIN",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CNR_MAX",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SNR_MIN",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SNR_MAX",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "COMPUTATION_STATUS",
+        "type": "enum",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "ALERTS_REVIEWED",
+        "type": "char",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PREV_ADR_TO_CM",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PREV_TO_CM_COMMENT",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "ASTHMA_ALLERGIES",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "EGFR_IN_ML_MIN",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CREATININE_IN_MICROMOLE_L",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DIABETES",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PATIENT_METFORMIN",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "NEPHROTOXIC_DRUGS",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "HEART_DISEASE",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "HEART_DISEASE_COMMENT",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "HAEMATOCRIT",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PATIENT_PREMEDICATED",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PATIENT_PREMEDICATED_COMMENT",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PREGNANT",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PREGNANT_COMMENT",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "ADVERSE_EVENT",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "ADVERSE_EVENT_COMMENT",
+        "type": "text",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CREATININE_AFTER_3_DAYS",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "HYPOTENSION",
+        "type": "tinytext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DRL_NAME",
+        "type": "longtext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DRL_TRACKING_STATUS",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CT_STUDY_DRL_DLP_NATIONAL",
+        "type": "longtext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CT_STUDY_DRL_DLP_LOCAL",
+        "type": "longtext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CT_STUDY_DRL_DLP_SITE",
+        "type": "longtext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "ALERT_TRACKING_STATUS",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CT_STUDY_ALERT_DLP_LEVEL1",
+        "type": "longtext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CT_STUDY_ALERT_DLP_LEVEL2",
+        "type": "longtext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CT_STUDY_ALERT_TNI_LEVEL1",
+        "type": "longtext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CT_STUDY_ALERT_TNI_LEVEL2",
+        "type": "longtext",
+        "nullable": "YES",
+        "key": ""
+      }
+    ],
+    "ct_log_message": [
+      {
+        "column": "ID",
+        "type": "int",
+        "nullable": "NO",
+        "key": "PRI"
+      },
+      {
+        "column": "PARENT_KEY",
+        "type": "int",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "AE_KEY",
+        "type": "int",
+        "nullable": "NO",
+        "key": "MUL"
+      },
+      {
+        "column": "DT_INSERTED",
+        "type": "timestamp",
+        "nullable": "NO",
+        "key": "MUL"
+      },
+      {
+        "column": "MESSAGE_STATUS_SL",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "MESSAGE_STATUS_DW",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "IS_GZIPPED",
+        "type": "char",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "COMPRESSION_METHOD",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SEQUENCE",
+        "type": "int",
+        "nullable": "NO",
+        "key": ""
+      },
+      {
+        "column": "FILENAME",
+        "type": "varchar",
+        "nullable": "NO",
+        "key": ""
+      },
+      {
+        "column": "MESSAGE_TYPE",
+        "type": "varchar",
+        "nullable": "NO",
+        "key": "MUL"
+      },
+      {
+        "column": "SERIE_INSTANCE_UID",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "EXAM_NUMBER",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "PATIENT_ID",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "FILE_PATH",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "FILE_DATE",
+        "type": "timestamp",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SSDE_CALCULATION_STATUS",
+        "type": "varchar",
+        "nullable": "NO",
+        "key": "MUL"
+      },
+      {
+        "column": "SSDE_CALCULATE_NOW",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "SERIES_NUMBER",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "SUBSERIES_NUMBER",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "LAST_IMAGE_INSTANCE_NUMBER",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "MESSAGE_ERROR",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "HAS_SMART_PREP",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "HAS_SCREENSHOT",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "NUMBER_OF_TRIES",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "HAS_CINE_SERIE",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "FORWARD_STATUS",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "FILE_SIZE",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "FTP_FILE_SIZE",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DT_LAST_UPDATE",
+        "type": "timestamp",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "FWD_DELAY_IN_MINUTES",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      }
+    ],
+    "ct_serie": [
+      {
+        "column": "ID",
+        "type": "bigint",
+        "nullable": "NO",
+        "key": "PRI"
+      },
+      {
+        "column": "ACQUISITION_NUMBER",
+        "type": "int",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "DISTANCE_SOURCE_TO_DETECTOR",
+        "type": "float",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "GENERATOR_POWER",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "RECONSTRUCTION_DIAMETER",
+        "type": "float",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DISTANCE_SOURCE_TO_PATIENT",
+        "type": "float",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SLICE_LOCATION",
+        "type": "float",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "FOCAL_SPOTS",
+        "type": "float",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "GANTRY_DETECTOR_TILT",
+        "type": "float",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SLICE_THICKNESS",
+        "type": "float",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SPACING_BETWEEN_SLICES",
+        "type": "float",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CONVOLUTION_KERNEL",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "MACRO_WIDTH",
+        "type": "float",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DATA_COLLECTION_DIAMETER",
+        "type": "float",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "NUMBER_OF_MACRO_ROWS_IN_DETECTOR",
+        "type": "float",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "TEN_TIME_GE_NOISE_INDEX",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "IMAGE_PER_SERIE",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "TABLE_HEIGHT",
+        "type": "float",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "FILTER_TYPE",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SCAN_FOV_TYPE",
+        "type": "smallint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "ROTATION_DIRECTION",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "START_SLICE_LOCATION",
+        "type": "float",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "END_SLICE_LOCATION",
+        "type": "float",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "MAS",
+        "type": "float",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "ASIR",
+        "type": "float",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "LOCALIZER",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "MIN_SLICE_LOCATION",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "MAX_SLICE_LOCATION",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "TOP_Z_SCANNING_LENGTH_LOCATION",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "BOTTOM_Z_SCANNING_LENGTH_LOCATION",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PIXEL_SPACING",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "MEAN_X_AXIS",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "MEAN_Y_AXIS",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DLP_SSDE",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CTDI_VOL_SSDE",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "AAPM_FACTOR_SSDE",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PROTOCOL_KEY",
+        "type": "bigint",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "APERTURE",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "HEART_RATE",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "MID_SCAN_TIME",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "Z_TRACKING_FLAG",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PATIENT_ORIENTATION",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "EXTERNAL_LANDMARK",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "HORIZONTAL_LANDMARK",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SERIES_SMART_PREP_SERIES_NUMBER",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CARDIAC_TBI_VALUE",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CARDIAC_IRR_VALUE",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CARDIAC_TD_VALUE",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CARDIAC_RRI_VALUE",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CARDIAC_MONITORING_ON",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CARDIAC_CINE_SS_MONITORING_ON",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "GATING_ON",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "ECG_ACTIVE",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "WAVEFORM_VIEWER_ON",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "NEW_RETRO_SERIES_ON",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "GSI_ON",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SMART_PREP_ON",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SMART_PREP_DONE",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SMART_PREP_BASELINE_DONE",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SP_SHOW_LOCALIZER",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SCAN_PHASE_WHILE_PAUSED",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SMART_PREP_SERIES_TIME",
+        "type": "datetime",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SMART_PREP_SERIES_UID",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "BASELINE_SCAN_NUMBER",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "NUMBER_OF_SMART_PREP_SCANS_DONE",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "NUMBER_OF_SMART_PREP_SCANS_CURRENT_SP_SERIES",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SMART_PREP_MILLI_AMPS",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DIAGNOSTIC_DELAY",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "ENHANCEMENT_THRESHOLD",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "MONITORING_DELAY",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "MONITORING_ISD",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "MONITORING_LOCATION",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SMART_PREP_NV_DLP_NEEDED",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SMART_PREP_NV_CTDI_NEEDED",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SMART_PREP_NV_DLP",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SMART_PREP_NV_CTDI",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SMART_PREP_DLP",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SMART_PREP_CTDI",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SMART_PREP_SFOV",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SMART_PREP_AUTO_MIN_DIAGNOSTIC_DELAY_ENABLED",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SMART_PREP_AUTO_VOICE_PRE_MGS_ENABLED",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "END_SERIES_TIME",
+        "type": "datetime",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "NUMBER_OF_AUTO_XFER_HOSTS",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DR_SERIES_AUTO_TRANSFER_NUMBER_OF_DESTINATIONS",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SR_SERIES_AUTO_TRANSFER_NUMBER_OF_DESTINATIONS",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SERIES_PATH_DIRECTORY",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "GATING_TYPE",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CARDIAC_RATE_AUTO_DETECT",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CINE_PADDING_VALUE_STATE",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CARDIAC_OPERATOR_ENTERED_HEART_RATE",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CARDIAC_RECON_PHASE_PERCENT",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CARDIAC_RECON_PHASE_PERCENT_START_LOCATION",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CARDIAC_RECON_PHASE_PERCENT_END_LOCATION",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CARDIAC_RECON_PHASE_PERCENT_INCREMENT",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CINE_WINDOW_PADDING",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "EBA_ENABLED",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "EBA_REQUEST_MAX",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PET_PROTOCOL_NAME",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PET_ON",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "NUMBER_OF_PET_FOV",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "NUMBER_OF_PET_IMAGES_PER_FOV",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "OVERLAP_PER_PET_FOV",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PET_START_LOCATION",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PET_END_LOCATION",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "MBIR_ON_FOR_RETRO",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "THIS_GROUP_SCANNED",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "BIOPSY_REFERENCE",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "BIOPSY_GROUP",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "IMAGE_ENHANCEMENT_ENABLED",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SMART_SCAN_ENABLED",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DUAL_KV_GROUP",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "RESP_TRIGGERING_GROUP",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DIRECTION",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "KV_MODULATION_MODE",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "ROTATION_TYPE",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "ROTATION_TYPE_FACTOR",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "BIOPSY_LOCATION",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DOSE_EFFICIENCY",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "GANTRY_TILT",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "GROUP_DELAY",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "ISD",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PITCH",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "RETRO_END_LOCATION",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "RETRO_STAT_LOCATION",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "RETRO_IMAGE_INTERVAL",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "RETRO_START_PHASE",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "RETRO_END_PHASE",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "RETRO_PHASE_INCREMENT",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CARDIAC_PHASE_RX_TYPE",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SCAN_SPACING",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "XRAY_OFF",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "XRAY_ON",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "AUTO_FILM_DELAY",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "AUTO_VOICE_PROTOCOL_NUMBER",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "BREATH_HOLD_TIME",
+        "type": "datetime",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "BREATH_TIME",
+        "type": "datetime",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "MILLI_AMPS_2_FACTOR",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "MILLI_AMPS",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "AUTO_MA_FLAG",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "MANUAL_MILLI_AMPS",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "MILLI_AMPS_2",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "AUTO_MA_REFERENCE_NOISE_INDEX",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "AUTO_MA_NOISE_INDEX",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "AUTO_MA_MAX_MILLI_AMPS",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "AUTO_MA_MIN_MILLI_AMPS",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "AUTOMA_SUB_MODE",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "ECG_MOD_MA_START_PHASE",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "ECG_MOD_MA_END_PHASE",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "ECG_MOD_MA_MIN_MILLI_AMPS",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "ECG_MOD_MA_MAX_MILLI_AMPS",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "REFER_MILLI_AMPS",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "ECG_MOD_MA_REFER_MIN_MILLI_AMPS",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "ECG_MOD_MA_REFER_MAX_MILLI_AMPS",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "MANUAL_MA_DOSE_REDUCTION",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "AUTO_MA_DOSE_REDUCTION",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "ECG_MOD_MA_DOSE_REDUCTION",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "NUM_IMAGES_PER_ROTATION",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "END_SCAN_NO",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "NUMBER_OF_SCANS",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "START_SCAN_NO",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SCOUT_PLANE",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SEGMENTS",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "TRIGGER_FREQUENCY_HZ",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "NUMBER_OF_PRETRIGGERS",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "NUMBER_OF_DATA_VIEWS",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "AXIAL_HI_RES_ENABLED",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "THIN_TWIN_ENABLED",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "OVERLAP_RECON_ENABLED",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "BREATHING_LIGHTS_ENABLED",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "COUNTDOWN_TIMER_ENABLED",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CARDIAC_RECON_ALGORITHM",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "BUMP_DISTANCE",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DAS_TYPE",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DETECTOR_TYPE",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SHUTTLE_MODE",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "NUMBER_OF_SHUTTLE_MODE",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SHUTTLE_SCANNED_FIRST_PASS",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SHUTTLE_SCANNED_LAST_PASS",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SHUTTLE_RETRO_START_PASS",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SHUTTLE_RETRO_END_PASS",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SCAN_PRESET_KEY",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CINE_TIME_BETWEEN_IMAGES",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CINE_SCAN_TIME",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CINE_SS_SCAN_SPACING",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CINE_SS_GROUP_NUMBER",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "NV_CTDI",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "NV_CTDI_NEEDED",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "NV_DLP",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "NV_DLP_NEEDED",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "FRAME_OF_REFERENCE_UID",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "IQ_ENHANCED_ENBLED",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CARDIACTEMPORAL_ALGORITHM_ENABLED",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "IBO_ENABLED",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "MATRIX_SIZE",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DISPLAY_FIEL_OF_VIEW",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PMR_START_LOCATION",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PMR_REND_LOCATION",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PMR_NUMBER_OF_IMAGES_PER_ROTATION",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PMR_IMAGE_THICKNESS",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PMR_INTERVAL",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PMR_NUMBER_OF_IMAGES",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PMR_NUMBER_OF_IMAGES_QUEUED",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PMR_CINE_TIME_BETWEEN_IMAGES",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PMR_CARDIAC_RECON_PHASE_PERCENT",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PMR_CARDIAC_RECON_PHASE_PERCENT_START_LOCATION",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PMR_CARDIAC_RECON_PHASE_PERCENT_END_LOCATION",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PMR_CARDIAC_RECON_PHASE_PERCENT_INCREMENT",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PMR_CARDIAC_RECON_ALGORITHM",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "ITERATIVE_MODE",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "REFITERATIVE_CONFIG",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "MBIR_ON",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "KEV_VALUE",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "MARS_ON",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "FLIP_ORIENTATION",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "FAST_KV_IMAGE_TYPE",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "QC_RECON_MODE_ON",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "GSI_MATERIAL_1",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "GSI_MATERIAL_2",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "GSI_MDABBR",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "RECON_NUMBER",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CONTIGUOUS_SERIES",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "ENHANCE_PRIORITY_RECON_ON",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DELTA_X",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DELTA_Y",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "MAX_PATIENT_WIDTH",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "MAX_PATIENT_THICKNESS",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "IMAGE_LOCATION_INCREMENT",
+        "type": "float",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "TABLE_START",
+        "type": "float",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "TABLE_END",
+        "type": "float",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DT_LAST_UPDATE",
+        "type": "timestamp",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "WED_FROM_DEVICE",
+        "type": "longtext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "WE_DIAMETER_TG_220",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "WE_DIAMETER_FROM_DEVICE",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "WE_DIAMETER_CORRECTION_FACTOR",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DIAMETER_TG_204",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "AAPM_FACTOR_SSDE_TG_220",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "AAPM_FACTOR_SSDE_FROM_DEVICE",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "AAPM_FACTOR_SSDE_CORR_FACT",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CTDI_VOL_SSDE_TG_220",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CTDI_VOL_SSDE_FROM_DEVICE",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CTDI_VOL_SSDE_CORR_FACT",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "IQ_SCORE",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "IQ_STATE",
+        "type": "enum",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CONTRAST_TO_NOISE_RATIO",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SIGNAL_TO_NOISE_RATIO",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "IQ_NUMBER_OF_SELECTED_SLICES",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "IQ_NUMBER_OF_COMPUTED_SLICES",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "blind_acquisition_ratio",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "blind_acquisition_scanning_length_in_mm",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "blind_acquisition_state",
+        "type": "enum",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "dose_check_alert_details_key",
+        "type": "bigint",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "dose_check_notification_details_key",
+        "type": "bigint",
+        "nullable": "YES",
+        "key": "MUL"
+      }
+    ],
+    "ct_study": [
+      {
+        "column": "ID",
+        "type": "bigint",
+        "nullable": "NO",
+        "key": "PRI"
+      },
+      {
+        "column": "START_OF_XRAY_IRRADIATION",
+        "type": "datetime",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "END_OF_XRAY_IRRADIATION",
+        "type": "datetime",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CT_DOSE_LENGTH_PRODUCT_TOTAL",
+        "type": "double",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "DLP_SSDE",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "TOTAL_NUMBER_OF_IRRADIATION_EVENT",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PATIENT_POSITION",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "LOCALIZER_STORED",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PROTOCOL_KEY",
+        "type": "bigint",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "FIRST_PROTOCOL_KEY",
+        "type": "bigint",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "LAST_PROTOCOL_KEY",
+        "type": "bigint",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "NUM_SERIES_NON_LOCALIZER",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "NUM_SERIES_NON_SMART_PREP_OR_LOCALIZER",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "NUM_SERIES",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "GI_CONTRAST_ENABLED",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "IV_CONTRAST_ENABLED",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SCANNED_WITH_GI_CONTRAST_ENABLED",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SCANNED_WITH_IV_CONTRAST_ENABLED",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PATIENT_ID_FROM_WL",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PATIENT_REQ_NUMBER_FROM_WL",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PATIENT_NAME_FROM_WL",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PATIENT_SEX_FROM_WL",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PATIENT_BIRTHDATE_FROM_WL",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PATIENT_AGE_FROM_WL",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PATIENT_WEIGHT_FROM_WL",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "REFERRING_PHYSICIAN_ID_FROM_WL",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "OPERATOR_ID_FROM_WL",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "RADIOLOGIST_ID_FROM_WL",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "EXAM_DESCRIPTION_FROM_WL",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CLINICAL_HISTORY_FROM_WL",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "REQ_PROC_ID_FROM_WL",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "STUDY_INSTANCE_UID_FROM_WL",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PATIENT_HEIGHT_FROM_WL",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "THIS_FOR_STAND_ALONE_PET",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "NEW_PATIENT_BUTTON_PRESS_TIME",
+        "type": "datetime",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "END_EXAM_BUTTON_PRESS_TIME",
+        "type": "datetime",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "EXAM_CTDI",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "FIRST_LANDMARK_PRESS_TIME",
+        "type": "datetime",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "LAST_LANDMARK_PRESS_TIME",
+        "type": "datetime",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "FIRST_PROTOCOLSELECT_TIME",
+        "type": "datetime",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "LAST_PROTOCOLSELECT_TIME",
+        "type": "datetime",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DETECTOR_CELL_SPACE",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DT_LAST_UPDATE",
+        "type": "timestamp",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "CTDI_VOL_MAX",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CORRECTION_FACTOR_HISTORY_KEY",
+        "type": "int",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "REVISED_CTDI_VOL_MAX_IN_MGY",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "REVISED_TOTAL_DLP_IN_MGY_CM",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "IQ_SCORE_MIN",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "IQ_SCORE_MAX",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "IQ_STATE",
+        "type": "enum",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CNR_MIN",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "CNR_MAX",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SNR_MIN",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SNR_MAX",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "has_blind_acquisition_series",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      }
+    ],
+    "cumulative_dose_alert": [
+      {
+        "column": "ID",
+        "type": "bigint",
+        "nullable": "NO",
+        "key": "PRI"
+      },
+      {
+        "column": "ACQUITTED",
+        "type": "tinyint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "ALERT_VALUES",
+        "type": "varchar",
+        "nullable": "NO",
+        "key": ""
+      },
+      {
+        "column": "ACQUITTED_DATE",
+        "type": "datetime",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SENT_TO",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "RAISED_DATE",
+        "type": "datetime",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SERPHYDOSE_USER_KEY",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PATIENT_KEY",
+        "type": "varchar",
+        "nullable": "NO",
+        "key": ""
+      }
+    ],
+    "dicom_message": [
+      {
+        "column": "ID",
+        "type": "int",
+        "nullable": "NO",
+        "key": "PRI"
+      },
+      {
+        "column": "sop_class_uid",
+        "type": "varchar",
+        "nullable": "NO",
+        "key": "MUL"
+      },
+      {
+        "column": "STUDY_INSTANCE_UID",
+        "type": "varchar",
+        "nullable": "NO",
+        "key": "MUL"
+      },
+      {
+        "column": "SERIES_INSTANCE_UID",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SOP_INSTANCE_UID",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "PATIENT_ID",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "MESSAGE_TYPE",
+        "type": "varchar",
+        "nullable": "NO",
+        "key": "MUL"
+      },
+      {
+        "column": "MESSAGE_COMMAND",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SSDE_CALCULATION_STATUS",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "STUDY_STATUS",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "SERIES_NUMBER",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "DT_INSERTED",
+        "type": "timestamp",
+        "nullable": "NO",
+        "key": "MUL"
+      },
+      {
+        "column": "AET_PRODUCER",
+        "type": "varchar",
+        "nullable": "NO",
+        "key": "MUL"
+      },
+      {
+        "column": "STATION_NAME",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "AET_SENDER",
+        "type": "varchar",
+        "nullable": "NO",
+        "key": ""
+      },
+      {
+        "column": "IP_SENDER",
+        "type": "char",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "AET_DESTINATION",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "AET_RETRIEVE",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "MANUFACTURERS_MODEL_NAME",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "NUMBER_OF_IMAGES",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "FORWARD_STATUS",
+        "type": "char",
+        "nullable": "NO",
+        "key": "MUL"
+      },
+      {
+        "column": "TRANSLATOR_CODE",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SSDE_CALCULATE_NOW",
+        "type": "tinyint",
+        "nullable": "NO",
+        "key": "MUL"
+      },
+      {
+        "column": "ACCESSION_NUMBER",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PROCEDURE_START_DATE",
+        "type": "timestamp",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PROCEDURE_END_DATE",
+        "type": "timestamp",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SOFTWARE_VERSION",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DT_LAST_UPDATE",
+        "type": "timestamp",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "DT_PROCESSING_MSG",
+        "type": "timestamp",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "FWD_DELAY_IN_MINUTES",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "NB_OF_ASSOCIATION",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "TRANSFER_SYNTAX_UID",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PROCESSING_STAGE",
+        "type": "varchar",
+        "nullable": "NO",
+        "key": "MUL"
+      },
+      {
+        "column": "PROCESSING_RETURN_CODE",
+        "type": "varchar",
+        "nullable": "NO",
+        "key": "MUL"
+      },
+      {
+        "column": "SIZE_OF_FILE",
+        "type": "int",
+        "nullable": "NO",
+        "key": ""
+      },
+      {
+        "column": "NUMBER_OF_EXPECTED_IMAGES",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "MISSING_SOP_INSTANCE_UIDS",
+        "type": "mediumtext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DISPATCH_AE_KEY",
+        "type": "int",
+        "nullable": "YES",
+        "key": "MUL"
+      }
+    ],
+    "dicom_message_for_lbm": [
+      {
+        "column": "ID",
+        "type": "int",
+        "nullable": "NO",
+        "key": "PRI"
+      },
+      {
+        "column": "SOP_CLASS_UID",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "STUDY_INSTANCE_UID",
+        "type": "varchar",
+        "nullable": "NO",
+        "key": "MUL"
+      },
+      {
+        "column": "SERIES_INSTANCE_UID",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SOP_INSTANCE_UID",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "PATIENT_ID",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "MESSAGE_TYPE",
+        "type": "varchar",
+        "nullable": "NO",
+        "key": "MUL"
+      },
+      {
+        "column": "MESSAGE_COMMAND",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SSDE_CALCULATION_STATUS",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "STUDY_STATUS",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "SERIES_NUMBER",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "DT_INSERTED",
+        "type": "timestamp",
+        "nullable": "NO",
+        "key": ""
+      },
+      {
+        "column": "AET_PRODUCER",
+        "type": "varchar",
+        "nullable": "NO",
+        "key": "MUL"
+      },
+      {
+        "column": "STATION_NAME",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "AET_SENDER",
+        "type": "varchar",
+        "nullable": "NO",
+        "key": ""
+      },
+      {
+        "column": "IP_SENDER",
+        "type": "char",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "AET_DESTINATION",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "AET_RETRIEVE",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "MANUFACTURERS_MODEL_NAME",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "NUMBER_OF_IMAGES",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "FORWARD_STATUS",
+        "type": "char",
+        "nullable": "NO",
+        "key": "MUL"
+      },
+      {
+        "column": "TRANSLATOR_CODE",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SSDE_CALCULATE_NOW",
+        "type": "tinyint",
+        "nullable": "NO",
+        "key": "MUL"
+      },
+      {
+        "column": "ACCESSION_NUMBER",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PROCEDURE_START_DATE",
+        "type": "timestamp",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PROCEDURE_END_DATE",
+        "type": "timestamp",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SOFTWARE_VERSION",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DT_LAST_UPDATE",
+        "type": "timestamp",
+        "nullable": "NO",
+        "key": "MUL"
+      },
+      {
+        "column": "DT_PROCESSING_MSG",
+        "type": "timestamp",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "FWD_DELAY_IN_MINUTES",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "NB_OF_ASSOCIATION",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "TRANSFER_SYNTAX_UID",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PROCESSING_STAGE",
+        "type": "varchar",
+        "nullable": "NO",
+        "key": ""
+      },
+      {
+        "column": "PROCESSING_RETURN_CODE",
+        "type": "varchar",
+        "nullable": "NO",
+        "key": "MUL"
+      },
+      {
+        "column": "EXPIRATION_DATE",
+        "type": "timestamp",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SIZE_OF_FILE",
+        "type": "int",
+        "nullable": "NO",
+        "key": ""
+      },
+      {
+        "column": "NUMBER_OF_EXPECTED_IMAGES",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "MISSING_SOP_INSTANCE_UIDS",
+        "type": "mediumtext",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DISPATCH_AE_KEY",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PROCESSING_CLASS_ROUTING_KEY",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      }
+    ],
+    "dicom_raw_image": [
+      {
+        "column": "ID",
+        "type": "bigint",
+        "nullable": "NO",
+        "key": "PRI"
+      },
+      {
+        "column": "SOP_CLASS_UID",
+        "type": "varchar",
+        "nullable": "NO",
+        "key": ""
+      },
+      {
+        "column": "SOP_INSTANCE_UID",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "STUDY_INSTANCE_UID",
+        "type": "varchar",
+        "nullable": "NO",
+        "key": "MUL"
+      },
+      {
+        "column": "SERIE_INSTANCE_UID",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "ORIGINAL_SERIES_INSTANCE_UID",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PATIENT_ID",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "IMAGE_TYPE",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "IMAGE_NUMBER",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SLICE_LOCATION",
+        "type": "float",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "MA",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DT_INSERTED",
+        "type": "timestamp",
+        "nullable": "NO",
+        "key": ""
+      },
+      {
+        "column": "AET_PRODUCER",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "AET_SENDER",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "AET_DESTINATION",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "IS_GZIPPED",
+        "type": "char",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "COMPRESSION_METHOD",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "IS_LOCALIZER",
+        "type": "char",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "TRANSLATOR_CODE",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "WITH_PIXEL_DATA",
+        "type": "tinyint",
+        "nullable": "NO",
+        "key": ""
+      },
+      {
+        "column": "SIZE_OF_FILE",
+        "type": "int",
+        "nullable": "NO",
+        "key": ""
+      },
+      {
+        "column": "LOCALIZER_ORIENTATION",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "TRANSFER_SYNTAX_UID",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      }
+    ],
+    "dicom_raw_image_for_lbm": [
+      {
+        "column": "ID",
+        "type": "bigint",
+        "nullable": "NO",
+        "key": "PRI"
+      },
+      {
+        "column": "SOP_CLASS_UID",
+        "type": "varchar",
+        "nullable": "NO",
+        "key": ""
+      },
+      {
+        "column": "SOP_INSTANCE_UID",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "STUDY_INSTANCE_UID",
+        "type": "varchar",
+        "nullable": "NO",
+        "key": "MUL"
+      },
+      {
+        "column": "SERIE_INSTANCE_UID",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "ORIGINAL_SERIES_INSTANCE_UID",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "PATIENT_ID",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "IMAGE_TYPE",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "IMAGE_NUMBER",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "SLICE_LOCATION",
+        "type": "float",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "MA",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "DT_INSERTED",
+        "type": "timestamp",
+        "nullable": "NO",
+        "key": ""
+      },
+      {
+        "column": "AET_PRODUCER",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "AET_SENDER",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "AET_DESTINATION",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "IS_GZIPPED",
+        "type": "char",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "COMPRESSION_METHOD",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "IS_LOCALIZER",
+        "type": "char",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "TRANSLATOR_CODE",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "WITH_PIXEL_DATA",
+        "type": "tinyint",
+        "nullable": "NO",
+        "key": ""
+      },
+      {
+        "column": "SIZE_OF_FILE",
+        "type": "int",
+        "nullable": "NO",
+        "key": ""
+      },
+      {
+        "column": "LOCALIZER_ORIENTATION",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "TRANSFER_SYNTAX_UID",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      }
+    ],
+    "dose_analytics_tmp_ct_series": [
+      {
+        "column": "id",
+        "type": "bigint",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "ae_key",
+        "type": "int",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "facility_key",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "sd_key",
+        "type": "bigint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "protocol_key",
+        "type": "bigint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "lexicon_item_key",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "series_description_key",
+        "type": "bigint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "dtype",
+        "type": "varchar",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "patient_age",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "patient_weight",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "patient_bmi",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      }
+    ],
+    "dose_analytics_tmp_ct_study": [
+      {
+        "column": "id",
+        "type": "bigint",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "ae_key",
+        "type": "int",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "facility_key",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "sd_key",
+        "type": "bigint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "protocol_key",
+        "type": "bigint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "lexicon_item_key",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "patient_age",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "patient_weight",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "patient_bmi",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      }
+    ],
+    "dose_analytics_tmp_mg_series": [
+      {
+        "column": "id",
+        "type": "bigint",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "ae_key",
+        "type": "int",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "facility_key",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "sd_key",
+        "type": "bigint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "protocol_key",
+        "type": "bigint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "standard_study_description_key",
+        "type": "bigint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "series_description_key",
+        "type": "bigint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "patient_age",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "patient_weight",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "patient_bmi",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "body_part_thickness",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      }
+    ],
+    "dose_analytics_tmp_mg_study": [
+      {
+        "column": "id",
+        "type": "bigint",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "ae_key",
+        "type": "int",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "facility_key",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "sd_key",
+        "type": "bigint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "protocol_key",
+        "type": "bigint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "standard_study_description_key",
+        "type": "bigint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "patient_age",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "patient_weight",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "patient_bmi",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "body_part_thickness",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      }
+    ],
+    "dose_analytics_tmp_nm_study": [
+      {
+        "column": "id",
+        "type": "bigint",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "ae_key",
+        "type": "int",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "facility_key",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "sd_key",
+        "type": "bigint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "protocol_key",
+        "type": "bigint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "radiopharmaceutical_code_key",
+        "type": "bigint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "patient_age",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "patient_weight",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "patient_bmi",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      }
+    ],
+    "dose_analytics_tmp_rf_series": [
+      {
+        "column": "id",
+        "type": "bigint",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "ae_key",
+        "type": "int",
+        "nullable": "YES",
+        "key": "MUL"
+      },
+      {
+        "column": "facility_key",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "sd_key",
+        "type": "bigint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "protocol_key",
+        "type": "bigint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "standard_study_description_key",
+        "type": "bigint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "series_description_key",
+        "type": "bigint",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "patient_age",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "patient_weight",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "patient_bmi",
+        "type": "double",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "VIEW_NAME_KEY",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      },
+      {
+        "column": "ACQUISITION_TYPE_KEY",
+        "type": "int",
+        "nullable": "YES",
+        "key": ""
+      }
+    ]
+  },
+  "declared_relationships": [
+    {
+      "table": "ae",
+      "column": "DEVICE_KEY",
+      "references_table": "device",
+      "references_column": "ID"
+    },
+    {
+      "table": "ae",
+      "column": "CT_LOG_SFTP_CONNECTION_KEY",
+      "references_table": "ct_log_sftp_connection",
+      "references_column": "ID"
+    },
+    {
+      "table": "ae",
+      "column": "PRISTINA_LOG_SFTP_CONNECTION_KEY",
+      "references_table": "pristina_log_sftp_connection",
+      "references_column": "ID"
+    },
+    {
+      "table": "ae",
+      "column": "DICOM_OVER_THE_WEB_CONNECTION_KEY",
+      "references_table": "dicom_over_the_web_connection",
+      "references_column": "ID"
+    },
+    {
+      "table": "ae",
+      "column": "DOMAIN_KEY",
+      "references_table": "domain",
+      "references_column": "ID"
+    },
+    {
+      "table": "ae",
+      "column": "PROCESSING_CLASS_KEY",
+      "references_table": "processing_class",
+      "references_column": "ID"
+    },
+    {
+      "table": "ae",
+      "column": "AE_TABLE_KEY",
+      "references_table": "ae_table",
+      "references_column": "ID"
+    },
+    {
+      "table": "clinical_context",
+      "column": "MEASURED_BY_USER_KEY",
+      "references_table": "serphydose_user",
+      "references_column": "USER_NAME"
+    },
+    {
+      "table": "clinical_order",
+      "column": "IMAGING_REQUEST_KEY",
+      "references_table": "imaging_service_request",
+      "references_column": "ID"
+    },
+    {
+      "table": "clinical_order",
+      "column": "PARENT_CLINICAL_ORDER_KEY",
+      "references_table": "clinical_order",
+      "references_column": "ID"
+    },
+    {
+      "table": "clinical_order",
+      "column": "ORDERING_PHYSICIAN_KEY",
+      "references_table": "physician",
+      "references_column": "ID"
+    },
+    {
+      "table": "clinical_order",
+      "column": "PATIENT_KEY",
+      "references_table": "patient",
+      "references_column": "ID"
+    },
+    {
+      "table": "correction_factor_history",
+      "column": "AE_KEY",
+      "references_table": "ae",
+      "references_column": "ID"
+    },
+    {
+      "table": "ct_log_message",
+      "column": "PARENT_KEY",
+      "references_table": "ct_log_message",
+      "references_column": "ID"
+    },
+    {
+      "table": "ct_log_message_data",
+      "column": "CT_LOG_MESSAGE_ID",
+      "references_table": "ct_log_message",
+      "references_column": "ID"
+    },
+    {
+      "table": "ct_serie",
+      "column": "dose_check_notification_details_key",
+      "references_table": "dose_check_notification_details",
+      "references_column": "id"
+    },
+    {
+      "table": "ct_serie",
+      "column": "dose_check_alert_details_key",
+      "references_table": "dose_check_alert_details",
+      "references_column": "id"
+    },
+    {
+      "table": "ct_serie",
+      "column": "PROTOCOL_KEY",
+      "references_table": "protocol",
+      "references_column": "ID"
+    },
+    {
+      "table": "ct_study",
+      "column": "PROTOCOL_KEY",
+      "references_table": "protocol",
+      "references_column": "ID"
+    },
+    {
+      "table": "ct_study",
+      "column": "LAST_PROTOCOL_KEY",
+      "references_table": "protocol",
+      "references_column": "ID"
+    },
+    {
+      "table": "ct_study",
+      "column": "FIRST_PROTOCOL_KEY",
+      "references_table": "protocol",
+      "references_column": "ID"
+    },
+    {
+      "table": "ct_study",
+      "column": "CORRECTION_FACTOR_HISTORY_KEY",
+      "references_table": "correction_factor_history",
+      "references_column": "ID"
+    },
+    {
+      "table": "device_group_ae",
+      "column": "AE_KEY",
+      "references_table": "ae",
+      "references_column": "ID"
+    },
+    {
+      "table": "dicom_message",
+      "column": "DISPATCH_AE_KEY",
+      "references_table": "ae",
+      "references_column": "ID"
+    },
+    {
+      "table": "dicom_message_data",
+      "column": "DICOM_MESSAGE_ID",
+      "references_table": "dicom_message",
+      "references_column": "ID"
+    },
+    {
+      "table": "dicom_message_state",
+      "column": "DICOM_MESSAGE_ID",
+      "references_table": "dicom_message",
+      "references_column": "ID"
+    },
+    {
+      "table": "dicom_raw_image_data",
+      "column": "DICOM_RAW_IMAGE_ID",
+      "references_table": "dicom_raw_image",
+      "references_column": "ID"
+    },
+    {
+      "table": "dose_analytics_tmp_ct_series",
+      "column": "id",
+      "references_table": "serie",
+      "references_column": "ID"
+    },
+    {
+      "table": "dose_analytics_tmp_ct_study",
+      "column": "id",
+      "references_table": "study",
+      "references_column": "ID"
+    },
+    {
+      "table": "dose_analytics_tmp_mg_series",
+      "column": "id",
+      "references_table": "serie",
+      "references_column": "ID"
+    },
+    {
+      "table": "dose_analytics_tmp_mg_study",
+      "column": "id",
+      "references_table": "study",
+      "references_column": "ID"
+    },
+    {
+      "table": "dose_analytics_tmp_nm_study",
+      "column": "id",
+      "references_table": "study",
+      "references_column": "ID"
+    },
+    {
+      "table": "dose_analytics_tmp_rf_series",
+      "column": "id",
+      "references_table": "serie",
+      "references_column": "ID"
+    },
+    {
+      "table": "ftp_event_log",
+      "column": "AE_KEY",
+      "references_table": "ae",
+      "references_column": "ID"
+    },
+    {
+      "table": "injection_event",
+      "column": "AE_KEY",
+      "references_table": "ae",
+      "references_column": "ID"
+    },
+    {
+      "table": "mg_image",
+      "column": "AE_KEY",
+      "references_table": "ae",
+      "references_column": "ID"
+    },
+    {
+      "table": "mr_image_orientation_patient",
+      "column": "mr_serie_key",
+      "references_table": "mr_serie",
+      "references_column": "id"
+    },
+    {
+      "table": "nm_administration_context",
+      "column": "AE_KEY",
+      "references_table": "ae",
+      "references_column": "ID"
+    },
+    {
+      "table": "nm_administration_context",
+      "column": "PATIENT_KEY",
+      "references_table": "patient",
+      "references_column": "ID"
+    },
+    {
+      "table": "nm_administration_context",
+      "column": "PATIENT_CHARACTERISTICS_KEY",
+      "references_table": "nm_patient_characteristics",
+      "references_column": "ID"
+    },
+    {
+      "table": "nm_gfr",
+      "column": "PATIENT_CHARACTERISTICS_KEY",
+      "references_table": "nm_patient_characteristics",
+      "references_column": "ID"
+    },
+    {
+      "table": "nm_patient_characteristics",
+      "column": "BODY_AREA_FORMULA_CODE_KEY",
+      "references_table": "term_code_type",
+      "references_column": "ID"
+    },
+    {
+      "table": "nm_patient_states",
+      "column": "TERM_CODE_TYPE_KEY",
+      "references_table": "term_code_type",
+      "references_column": "ID"
+    },
+    {
+      "table": "nm_patient_states",
+      "column": "NM_PATIENT_CHARACTERISTICS_KEY",
+      "references_table": "nm_patient_characteristics",
+      "references_column": "ID"
+    },
+    {
+      "table": "patient",
+      "column": "PHYSICAL_PATIENT_KEY",
+      "references_table": "physical_patient",
+      "references_column": "ID"
+    },
+    {
+      "table": "petct_device_linkage",
+      "column": "CT_AE_KEY",
+      "references_table": "ae",
+      "references_column": "ID"
+    },
+    {
+      "table": "petct_device_linkage",
+      "column": "PET_AE_KEY",
+      "references_table": "ae",
+      "references_column": "ID"
+    },
+    {
+      "table": "physician_operator_ae",
+      "column": "ae_id",
+      "references_table": "ae",
+      "references_column": "ID"
+    },
+    {
+      "table": "physician_performing_ae",
+      "column": "ae_id",
+      "references_table": "ae",
+      "references_column": "ID"
+    },
+    {
+      "table": "physician_reading_ae",
+      "column": "ae_id",
+      "references_table": "ae",
+      "references_column": "ID"
+    },
+    {
+      "table": "physician_referring_ae",
+      "column": "ae_id",
+      "references_table": "ae",
+      "references_column": "ID"
+    },
+    {
+      "table": "physician_requesting_ae",
+      "column": "ae_id",
+      "references_table": "ae",
+      "references_column": "ID"
+    },
+    {
+      "table": "positioner_event",
+      "column": "AE_KEY",
+      "references_table": "ae",
+      "references_column": "ID"
+    },
+    {
+      "table": "pristina_log_sftp_connection",
+      "column": "TECHNICAL_AE_KEY",
+      "references_table": "ae",
+      "references_column": "ID"
+    },
+    {
+      "table": "puncture_event",
+      "column": "AE_KEY",
+      "references_table": "ae",
+      "references_column": "ID"
+    },
+    {
+      "table": "raised_alert",
+      "column": "PHYSICAL_PATIENT_KEY",
+      "references_table": "physical_patient",
+      "references_column": "ID"
+    },
+    {
+      "table": "raised_drl_alert",
+      "column": "PHYSICAL_PATIENT_KEY",
+      "references_table": "physical_patient",
+      "references_column": "ID"
+    },
+    {
+      "table": "raised_lexicon_alert",
+      "column": "PHYSICAL_PATIENT_KEY",
+      "references_table": "physical_patient",
+      "references_column": "ID"
+    },
+    {
+      "table": "requested_procedure",
+      "column": "CLINICAL_ORDER_KEY",
+      "references_table": "clinical_order",
+      "references_column": "ID"
+    },
+    {
+      "table": "rl_ae",
+      "column": "AE_KEY",
+      "references_table": "ae",
+      "references_column": "ID"
+    },
+    {
+      "table": "rl_read_summary",
+      "column": "LAST_AE_KEY",
+      "references_table": "ae",
+      "references_column": "ID"
+    },
+    {
+      "table": "rra_database_image",
+      "column": "AE_KEY",
+      "references_table": "ae",
+      "references_column": "ID"
+    },
+    {
+      "table": "scheduled_procedure_step",
+      "column": "SCHEDULED_AE_KEY",
+      "references_table": "ae",
+      "references_column": "ID"
+    },
+    {
+      "table": "study",
+      "column": "AE_KEY",
+      "references_table": "ae",
+      "references_column": "ID"
+    },
+    {
+      "table": "study",
+      "column": "PATIENT_KEY",
+      "references_table": "patient",
+      "references_column": "ID"
+    },
+    {
+      "table": "study_description_ae",
+      "column": "ae_id",
+      "references_table": "ae",
+      "references_column": "ID"
+    },
+    {
+      "table": "tracking_ct_series_alert",
+      "column": "series_key",
+      "references_table": "ct_serie",
+      "references_column": "ID"
+    },
+    {
+      "table": "tracking_ct_series_lexicon_alert",
+      "column": "series_key",
+      "references_table": "ct_serie",
+      "references_column": "ID"
+    },
+    {
+      "table": "tracking_ct_study_alert",
+      "column": "study_key",
+      "references_table": "ct_study",
+      "references_column": "ID"
+    },
+    {
+      "table": "tracking_ct_study_lexicon_alert",
+      "column": "study_key",
+      "references_table": "ct_study",
+      "references_column": "ID"
+    },
+    {
+      "table": "tracking_ct_study_protocol_alert",
+      "column": "study_key",
+      "references_table": "ct_study",
+      "references_column": "ID"
+    }
+  ],
+  "guessed_relationships": [
+    {
+      "table": "patient_hash",
+      "column": "PATIENT_ID",
+      "likely_references_table": "patient"
+    },
+    {
+      "table": "ct_detailed_export",
+      "column": "PATIENT_ID",
+      "likely_references_table": "patient"
+    },
+    {
+      "table": "ct_general_export",
+      "column": "PATIENT_ID",
+      "likely_references_table": "patient"
+    },
+    {
+      "table": "ct_log_message",
+      "column": "PATIENT_ID",
+      "likely_references_table": "patient"
+    },
+    {
+      "table": "dicom_message",
+      "column": "PATIENT_ID",
+      "likely_references_table": "patient"
+    },
+    {
+      "table": "dicom_message_for_lbm",
+      "column": "PATIENT_ID",
+      "likely_references_table": "patient"
+    },
+    {
+      "table": "dicom_raw_image",
+      "column": "PATIENT_ID",
+      "likely_references_table": "patient"
+    },
+    {
+      "table": "dicom_raw_image_for_lbm",
+      "column": "PATIENT_ID",
+      "likely_references_table": "patient"
+    }
+  ]
+}

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DevHub — opening…</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpolygon points='16,1 29,8.5 29,23.5 16,31 3,23.5 3,8.5' fill='%233b82f6'/%3E%3Ctext x='16' y='22' text-anchor='middle' fill='white' font-size='15' font-weight='900' font-family='system-ui,sans-serif'%3ED%3C/text%3E%3C/svg%3E">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f172a; --surface: #1e293b; --surface2: #263347; --border: #334155;
+      --accent: #3b82f6; --green: #22c55e; --red: #ef4444;
+      --text: #f1f5f9; --muted: #94a3b8;
+    }
+    body {
+      min-height: 100vh; background:
+        radial-gradient(900px 520px at 50% -12%, rgba(59,130,246,.16), transparent 70%),
+        var(--bg);
+      color: var(--text); font-family: system-ui, -apple-system, sans-serif;
+      display: flex; align-items: center; justify-content: center; padding: 24px;
+    }
+    .card {
+      width: 100%; max-width: 440px; background: var(--surface);
+      border: 1px solid var(--border); border-radius: 14px;
+      box-shadow: 0 24px 60px rgba(0,0,0,.5); overflow: hidden;
+      animation: fadeIn .25s ease-out;
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+    /* ── profile band: the tab starts here, on DevHub, as you ── */
+    .who {
+      display: flex; align-items: center; gap: 10px;
+      padding: 14px 18px; background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+    }
+    .avatar {
+      width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+      background: linear-gradient(135deg, var(--accent), #8b5cf6);
+      color: #fff; font-size: 13px; font-weight: 700;
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+    .who-text { display: flex; flex-direction: column; line-height: 1.25; min-width: 0; }
+    .who-hi   { font-size: 9px; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); }
+    .who-name { font-size: 13px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .who-logo { margin-left: auto; font-size: 12px; font-weight: 700; color: var(--muted); white-space: nowrap; }
+    .who-logo b { color: var(--accent); }
+
+    .body { padding: 24px 22px 20px; text-align: center; }
+    .spinner {
+      width: 38px; height: 38px; margin: 0 auto 18px; border-radius: 50%;
+      border: 3px solid var(--border); border-top-color: var(--accent);
+      animation: spin .8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner.done { animation: none; border-color: var(--green); border-top-color: var(--green); }
+    .spinner.fail { animation: none; border-color: #7f1d1d; border-top-color: var(--red); }
+
+    h1 { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+    .sub { font-size: 12.5px; color: var(--muted); line-height: 1.55; min-height: 20px; }
+
+    /* ── stepper: profile → start → open ── */
+    .steps {
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      margin: 20px 0 4px;
+    }
+    .step {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em;
+      color: #475569; transition: color .2s;
+    }
+    .step i {
+      width: 7px; height: 7px; border-radius: 50%; background: #334155;
+      flex-shrink: 0; transition: background .2s, box-shadow .2s;
+    }
+    .step.done { color: var(--muted); }
+    .step.done i { background: var(--green); }
+    .step.now  { color: #93c5fd; }
+    .step.now i { background: var(--accent); animation: pulse 1.1s ease-in-out infinite; }
+    .step.fail { color: #f87171; }
+    .step.fail i { background: var(--red); }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .25; } }
+    .step-arrow { color: #334155; font-size: 10px; }
+
+    .log {
+      display: none; margin-top: 16px; text-align: left;
+      background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+      padding: 9px 11px; font-family: monospace; font-size: 11px; color: var(--muted);
+      white-space: pre-wrap; max-height: 150px; overflow: auto;
+    }
+    .log.show { display: block; }
+
+    .actions { display: none; gap: 8px; margin-top: 18px; justify-content: center; }
+    .actions.show { display: flex; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 8px 15px; border-radius: 8px; border: none; cursor: pointer;
+      font-family: inherit; font-size: 13px; font-weight: 600; text-decoration: none;
+      transition: opacity .15s, transform .1s;
+    }
+    .btn:hover  { opacity: .88; }
+    .btn:active { transform: scale(.97); }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-ghost   { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+
+    .foot {
+      padding: 11px 18px; border-top: 1px solid var(--border);
+      font-size: 10.5px; color: var(--muted);
+      display: flex; justify-content: space-between; gap: 8px;
+    }
+    .foot code { font-family: monospace; color: #64748b; }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div class="who">
+    <span class="avatar" id="avatar">·</span>
+    <span class="who-text">
+      <span class="who-hi">Signed in as</span>
+      <span class="who-name" id="whoName">…</span>
+    </span>
+    <span class="who-logo">⬢ <b>Dev</b>Hub</span>
+  </div>
+
+  <div class="body">
+    <div class="spinner" id="spinner"></div>
+    <h1 id="title">Opening…</h1>
+    <p class="sub" id="sub">Checking with DevHub…</p>
+
+    <div class="steps">
+      <span class="step now"  id="s1"><i></i>Profile</span>
+      <span class="step-arrow">→</span>
+      <span class="step"      id="s2"><i></i>Service</span>
+      <span class="step-arrow">→</span>
+      <span class="step"      id="s3"><i></i>Open</span>
+    </div>
+
+    <pre class="log" id="log"></pre>
+
+    <div class="actions" id="actions">
+      <button class="btn btn-primary" id="retry">↻ Try again</button>
+      <a class="btn btn-ghost" href="/">← Back to DevHub</a>
+    </div>
+  </div>
+
+  <div class="foot">
+    <span id="footSvc">…</span>
+    <code id="footTarget"></code>
+  </div>
+</div>
+
+<script>
+  // The service id is the last path segment: /go/<id>
+  const SVC_ID  = decodeURIComponent(location.pathname.split('/').filter(Boolean).pop() || '');
+  const PARAMS  = new URLSearchParams(location.search);
+  // ?restart=1 always relaunches; without it a healthy service is opened as-is.
+  const RESTART = PARAMS.has('restart');
+  const POLL_MS = 1000;
+  const FALLBACK_TIMEOUT_S = 30;
+
+  const el = id => document.getElementById(id);
+  const esc = s => String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+  function step(n, state) {
+    ['s1','s2','s3'].forEach((sid, i) => {
+      if (i + 1 < n)  el(sid).className = 'step done';
+      if (i + 1 === n) el(sid).className = 'step ' + state;
+    });
+  }
+
+  function say(title, sub) {
+    el('title').textContent = title;
+    el('sub').innerHTML = sub;
+    document.title = `DevHub — ${title}`;
+  }
+
+  function fail(title, sub, logText) {
+    el('spinner').className = 'spinner fail';
+    say(title, sub);
+    if (logText) { el('log').textContent = logText; el('log').classList.add('show'); }
+    el('actions').classList.add('show');
+  }
+
+  // ── step 1: who's asking ────────────────────────────────────────────────────
+  async function loadProfile() {
+    try {
+      const u = await fetch('/api/user').then(r => r.json());
+      el('avatar').textContent  = u.initials || '·';
+      el('whoName').textContent = u.display_name || u.username || 'this machine';
+      return u;
+    } catch {
+      el('whoName').textContent = 'this machine';
+      return null;
+    }
+  }
+
+  async function tail() {
+    try {
+      const { log } = await fetch(`/api/services/${SVC_ID}/log?lines=20`).then(r => r.json());
+      return (log || '').trim();
+    } catch { return ''; }
+  }
+
+  async function run() {
+    step(1, 'now');
+    const [user, svc0] = await Promise.all([
+      loadProfile(),
+      fetch(`/api/services/${SVC_ID}`).then(r => r.ok ? r.json() : null).catch(() => null),
+    ]);
+
+    if (!svc0) {
+      step(1, 'fail');
+      return fail('Unknown service', `DevHub has no service called <code>${esc(SVC_ID)}</code>.`);
+    }
+
+    el('footSvc').textContent = svc0.name;
+    el('footTarget').textContent = svc0.url || svc0.launch_type;
+    step(1, 'done');
+    step(2, 'now');
+
+    // Not a web service (folder / desktop app / MMC console): start it and stop.
+    if (!['python', 'bat', 'ps1'].includes(svc0.launch_type)) {
+      const res = await fetch(`/api/services/${SVC_ID}/launch`, { method: 'POST' });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        step(2, 'fail');
+        return fail(`Couldn't open ${svc0.name}`, esc(err.detail || 'The launch was rejected.'));
+      }
+      el('spinner').className = 'spinner done';
+      step(2, 'done'); step(3, 'done');
+      say(`${esc(svc0.name)} opened`, 'It has no web page — look for its window on your desktop.');
+      el('actions').classList.add('show');
+      el('retry').style.display = 'none';
+      return;
+    }
+
+    // Already up and answering, and no restart asked for: hop straight there.
+    if (!RESTART && svc0.ready && svc0.url) {
+      step(2, 'done'); step(3, 'now');
+      el('spinner').className = 'spinner done';
+      say(`Opening ${esc(svc0.name)}`, `Already running on <code>:${svc0.port}</code> — taking you there.`);
+      await sleep(400);
+      return location.replace(svc0.url);
+    }
+
+    say(`Starting ${esc(svc0.name)}…`,
+        RESTART ? 'Restarting it, then opening it here.' : 'DevHub is starting it for you.');
+    const res = await fetch(`/api/services/${SVC_ID}/launch`, { method: 'POST' });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      step(2, 'fail');
+      return fail(`Couldn't start ${svc0.name}`, esc(err.detail || 'The launch was rejected.'),
+                  await tail());
+    }
+    const info = await res.json();
+    const budget = (info.timeout || svc0.timeout || FALLBACK_TIMEOUT_S) * 1000;
+    const deadline = Date.now() + budget;
+
+    while (Date.now() < deadline) {
+      await sleep(POLL_MS);
+      const left = Math.ceil((deadline - Date.now()) / 1000);
+      el('sub').innerHTML = `Waiting for it to answer — ${left}s left.`;
+      let s;
+      try { s = await fetch(`/api/services/${SVC_ID}`).then(r => r.json()); } catch { continue; }
+      if (s.ready && s.url) {
+        step(2, 'done'); step(3, 'now');
+        el('spinner').className = 'spinner done';
+        say(`${esc(s.name)} is up`, `Running on <code>:${s.port}</code> — opening now.`);
+        await sleep(400);
+        return location.replace(s.url);
+      }
+    }
+
+    step(2, 'fail');
+    fail(`${svc0.name} didn't start`,
+         `No response in ${Math.round(budget / 1000)}s. Last lines of its launch log:`,
+         (await tail()) || '(no log written)');
+  }
+
+  el('retry').onclick = () => location.replace(`/go/${encodeURIComponent(SVC_ID)}?restart=1`);
+  run();
+</script>
+
+</body>
+</html>

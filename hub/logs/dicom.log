@@ -1,0 +1,4 @@
+[hub] 2026-09-01T15:14:11.297245 launching dicom
+[hub] cwd: C:\Users\250020392\OneDrive - GE HealthCare\Desktop\local-setup\dicom-send
+[hub] cmd: C:\Users\250020392\AppData\Local\Python\pythoncore-3.14-64\pythonw.exe dicom_send_web.py
+

@@ -1,0 +1,37 @@
+{
+  "targets": [
+    {
+      "label": "",
+      "enabled": true,
+      "host": "10.12.56.212",
+      "port": 2001,
+      "called_aet": "DW_SCP",
+      "calling_aet": "ct"
+    },
+    {
+      "label": "",
+      "enabled": true,
+      "host": "10.12.56.212",
+      "port": 2001,
+      "called_aet": "DW_SCP",
+      "calling_aet": "nm"
+    }
+  ],
+  "throttle": {
+    "enabled": true,
+    "series_min_s": 8.0,
+    "series_max_s": 18.0,
+    "file_delay_enabled": false,
+    "file_min_s": 0.2,
+    "file_max_s": 1.5
+  },
+  "health": {
+    "gate_enabled": true,
+    "retry_enabled": true,
+    "max_retries": 2,
+    "retry_backoff_s": 5.0,
+    "wait_attempts": 6,
+    "wait_interval_s": 10.0,
+    "abort_target_on_unhealthy": true
+  }
+}

@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Read-only Jira sprint status and hygiene reporting.">
+  <title>Jira Weekly Report</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Jira Weekly Report home">
+        <span class="brand-mark" aria-hidden="true">JF</span>
+        <span>
+          <strong>Jira Weekly Report</strong>
+          <small>Sprint status &amp; hygiene</small>
+        </span>
+      </a>
+      <nav class="view-nav" aria-label="Report sections">
+        <a class="active" href="/">Weekly report</a>
+        <a href="/standup">Daily standup</a>
+        <a href="/assignments">Assignment &amp; backlog</a>
+        <a href="/sd-analysis">SD analysis</a>
+        <a href="/bulk-create">Bulk create</a>
+      </nav>
+      <div class="topbar-right">
+        <div class="topbar-status">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span>Read-only scan</span>
+        </div>
+
+        <div class="gitlab-toggle-wrap">
+          <button id="gitlab-toggle-button" type="button" class="gitlab-toggle-button" aria-expanded="false" aria-controls="gitlab-panel">
+            <span id="gitlab-toggle-dot" class="gitlab-toggle-dot" aria-hidden="true"></span>
+            <span>GitLab sync</span>
+            <span class="gitlab-toggle-caret" aria-hidden="true">▾</span>
+          </button>
+
+          <div id="gitlab-panel" class="gitlab-panel" hidden>
+            <div class="gitlab-card" aria-labelledby="gitlab-title">
+              <div class="section-heading">
+                <div>
+                  <p class="eyebrow">GITLAB SYNC (OPTIONAL)</p>
+                  <h2 id="gitlab-title">Match MRs to Jira issues</h2>
+                </div>
+              </div>
+              <p class="muted">Connect a GitLab group to see which merge requests belong to each
+                sprint issue, flag missing links, and push MR details into a Jira comment on demand.</p>
+
+              <label for="gitlab-url">GitLab group URL</label>
+              <input id="gitlab-url" type="url" placeholder="https://gitlab.your-company.com/your-group">
+
+              <label for="gitlab-token">GitLab access token</label>
+              <div class="secret-input">
+                <input id="gitlab-token" type="password"
+                  placeholder="Enter once, then it is remembered securely" autocomplete="off">
+                <button id="toggle-gitlab-token" type="button" class="text-button"
+                  aria-label="Show token">Show</button>
+              </div>
+              <div class="credential-options">
+                <label class="check-label">
+                  <input id="gitlab-save-token" type="checkbox" checked>
+                  <span>Remember securely on this Windows account</span>
+                </label>
+                <button id="gitlab-forget-token" type="button" class="forget-button" hidden>Forget token</button>
+              </div>
+              <p id="gitlab-saved-token-status" class="saved-token-status" hidden></p>
+
+              <label class="check-label gitlab-write-toggle">
+                <input id="gitlab-allow-comments" type="checkbox">
+                <span>Allow posting MR details as Jira comments (off = matching only, nothing is written)</span>
+              </label>
+
+              <button id="gitlab-connect-button" type="button" class="secondary-button">Connect GitLab</button>
+              <div id="gitlab-error" class="error-message" role="alert" hidden></div>
+              <p id="gitlab-status" class="saved-token-status" hidden></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="workspace">
+        <aside class="setup-card" aria-labelledby="setup-title">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">CONNECTION</p>
+              <h2 id="setup-title">Run sprint scan</h2>
+            </div>
+            <span class="secure-note">Token not saved</span>
+          </div>
+
+          <form id="report-form">
+            <fieldset class="report-type">
+              <legend>Weekly report type</legend>
+              <label>
+                <input type="radio" name="report_type" value="combined" checked>
+                <span><strong>Everything</strong><small>Status + hygiene</small></span>
+              </label>
+              <label>
+                <input type="radio" name="report_type" value="sprint">
+                <span><strong>Sprint</strong><small>Progress &amp; blockers</small></span>
+              </label>
+              <label>
+                <input type="radio" name="report_type" value="hygiene">
+                <span><strong>Hygiene</strong><small>Missing fields</small></span>
+              </label>
+            </fieldset>
+
+            <label for="base-url">Jira URL</label>
+            <input id="base-url" name="base_url" type="url"
+              placeholder="https://jira.your-company.com" autocomplete="url" required>
+
+            <div class="field-grid">
+              <div>
+                <label for="api-mode">Jira type</label>
+                <select id="api-mode" name="api_mode">
+                  <option value="auto">Detect automatically</option>
+                  <option value="server">Data Center / Server</option>
+                  <option value="cloud">Jira Cloud</option>
+                </select>
+              </div>
+              <div>
+                <label for="auth-type">Authentication</label>
+                <select id="auth-type" name="auth_type">
+                  <option value="auto">Choose automatically</option>
+                  <option value="bearer">Personal access token</option>
+                  <option value="basic">Email + API token</option>
+                </select>
+              </div>
+            </div>
+
+            <div id="username-field">
+              <label for="username">Username / Cloud email</label>
+              <input id="username" name="username" type="text"
+                placeholder="your.name@company.com" autocomplete="username">
+            </div>
+
+            <label for="token">API token or PAT</label>
+            <div class="secret-input">
+              <input id="token" name="token" type="password"
+                placeholder="Enter once, then it is remembered securely" autocomplete="current-password">
+              <button id="toggle-token" type="button" class="text-button"
+                aria-label="Show token">Show</button>
+            </div>
+            <div class="credential-options">
+              <label class="check-label">
+                <input id="save-token" type="checkbox" checked>
+                <span>Remember securely on this Windows account</span>
+              </label>
+              <button id="forget-token" type="button" class="forget-button" hidden>Forget token</button>
+            </div>
+            <p id="saved-token-status" class="saved-token-status" hidden></p>
+
+            <div class="sprint-picker-heading">
+              <label for="sprint">Sprint</label>
+              <button id="refresh-sprints" type="button" class="inline-link-button" title="Re-fetch the sprint list from Jira">Refresh</button>
+            </div>
+            <div class="sprint-picker" id="sprint-picker">
+              <input id="sprint" name="sprint" type="text" class="sprint-search"
+                placeholder="Type a sprint number or name to search…" autocomplete="off">
+              <div id="sprint-options" class="sprint-options" role="listbox" aria-label="Active and upcoming sprints" hidden></div>
+            </div>
+            <p id="sprint-picker-status" class="muted sprint-picker-status" hidden></p>
+
+            <div class="period-heading">
+              <label>Timesheet period</label>
+              <div class="period-shortcuts">
+                <button id="this-week" type="button">This week</button>
+                <button id="last-week" type="button">Last week</button>
+              </div>
+            </div>
+            <div class="field-grid">
+              <div>
+                <label for="worklog-start">From date</label>
+                <input id="worklog-start" type="date" required>
+              </div>
+              <div>
+                <label for="worklog-end">To date</label>
+                <input id="worklog-end" type="date" required>
+              </div>
+            </div>
+
+            <details class="advanced">
+              <summary>Advanced JQL</summary>
+              <label for="jql">Query to run</label>
+              <textarea id="jql" name="jql" rows="5"
+                spellcheck="false"></textarea>
+              <p>Leave the default query or edit it for a one-time report.</p>
+            </details>
+
+            <button id="run-button" class="primary-button" type="submit">
+              <span class="button-label">Run weekly report</span>
+              <span class="button-loader" aria-hidden="true"></span>
+            </button>
+          </form>
+          <div id="form-error" class="error-message" role="alert" hidden></div>
+        </aside>
+
+        <section class="results" aria-live="polite">
+          <div id="empty-state" class="empty-state">
+            <div class="empty-visual" aria-hidden="true">
+              <span></span><span></span><span></span>
+            </div>
+            <p class="eyebrow">READY WHEN YOU ARE</p>
+            <h2>Your sprint health will appear here.</h2>
+            <p>Connect to Jira and run the scan. Reports are generated locally
+              and Jira remains unchanged.</p>
+          </div>
+
+          <div id="loading-state" class="loading-state" hidden>
+            <div class="scan-animation" aria-hidden="true"></div>
+            <p class="eyebrow">SCANNING JIRA</p>
+            <h2>Building the weekly report…</h2>
+            <p id="loading-message">Resolving Jira fields and reading sprint items.</p>
+          </div>
+
+          <div id="report-results" hidden>
+            <div class="result-header">
+              <div>
+                <p class="eyebrow">SPRINT HEALTH</p>
+                <h2 id="report-title">Weekly status summary</h2>
+                <p id="report-caption" class="muted"></p>
+              </div>
+              <div id="download-actions" class="download-actions"></div>
+            </div>
+
+            <div id="metric-grid" class="metric-grid"></div>
+
+            <div id="configuration-alert" class="configuration-alert" hidden>
+              <strong>Some custom fields need matching</strong>
+              <p id="configuration-text"></p>
+            </div>
+
+            <section class="data-card timesheet-card">
+              <div class="card-heading">
+                <div>
+                  <p class="eyebrow">TIMESHEET FILLED UP</p>
+                  <h3 id="timesheet-title">Weekly hours by person and date</h3>
+                  <p id="timesheet-caption" class="muted"></p>
+                </div>
+                <div id="timesheet-summary" class="mini-metrics"></div>
+              </div>
+              <div class="table-scroll">
+                <table>
+                  <thead><tr id="timesheet-header"></tr></thead>
+                  <tbody id="timesheet-table"></tbody>
+                </table>
+              </div>
+            </section>
+
+            <section class="data-card">
+              <div class="card-heading">
+                <div>
+                  <p class="eyebrow">BY OWNER</p>
+                  <h3 id="owner-title">Team status and hygiene</h3>
+                </div>
+              </div>
+              <div class="table-scroll">
+                <table>
+                  <thead>
+                    <tr id="owner-header"></tr>
+                  </thead>
+                  <tbody id="owner-table"></tbody>
+                </table>
+              </div>
+            </section>
+
+            <section class="data-card">
+              <div class="card-heading issue-heading">
+                <div>
+                  <p class="eyebrow">ISSUE DETAILS</p>
+                  <h3>Items requiring attention</h3>
+                </div>
+                <div class="filters">
+                  <input id="issue-search" type="search" placeholder="Search key, owner or summary"
+                    aria-label="Search report issues">
+                  <select id="issue-filter" aria-label="Filter report issues">
+                    <option value="attention">Needs attention</option>
+                    <option value="all">All items</option>
+                    <option value="blocked">Blocked</option>
+                    <option value="overdue">Overdue</option>
+                    <option value="compliant">Compliant</option>
+                  </select>
+                  <select id="issue-sort" aria-label="Sort report issues">
+                    <option value="owner-asc">Owner A–Z</option>
+                    <option value="owner-desc">Owner Z–A</option>
+                    <option value="key-asc">Issue key</option>
+                    <option value="score-asc">Lowest score</option>
+                  </select>
+                </div>
+              </div>
+              <div class="table-scroll issue-table-scroll" role="region"
+                aria-label="Issue details table. Scroll horizontally to view all columns." tabindex="0">
+                <table class="issue-table">
+                  <thead>
+                    <tr>
+                      <th>Issue</th><th>Owner</th><th>Status</th><th>Total logged</th>
+                      <th>Worked this period by</th><th>Score</th><th>Missing / attention</th>
+                      <th>Content</th><th>GitLab &amp; actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="issue-table"></tbody>
+                </table>
+              </div>
+              <p class="issue-table-scroll-hint">Scroll horizontally for all columns. Issue and owner stay visible on the left.</p>
+              <p id="issue-count" class="table-footnote"></p>
+            </section>
+
+            <section class="data-card" id="description-sections-card" hidden>
+              <div class="card-heading">
+                <div>
+                  <p class="eyebrow">DESCRIPTION CONTENT CHECKS</p>
+                  <h3>Acceptance criteria, test evidence &amp; documentation</h3>
+                  <p class="muted">These aren't separate Jira fields here — they're expected as sections
+                    inside the issue Description, so they're checked and reported separately from the
+                    main hygiene score.</p>
+                </div>
+              </div>
+              <div class="table-scroll">
+                <table>
+                  <thead>
+                    <tr><th>Issue</th><th>Owner</th><th>Status</th><th>Missing sections</th></tr>
+                  </thead>
+                  <tbody id="description-sections-table"></tbody>
+                </table>
+              </div>
+              <p id="description-sections-count" class="table-footnote"></p>
+            </section>
+
+            <section class="data-card" id="orphan-mr-card" hidden>
+              <div class="card-heading">
+                <div>
+                  <p class="eyebrow">GITLAB HYGIENE</p>
+                  <h3>Open merge requests with no linked Jira issue</h3>
+                  <p class="muted">No SD-1234-style key was found in the branch name, title, or description.</p>
+                </div>
+              </div>
+              <div class="table-scroll">
+                <table>
+                  <thead>
+                    <tr><th>Merge request</th><th>Project</th><th>Author</th><th>Description</th><th>Updated</th></tr>
+                  </thead>
+                  <tbody id="orphan-mr-table"></tbody>
+                </table>
+              </div>
+              <p id="orphan-mr-count" class="table-footnote"></p>
+            </section>
+
+            <section class="data-card">
+              <div class="card-heading">
+                <div>
+                  <p class="eyebrow">DATE-WISE WORKLOGS</p>
+                  <h3>Who worked on which story</h3>
+                </div>
+              </div>
+              <div class="table-scroll">
+                <table>
+                  <thead>
+                    <tr><th>Date</th><th>Person</th><th>Story</th><th>Hours</th><th>Worklog comment</th></tr>
+                  </thead>
+                  <tbody id="worklog-table"></tbody>
+                </table>
+              </div>
+              <p id="worklog-count" class="table-footnote"></p>
+            </section>
+          </div>
+        </section>
+      </section>
+    </main>
+    <footer>Local Jira reporting is read-only · GitLab sync only posts a Jira comment when you click
+      "Push to Jira" on a specific issue and comments are explicitly enabled</footer>
+  </div>
+
+  <dialog id="gitlab-detail-modal" class="gitlab-modal">
+    <div class="gitlab-modal-header">
+      <div>
+        <p class="eyebrow">GITLAB DETAILS</p>
+        <h3 id="gitlab-modal-title"></h3>
+      </div>
+      <button type="button" class="gitlab-modal-close" aria-label="Close">&times;</button>
+    </div>
+    <div id="gitlab-modal-body" class="gitlab-modal-body"></div>
+  </dialog>
+</body>
+</html>

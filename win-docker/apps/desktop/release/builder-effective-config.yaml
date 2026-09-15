@@ -1,0 +1,35 @@
+directories:
+  output: release
+  buildResources: build
+appId: org.wincolima.desktop
+productName: WinDock
+copyright: Copyright © 2026 Saurabh Gupta. All rights reserved.
+files:
+  - filter:
+      - out/**/*
+      - package.json
+extraResources:
+  - from: ../../dist/wincolima.exe
+    to: bin/wincolima.exe
+  - from: ../../scripts/packaged-bootstrap.ps1
+    to: bootstrap/packaged-bootstrap.ps1
+win:
+  target:
+    - nsis
+  artifactName: ${productName}-${version}-setup.${ext}
+  legalTrademarks: WinDock — created and owned by Saurabh Gupta
+  signAndEditExecutable: false
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  perMachine: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  menuCategory: WinDock — Created by Saurabh Gupta
+  uninstallDisplayName: WinDock — Created and owned by Saurabh Gupta
+  include: build/installer.nsh
+publish:
+  - provider: github
+    owner: wincolima
+    repo: wincolima
+electronVersion: 36.2.0

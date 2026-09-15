@@ -1,0 +1,11 @@
+dist/
+coverage/
+*.exe
+*.msi
+*.wixpdb
+*.wixobj
+*.log
+apps/desktop/node_modules/
+apps/desktop/out/
+apps/desktop/.vite/
+.env

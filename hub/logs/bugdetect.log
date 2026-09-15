@@ -1,0 +1,23 @@
+[hub] 2026-09-09T12:06:48.021381 launching bugdetect
+[hub] cwd: C:\Users\250020392\OneDrive - GE HealthCare\Desktop\local-setup\BugDetection\sr-assistant
+[hub] cmd: C:\windows\system32\cmd.exe /c C:\Users\250020392\OneDrive - GE HealthCare\Desktop\local-setup\BugDetection\sr-assistant\start.bat
+
+
+ DoseWatch SR Assistant
+ ========================
+
+ [START] Starting backend on http://localhost:3001 ...
+ [START] Waiting for backend to initialise...
+ERROR: Input redirection is not supported, exiting the process immediately.
+ [START] Starting frontend on http://localhost:5173 ...
+ [START] Waiting for frontend to initialise...
+ERROR: Input redirection is not supported, exiting the process immediately.
+ [OPEN]  Opening http://localhost:5173 in browser...
+
+ SR Assistant is running.
+ Backend  > http://localhost:3001
+ Frontend > http://localhost:5173
+
+ Close the two terminal windows to stop the services.
+
+Press any key to continue . . . 

@@ -1,0 +1,4 @@
+[hub] 2026-09-01T15:08:48.880315 launching devwork
+[hub] cwd: C:\Users\250020392\OneDrive - GE HealthCare\Desktop\local-setup\Dev Workstation Manager
+[hub] cmd: C:\windows\System32\WindowsPowerShell\v1.0\powershell.exe -NoProfile -ExecutionPolicy Bypass -File C:\Users\250020392\OneDrive - GE HealthCare\Desktop\local-setup\Dev Workstation Manager\BrowserServer.ps1 -NoBrowser
+

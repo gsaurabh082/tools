@@ -1,0 +1,47 @@
+[
+  {
+    "timestamp": "2026-08-31T10:55:07.728810+00:00",
+    "connection": "10.12.132.24",
+    "database": "serphydose",
+    "sql": "ALTER TABLE `serie` DROP COLUMN `acquisition_duration_source`",
+    "ok": true,
+    "row_count": null,
+    "error": null
+  },
+  {
+    "timestamp": "2026-08-31T10:55:20.207963+00:00",
+    "connection": "10.12.132.24",
+    "database": "serphydose",
+    "sql": "ALTER TABLE `serie` DROP COLUMN `acquisition_end_datetime`",
+    "ok": true,
+    "row_count": null,
+    "error": null
+  },
+  {
+    "timestamp": "2026-08-31T10:55:29.681251+00:00",
+    "connection": "10.12.132.24",
+    "database": "serphydose",
+    "sql": "ALTER TABLE `serie` DROP COLUMN `acquisition_start_datetime`",
+    "ok": true,
+    "row_count": null,
+    "error": null
+  },
+  {
+    "timestamp": "2026-08-31T11:06:51.463733+00:00",
+    "connection": "10.12.132.24",
+    "database": "serphydose",
+    "sql": "DELETE FROM `schema_version` WHERE `installed_rank` = %s AND `version` = %s AND `description` = %s AND `type` = %s AND `script` = %s AND `checksum` = %s AND `installed_by` = %s AND `installed_on` = %s AND `execution_time` = %s AND `success` = %s LIMIT 1",
+    "ok": true,
+    "row_count": 1,
+    "error": null
+  },
+  {
+    "timestamp": "2026-09-01T11:30:58.831351+00:00",
+    "connection": "10.12.132.24",
+    "database": "serphydose",
+    "sql": "SHOW CREATE TABLE acquisition_duration_audit",
+    "ok": true,
+    "row_count": 1,
+    "error": null
+  }
+]

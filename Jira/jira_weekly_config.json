@@ -1,0 +1,228 @@
+{
+  "base_url": "https://your-company-jira.example.com",
+  "api_mode": "auto",
+  "verify_ssl": true,
+  "auth": {
+    "type": "auto",
+    "pat_env": "JIRA_PAT",
+    "username_env": "JIRA_USER",
+    "token_env": "JIRA_API_TOKEN"
+  },
+  "sprint": "1051",
+  "team_members": [
+    "250020392",
+    "250019548",
+    "550025448",
+    "250008846",
+    "250007071"
+  ],
+  "jql_template": "project = SD AND Sprint = {sprint} AND assignee in (\"250020392\", \"250019548\", \"550025448\", \"250008846\", \"250007071\")",
+  "assignment_jql": "project = SD AND Sprint = 1051 AND assignee in (\"250020392\", \"250019548\", \"550025448\", \"250008846\", \"250007071\") AND statusCategory != Done ORDER BY assignee ASC, updated DESC",
+  "gitlab": {
+    "group_url": "https://gitlab.apps.ge-healthcare.net/pia_restricted",
+    "verify_ssl": true,
+    "token_env": "GITLAB_TOKEN",
+    "merged_lookback_days": 30,
+    "allow_comments": true,
+    "filter_to_team_members": true
+  },
+  "output_dir": "reports",
+  "thresholds": {
+    "no_activity_days": 7,
+    "in_progress_days": 14,
+    "due_soon_days": 7,
+    "expected_hours_per_day": 8,
+    "worklog_workers": 4
+  },
+  "checks": [
+    {
+      "key": "assignee",
+      "label": "Assignee",
+      "field_ids": [
+        "assignee"
+      ],
+      "required": true
+    },
+    {
+      "key": "epic_parent",
+      "label": "Epic / Parent Link",
+      "field_ids": [
+        "parent"
+      ],
+      "field_names": [
+        "Epic Link",
+        "Parent Link",
+        "Parent"
+      ],
+      "exclude_issue_types": [
+        "Epic",
+        "Sub-task",
+        "Subtask"
+      ],
+      "required": true
+    },
+    {
+      "key": "due_date",
+      "label": "Due Date",
+      "field_ids": [
+        "duedate"
+      ],
+      "required": true
+    },
+    {
+      "key": "fix_version",
+      "label": "Fix Version",
+      "field_ids": [
+        "fixVersions"
+      ],
+      "required": true
+    },
+    {
+      "key": "affected_version",
+      "label": "Affected Version",
+      "field_ids": [
+        "versions"
+      ],
+      "required": true
+    },
+    {
+      "key": "sprint",
+      "label": "Sprint",
+      "field_names": [
+        "Sprint"
+      ],
+      "exclude_issue_types": [
+        "Epic"
+      ],
+      "required": true
+    },
+    {
+      "key": "labels",
+      "label": "Labels",
+      "field_ids": [
+        "labels"
+      ],
+      "required": true
+    },
+    {
+      "key": "description",
+      "label": "Story Description",
+      "field_ids": [
+        "description"
+      ],
+      "required": true
+    },
+    {
+      "key": "acceptance_criteria",
+      "label": "Acceptance Criteria",
+      "field_names": [
+        "Acceptance Criteria",
+        "Acceptance criteria"
+      ],
+      "issue_types": [
+        "Story"
+      ],
+      "required": true,
+      "description_keywords": [
+        "acceptance criteria",
+        "acceptance criterion"
+      ]
+    },
+    {
+      "key": "story_points",
+      "label": "Story Points",
+      "field_names": [
+        "Story Points",
+        "Story point estimate"
+      ],
+      "issue_types": [
+        "Story"
+      ],
+      "required": true
+    },
+    {
+      "key": "commit_ids",
+      "label": "Commit IDs / Development",
+      "field_names": [
+        "Commit IDs",
+        "Commit ID",
+        "Git Commits",
+        "Development"
+      ],
+      "status_categories": [
+        "In Progress",
+        "Done"
+      ],
+      "required": true
+    },
+    {
+      "key": "logged_time",
+      "label": "Logged Time / Worklog",
+      "field_ids": [
+        "timespent"
+      ],
+      "field_names": [
+        "Time Spent",
+        "Logged Time"
+      ],
+      "status_categories": [
+        "In Progress",
+        "Done"
+      ],
+      "allow_zero": false,
+      "required": true
+    },
+    {
+      "key": "test_evidence",
+      "label": "Test Evidence",
+      "field_names": [
+        "Test Evidence",
+        "Testing Evidence",
+        "Test Results"
+      ],
+      "status_categories": [
+        "Done"
+      ],
+      "required": true,
+      "description_keywords": [
+        "test evidence",
+        "testing evidence",
+        "test results",
+        "test summary"
+      ]
+    },
+    {
+      "key": "documentation",
+      "label": "Wiki / Documentation Link",
+      "field_names": [
+        "Wiki Link",
+        "Documentation Link",
+        "Wiki / Documentation Link"
+      ],
+      "status_categories": [
+        "Done"
+      ],
+      "required": true,
+      "description_keywords": [
+        "wiki link",
+        "documentation link",
+        "wiki / documentation",
+        "documentation:"
+      ]
+    },
+    {
+      "key": "workstream",
+      "label": "Workstream / Platform",
+      "field_names": [
+        "Workstream",
+        "Platform",
+        "Workstream / Platform"
+      ],
+      "required": false,
+      "description_keywords": [
+        "workstream",
+        "platform"
+      ]
+    }
+  ]
+}

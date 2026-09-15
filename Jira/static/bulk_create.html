@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Create Jira stories in bulk for a person, epic, and heading list.">
+  <title>Bulk Ticket Creation</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
+  <script src="/static/bulk_create.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Jira Weekly Report home">
+        <span class="brand-mark" aria-hidden="true">JF</span>
+        <span><strong>Jira Weekly Report</strong><small>Bulk ticket creation</small></span>
+      </a>
+      <nav class="view-nav" aria-label="Report sections">
+        <a href="/">Weekly report</a>
+        <a href="/standup">Daily standup</a>
+        <a href="/assignments">Assignment &amp; backlog</a>
+        <a href="/sd-analysis">SD analysis</a>
+        <a class="active" href="/bulk-create">Bulk create</a>
+      </nav>
+      <div class="topbar-status"><span class="status-dot" aria-hidden="true"></span><span>Writes new issues to Jira</span></div>
+    </header>
+
+    <main>
+      <section class="workspace">
+        <aside class="setup-card" aria-labelledby="bulk-setup-title">
+          <div class="section-heading">
+            <div><p class="eyebrow">CONNECTION</p><h2 id="bulk-setup-title">Jira connection &amp; defaults</h2></div>
+            <span class="secure-note">Token encrypted</span>
+          </div>
+          <form id="bulk-connection-form">
+            <label for="base-url">Jira URL</label>
+            <input id="base-url" type="url" placeholder="https://jira.your-company.com" required>
+
+            <div class="field-grid">
+              <div>
+                <label for="api-mode">Jira type</label>
+                <select id="api-mode">
+                  <option value="auto">Detect automatically</option>
+                  <option value="server">Data Center / Server</option>
+                  <option value="cloud">Jira Cloud</option>
+                </select>
+              </div>
+              <div>
+                <label for="auth-type">Authentication</label>
+                <select id="auth-type">
+                  <option value="auto">Choose automatically</option>
+                  <option value="bearer">Personal access token</option>
+                  <option value="basic">Email + API token</option>
+                </select>
+              </div>
+            </div>
+
+            <div id="username-field">
+              <label for="username">Username / Cloud email</label>
+              <input id="username" type="text" placeholder="your.name@company.com">
+            </div>
+
+            <label for="token">API token or PAT</label>
+            <div class="secret-input">
+              <input id="token" type="password" placeholder="Saved token will be used when available">
+              <button id="toggle-token" type="button" class="text-button">Show</button>
+            </div>
+            <label class="check-label">
+              <input id="save-token" type="checkbox" checked>
+              <span>Remember securely on this Windows account</span>
+            </label>
+            <p id="saved-token-status" class="saved-token-status" hidden></p>
+
+            <div class="field-grid">
+              <div>
+                <label for="project-key">Project key</label>
+                <input id="project-key" type="text" placeholder="SD" required>
+              </div>
+              <div>
+                <label for="issue-type">Issue type</label>
+                <input id="issue-type" type="text" value="Story">
+              </div>
+            </div>
+
+            <div class="field-grid">
+              <div>
+                <label for="max-points">Split above (story points)</label>
+                <input id="max-points" type="number" min="1" max="20" value="5">
+              </div>
+              <div>
+                <label for="default-epic">Default epic link</label>
+                <input id="default-epic" type="text" placeholder="SD-1000 (used when a row has none)">
+              </div>
+            </div>
+            <p class="muted">Applies to every row below unless a row sets its own epic link.</p>
+          </form>
+          <div id="form-error" class="error-message" role="alert" hidden></div>
+        </aside>
+
+        <section class="results" aria-live="polite">
+          <section class="data-card">
+            <div class="card-heading">
+              <div><p class="eyebrow">INPUT</p><h3>Stories to create</h3></div>
+              <div class="filters">
+                <button id="mode-paste" class="secondary-button" type="button">Paste rows</button>
+                <button id="mode-upload" class="secondary-button" type="button">Upload Excel</button>
+              </div>
+            </div>
+
+            <div id="paste-panel" style="padding: 0 18px 18px;">
+              <label for="paste-area">One story per line</label>
+              <textarea id="paste-area" rows="8" spellcheck="false"
+                placeholder="Person | Heading | Epic Link | Story Points&#10;Anant Singh | Upgrade Apache Tomcat core | SD-1000 | 2&#10;Praveen | Upgrade Undertow modules | SD-1000 | 2"></textarea>
+              <p class="muted">Separate columns with a tab or a pipe ( | ): Person, Heading, Epic Link, Story Points
+                (epic link and points are both optional — leave blank if there isn't one yet, defaults to 3 points).
+                Pasting straight from Excel (tab-separated) also works, including a header row.</p>
+            </div>
+
+            <div id="upload-panel" style="padding: 0 18px 18px;" hidden>
+              <label for="excel-file">Excel file (.xlsx)</label>
+              <input id="excel-file" type="file" accept=".xlsx,.xls">
+              <p class="muted">Reads the "Jira Stories" sheet if present, otherwise the first sheet.
+                Recognizes columns named Person/Owner, Heading/Title/Story Title, Epic Link/Epic, and Story Points.</p>
+            </div>
+
+            <div class="input-actions" style="padding: 0 18px 18px;">
+              <button id="parse-button" class="secondary-button" type="button">Parse rows</button>
+              <button id="clear-button" class="text-button" type="button">Clear</button>
+            </div>
+            <div id="parse-error" class="error-message" role="alert" hidden style="margin: 0 18px 18px;"></div>
+          </section>
+
+          <section id="preview-card" class="data-card" hidden>
+            <div class="card-heading">
+              <div><p class="eyebrow">PREVIEW</p><h3>Before creating in Jira</h3></div>
+              <p id="preview-summary" class="muted"></p>
+            </div>
+            <div id="person-filter" class="person-filter"></div>
+            <div class="table-scroll">
+              <table>
+                <thead><tr>
+                  <th><input type="checkbox" id="preview-select-all" checked title="Select/unselect all"></th>
+                  <th>Person</th><th>Heading</th><th>Epic link</th><th>Points</th><th>Split into</th>
+                </tr></thead>
+                <tbody id="preview-table"></tbody>
+              </table>
+            </div>
+            <div style="padding: 12px 18px; display:flex; justify-content:flex-end;">
+              <button id="create-button" class="primary-button" type="button">
+                <span class="button-label">Create Jira issues</span>
+                <span class="button-loader"></span>
+              </button>
+            </div>
+          </section>
+
+          <section id="results-card" class="data-card" hidden>
+            <div class="card-heading">
+              <div><p class="eyebrow">RESULT</p><h3>Created issues</h3></div>
+              <p id="results-summary" class="muted"></p>
+            </div>
+            <div class="table-scroll">
+              <table>
+                <thead><tr>
+                  <th>Status</th><th>Issue</th><th>Heading</th><th>Person</th><th>Epic link</th><th>Points</th><th>Detail</th>
+                </tr></thead>
+                <tbody id="results-table"></tbody>
+              </table>
+            </div>
+          </section>
+        </section>
+      </section>
+    </main>
+    <footer>Bulk creation writes new issues to Jira &middot; each run asks for confirmation first</footer>
+  </div>
+</body>
+</html>

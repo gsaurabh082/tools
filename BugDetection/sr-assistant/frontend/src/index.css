@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body { @apply bg-gray-50 text-gray-900 antialiased; }
+}
+
+@layer components {
+  .btn-primary {
+    @apply px-4 py-2 bg-brand text-white rounded-md font-medium hover:bg-brand-dark
+           disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm;
+  }
+  .btn-secondary {
+    @apply px-4 py-2 bg-white text-brand border border-brand rounded-md font-medium
+           hover:bg-brand-light disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm;
+  }
+  .btn-ghost {
+    @apply px-3 py-1.5 text-gray-600 rounded-md hover:bg-gray-100 text-sm transition-colors;
+  }
+  .input {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-md text-sm
+           focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent;
+  }
+  .textarea {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-md text-sm font-mono
+           focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent resize-y;
+  }
+  .label  { @apply block text-sm font-medium text-gray-700 mb-1; }
+  .card   { @apply bg-white rounded-lg border border-gray-200 shadow-sm; }
+  .badge  { @apply inline-flex items-center px-2 py-0.5 rounded text-xs font-medium; }
+}
+
+/* Markdown inside analysis sections */
+.prose-report h1,.prose-report h2,.prose-report h3 { @apply font-semibold text-gray-900 mt-4 mb-2; }
+.prose-report h4,.prose-report h5 { @apply font-medium text-gray-800 mt-3 mb-1; }
+.prose-report p  { @apply mb-3 text-sm leading-relaxed; }
+.prose-report ul { @apply list-disc list-inside mb-3 text-sm space-y-1; }
+.prose-report ol { @apply list-decimal list-inside mb-3 text-sm space-y-1; }
+.prose-report pre { @apply bg-gray-800 text-gray-100 rounded p-3 overflow-x-auto text-xs mb-3; }
+.prose-report code { @apply bg-gray-100 px-1 py-0.5 rounded text-xs font-mono; }
+.prose-report pre code { @apply bg-transparent p-0; }
+.prose-report strong { @apply font-semibold; }
+.prose-report blockquote { @apply border-l-4 border-brand-light pl-4 text-gray-600 italic my-3 text-sm; }
+.prose-report hr  { @apply border-gray-200 my-4; }
+.prose-report table { @apply w-full text-sm border-collapse mb-3; }
+.prose-report th { @apply bg-gray-100 font-semibold text-left px-3 py-2 border border-gray-200; }
+.prose-report td { @apply px-3 py-2 border border-gray-200; }

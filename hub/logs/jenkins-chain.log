@@ -1,0 +1,52 @@
+[hub] 2026-09-11T17:11:37.664536 launching jenkins-chain
+[hub] cwd: C:\Users\250020392\OneDrive - GE HealthCare\Desktop\local-setup\Jenkins
+[hub] cmd: C:\Users\250020392\OneDrive - GE HealthCare\Desktop\local-setup\Jenkins\.venv\Scripts\python.exe run.py
+
+INFO:     Started server process [5652]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:60268 (Press CTRL+C to quit)
+[Jenkins Chain] Opening http://127.0.0.1:60268
+INFO:     127.0.0.1:53299 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53299 - "GET /static/styles.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49770 - "GET /static/app.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49770 - "GET /api/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50410 - "GET /api/runs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53299 - "GET /api/chains HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53299 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:53908 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53909 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53299 - "GET /api/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49770 - "GET /api/runs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50410 - "GET /api/chains HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50410 - "GET /api/runs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50410 - "GET /api/runs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50410 - "GET /api/runs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50410 - "GET /api/runs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50410 - "GET /api/runs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50410 - "GET /api/runs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50410 - "GET /api/runs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50410 - "GET /api/runs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50410 - "GET /api/runs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50410 - "GET /api/runs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50410 - "GET /api/runs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50410 - "GET /api/runs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50410 - "GET /api/runs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50410 - "GET /api/runs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50410 - "GET /api/runs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50410 - "GET /api/runs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50410 - "GET /api/runs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50410 - "GET /api/runs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50410 - "GET /api/runs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50410 - "GET /api/runs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50410 - "GET /api/runs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50410 - "GET /api/runs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50410 - "GET /api/runs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50410 - "GET /api/runs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50410 - "GET /api/runs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50410 - "GET /api/runs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50410 - "GET /api/runs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50410 - "GET /api/runs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50410 - "GET /api/runs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50410 - "GET /api/runs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50410 - "GET /api/runs HTTP/1.1" 200 OK

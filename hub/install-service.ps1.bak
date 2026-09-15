@@ -1,0 +1,195 @@
+#Requires -Version 5.1
+<#
+.SYNOPSIS
+    Clean install + register LocalHub as a Windows startup service.
+    Steps: locate Python → kill port → wipe old packages → fresh install → verify → register → launch
+#>
+
+$ErrorActionPreference = "Stop"
+$taskName = "LocalHub"
+$hubDir   = $PSScriptRoot
+$hubScript = Join-Path $hubDir "hub.py"
+
+Write-Host ""
+Write-Host "  ◈ LocalHub Installer" -ForegroundColor Cyan
+Write-Host "  ─────────────────────────────────────────────" -ForegroundColor DarkGray
+Write-Host ""
+
+# ── 1. Locate Python ─────────────────────────────────────────────────────────
+Write-Host "[1/5] Locating Python..." -ForegroundColor Cyan
+
+$pyExe = $null
+foreach ($cmd in @("python.exe", "py.exe")) {
+    $found = Get-Command $cmd -ErrorAction SilentlyContinue
+    if ($found) { $pyExe = $found.Source; break }
+}
+if (-not $pyExe) { throw "Python 3 not found. Install from https://python.org and retry." }
+
+# Ask Python itself for sys.executable — the only reliable way when py.exe
+# (the launcher) or a Microsoft Store stub is on PATH instead of the real binary.
+$realPy = (& $pyExe -c "import sys; print(sys.executable)" 2>&1).Trim()
+if ($realPy -and (Test-Path $realPy)) { $pyExe = $realPy }
+
+$pyDir  = Split-Path $pyExe
+$pywExe = Join-Path $pyDir "pythonw.exe"
+if (-not (Test-Path $pywExe)) { $pywExe = $pyExe }
+
+Write-Host "  python  : $pyExe"  -ForegroundColor DarkGray
+Write-Host "  pythonw : $pywExe" -ForegroundColor DarkGray
+
+# Persist path so start-hub.vbs never has to search PATH
+$pywExe | Out-File (Join-Path $hubDir "_pythonw.txt") -Encoding UTF8 -NoNewline
+
+# ── 2. Kill port 7272 ────────────────────────────────────────────────────────
+Write-Host "[2/5] Clearing port 7272..." -ForegroundColor Cyan
+
+$lines = netstat -ano 2>$null | Select-String "TCP\s+\S+:7272\s"
+foreach ($line in $lines) {
+    $pid = ($line.Line.Trim() -split "\s+")[-1]
+    if ($pid -match '^\d+$' -and $pid -ne '0') {
+        Stop-Process -Id ([int]$pid) -Force -ErrorAction SilentlyContinue
+        Write-Host "  Killed PID $pid" -ForegroundColor DarkGray
+    }
+}
+Start-Sleep -Milliseconds 800
+
+# ── 3. Remove old packages for a clean slate ─────────────────────────────────
+Write-Host "[3/5] Removing old packages..." -ForegroundColor Cyan
+
+$remove = @("fastapi","uvicorn","psutil","starlette","anyio","httptools",
+            "websockets","watchfiles","python-multipart","h11","click")
+foreach ($pkg in $remove) {
+    & $pyExe -m pip uninstall -y $pkg 2>&1 | Out-Null
+}
+Write-Host "  Done." -ForegroundColor DarkGray
+
+# ── 4. Fresh install ─────────────────────────────────────────────────────────
+Write-Host "[4/5] Installing latest dependencies..." -ForegroundColor Cyan
+
+& $pyExe -m pip install --upgrade pip --quiet
+if ($LASTEXITCODE -ne 0) { throw "pip upgrade failed." }
+
+& $pyExe -m pip install --upgrade --force-reinstall -r (Join-Path $hubDir "requirements.txt")
+if ($LASTEXITCODE -ne 0) { throw "pip install failed. See errors above." }
+
+# Verify imports before registering anything
+$check = & $pyExe -c "import fastapi, uvicorn, psutil; print('OK')" 2>&1
+if ("$check".Trim() -ne "OK") { throw "Import verification failed: $check" }
+Write-Host "  Imports OK." -ForegroundColor Green
+
+# ── 5. Register startup task ─────────────────────────────────────────────────
+Write-Host "[5/5] Registering Task Scheduler task '$taskName'..." -ForegroundColor Cyan
+
+$action   = New-ScheduledTaskAction -Execute $pywExe `
+                -Argument "`"$hubScript`" --no-browser" -WorkingDirectory $hubDir
+$trigger  = New-ScheduledTaskTrigger -AtLogOn -User "$env:USERDOMAIN\$env:USERNAME"
+$settings = New-ScheduledTaskSettingsSet `
+                -ExecutionTimeLimit (New-TimeSpan -Hours 0) -RestartCount 3 `
+                -RestartInterval (New-TimeSpan -Minutes 1) `
+                -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
+$principal = New-ScheduledTaskPrincipal `
+                -UserId "$env:USERDOMAIN\$env:USERNAME" -LogonType Interactive -RunLevel Highest
+
+Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $trigger `
+    -Settings $settings -Principal $principal -Force | Out-Null
+
+Write-Host ""
+Write-Host "  [OK] Task '$taskName' registered — auto-starts at every login." -ForegroundColor Green
+Write-Host "  [OK] URL : http://127.0.0.1:7272" -ForegroundColor Green
+Write-Host ""
+
+# ── Launch now ───────────────────────────────────────────────────────────────
+$ans = Read-Host "Launch Local Hub now? [Y/n]"
+if ($ans -notin @('n','N')) {
+    Write-Host "  Starting hub..." -ForegroundColor Cyan
+    Start-Process $pywExe -ArgumentList "`"$hubScript`" --no-browser" `
+        -WorkingDirectory $hubDir -WindowStyle Hidden
+
+    Write-Host "  Waiting for port 7272 (up to 15 s)..." -ForegroundColor DarkGray
+    $ready = $false
+    for ($i = 0; $i -lt 15; $i++) {
+        Start-Sleep -Seconds 1
+        try {
+            $tcp = [System.Net.Sockets.TcpClient]::new("127.0.0.1", 7272)
+            $tcp.Close(); $ready = $true; break
+        } catch {}
+    }
+
+    if ($ready) {
+        Write-Host "  Hub is live — opening browser." -ForegroundColor Green
+        Start-Process "http://127.0.0.1:7272"
+    } else {
+        Write-Host ""
+        Write-Host "  [WARN] Hub did not respond on :7272 within 15 s." -ForegroundColor Yellow
+        Write-Host "  Run manually to see errors:" -ForegroundColor Yellow
+        Write-Host "    $pyExe `"$hubScript`"" -ForegroundColor Yellow
+    }
+}
+
+
+$ErrorActionPreference = "Stop"
+$taskName = "LocalHub"
+$hubDir    = $PSScriptRoot
+$hubScript = Join-Path $hubDir "hub.py"
+
+function Find-Pythonw {
+    # prefer pythonw.exe so no console window appears at startup
+    foreach ($cmd in @("python.exe", "py.exe")) {
+        $found = Get-Command $cmd -ErrorAction SilentlyContinue
+        if ($found) {
+            $pyw = Join-Path (Split-Path $found.Source) "pythonw.exe"
+            if (Test-Path $pyw) { return $pyw }
+            return $found.Source   # fallback: python.exe (shows window briefly)
+        }
+    }
+    throw "Python 3 not found. Install it from https://python.org and retry."
+}
+
+$exe = Find-Pythonw
+Write-Host "Python: $exe" -ForegroundColor DarkGray
+
+Write-Host "Upgrading pip and installing latest dependencies..." -ForegroundColor Cyan
+& $exe -m pip install --upgrade pip -q
+& $exe -m pip install --upgrade -r (Join-Path $hubDir "requirements.txt")
+if ($LASTEXITCODE -ne 0) { throw "pip install failed." }
+
+$action = New-ScheduledTaskAction `
+    -Execute $exe `
+    -Argument "`"$hubScript`" --no-browser" `
+    -WorkingDirectory $hubDir
+
+$trigger = New-ScheduledTaskTrigger -AtLogOn -User "$env:USERDOMAIN\$env:USERNAME"
+
+$settings = New-ScheduledTaskSettingsSet `
+    -ExecutionTimeLimit  (New-TimeSpan -Hours 0) `
+    -RestartCount        3 `
+    -RestartInterval     (New-TimeSpan -Minutes 1) `
+    -AllowStartIfOnBatteries `
+    -DontStopIfGoingOnBatteries
+
+$principal = New-ScheduledTaskPrincipal `
+    -UserId    "$env:USERDOMAIN\$env:USERNAME" `
+    -LogonType Interactive `
+    -RunLevel  Highest
+
+Register-ScheduledTask `
+    -TaskName  $taskName `
+    -Action    $action `
+    -Trigger   $trigger `
+    -Settings  $settings `
+    -Principal $principal `
+    -Force | Out-Null
+
+Write-Host ""
+Write-Host "[OK]  Task '$taskName' registered." -ForegroundColor Green
+Write-Host "[OK]  Hub will start automatically at every Windows login." -ForegroundColor Green
+Write-Host "[OK]  URL: http://127.0.0.1:7272" -ForegroundColor Green
+Write-Host ""
+
+$ans = Read-Host "Start Local Hub now? [Y/n]"
+if ($ans -notin @('n','N')) {
+    Write-Host "Starting silently..." -ForegroundColor Cyan
+    # Use the VBScript launcher so nothing appears on screen
+    Start-Process "wscript.exe" -ArgumentList "`"$hubDir\start-hub.vbs`"" -WindowStyle Hidden
+    Write-Host "Hub started. Opening http://127.0.0.1:7272 in your browser." -ForegroundColor Green
+}

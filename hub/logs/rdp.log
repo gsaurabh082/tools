@@ -1,0 +1,21 @@
+[hub] 2026-09-11T11:51:45.392221 launching rdp
+[hub] cwd: C:\Users\250020392\OneDrive - GE HealthCare\Desktop\local-setup\rdp
+[hub] cmd: C:\Users\250020392\AppData\Local\Python\pythoncore-3.14-64\pythonw.exe -m uvicorn rdp_manager_app:app --host 127.0.0.1 --port 0
+
+INFO:     Started server process [36632]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:51982 (Press CTRL+C to quit)
+INFO:     127.0.0.1:51984 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55474 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55474 - "GET /static/styles.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60873 - "GET /static/app.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60873 - "GET /api/defaults HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60873 - "GET /api/hosts HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60873 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:60878 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59857 - "POST /api/hosts HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59857 - "GET /api/hosts HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59857 - "POST /api/hosts/0966dfd5fa9b/connect HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57273 - "PUT /api/hosts/0966dfd5fa9b HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57273 - "GET /api/hosts HTTP/1.1" 200 OK
